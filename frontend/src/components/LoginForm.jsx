@@ -4,21 +4,34 @@ import Input from './Input';
 import Button from './Button';
 import { PiUserFill } from 'react-icons/pi';
 import { RiLockPasswordFill } from 'react-icons/ri';
+import { login } from '../services/authService';
+import { toast } from 'react-toastify';
+import { localStorageConfig } from '../config/localStorageConfig';
+import { useNavigate } from 'react-router-dom';
 
 function LoginForm() {
     const [data, setData] = useState({
         email: '',
         password: '',
     });
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { id, value } = e.target;
         setData({ ...data, [id]: value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(data, 'data');
+
+        const res = await login(data);
+        if (res.status === 'success') {
+            localStorage.setItem(localStorageConfig.TOKEN, `Bearer ${res.token}`);
+            toast.success(res.message);
+            navigate('/posts');
+        } else {
+            toast.error(res.message);
+        }
     };
 
     return (
@@ -58,7 +71,7 @@ function LoginForm() {
                             id={'rememberme'}
                             className="appearance-none w-3 h-3 border-2 border-gray-500 rounded-full checked:bg-slate-950 checked:border-transparent focus:outline-none"
                         />
-                        <Label htmlFor={'rememberme'} className={'text-xs'}>
+                        <Label htmlFor={'rememberme'} className={'text-xs select-none cursor-pointer'}>
                             Remember me
                         </Label>
                     </div>

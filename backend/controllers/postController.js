@@ -1,12 +1,13 @@
 const asyncErrorHandler = require('../utils/asyncErrorHandler');
 const CustomError = require('../utils/CustomError');
+const PostModel = require('../models/PostModel');
 
 const getAllPosts = asyncErrorHandler(async (req, res, next) => {
-    console.log(req.user, 'req.user');
+    const posts = await PostModel.find({});
 
     res.status(200).json({
         status: 'success',
-        message: 'All posts',
+        posts,
     });
 });
 

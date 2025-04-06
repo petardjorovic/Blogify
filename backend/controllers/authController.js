@@ -16,6 +16,7 @@ const login = asyncErrorHandler(async (req, res, next) => {
     const payload = { id: foundUser._id, role: foundUser.role };
     const token = signToken(payload);
     res.status(200).json({
+        status: 'success',
         message: 'You have logged in',
         token,
     });

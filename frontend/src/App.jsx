@@ -1,9 +1,12 @@
 import { Outlet } from 'react-router-dom';
+import './config/axiosConfig';
+import { ToastContainer } from 'react-toastify';
 
 function App() {
     return (
         <>
             <Outlet />
+            <ToastContainer />
         </>
     );
 }
