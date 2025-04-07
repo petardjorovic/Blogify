@@ -1,3 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+    .box {
+        @apply border border-mainBlue p-[10px] rounded-[10px] shadow-custom;
+    }
+
+    .loader {
+        @apply w-[100px] h-[100px] border-white border-[10px] rounded-full border-t-orange-600;
+        animation: spin 2s infinite linear;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(1turn);
+        }
+    }
+}

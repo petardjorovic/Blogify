@@ -3,6 +3,7 @@ import App from '../App';
 import LoginPage from '../pages/LoginPage';
 import PostsPage from '../pages/PostsPage';
 import { localStorageConfig } from '../config/localStorageConfig';
+import RegisterPage from '../pages/RegisterPage';
 
 const router = createBrowserRouter([
     {
@@ -12,6 +13,10 @@ const router = createBrowserRouter([
             {
                 path: '/',
                 element: <LoginPage />,
+            },
+            {
+                path: '/register',
+                element: <RegisterPage />,
             },
             {
                 path: '/posts',

@@ -16,11 +16,13 @@ function PostsPage() {
     }, []);
     return (
         <div className="container mx-auto">
-            <h1 className="text-3xl">Posts Page</h1>
-            {posts.length > 0 &&
-                posts.map((post, index) => {
-                    return <div key={index}>{post.title}</div>;
-                })}
+            <div className="px-[16px]">
+                <h1 className="text-3xl">Posts Page</h1>
+                {posts.length > 0 &&
+                    posts.map((post, index) => {
+                        return <div key={index}>{post.title}</div>;
+                    })}
+            </div>
         </div>
     );
 }
