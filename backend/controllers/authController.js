@@ -24,9 +24,11 @@ const login = asyncErrorHandler(async (req, res, next) => {
 
 const register = asyncErrorHandler(async (req, res, next) => {
     const checkUser = await UserModel.findOne({ email: req.body.email });
+    if (checkUser) return next(new CustomError('There is already user with this email', 400));
     const user = new UserModel({ ...req.body });
     const savedUser = await user.save();
     res.status(200).json({
+        status: 'success',
         message: 'You have successufully registered',
     });
 });

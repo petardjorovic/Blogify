@@ -2,6 +2,7 @@ import React from 'react';
 import LoginForm from '../components/LoginForm';
 import loginImg from '../assets/login.jpg';
 import { Link } from 'react-router-dom';
+import { routesConfig } from '../config/routesConfig';
 
 function LoginPage() {
     return (
@@ -21,11 +22,7 @@ function LoginPage() {
                     </div>
                     <div className="box text-center">
                         <p>
-                            Please{' '}
-                            <Link to={''} className="font-bold">
-                                Login
-                            </Link>{' '}
-                            to create your own memories and like others memories.
+                            Please <span className="font-bold">Login</span> to create your own memories and like others memories.
                         </p>
                     </div>
                     <LoginForm />
@@ -33,7 +30,7 @@ function LoginPage() {
                         <p>Don't have account?</p>
                         <p>
                             Click here to{' '}
-                            <Link to={'/register'} className="font-bold text-mainBlue">
+                            <Link to={routesConfig.REGISTER.path} className="font-bold text-mainBlue">
                                 Register
                             </Link>
                         </p>

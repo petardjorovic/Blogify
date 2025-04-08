@@ -1,6 +1,7 @@
 import React from 'react';
 import logo from '../assets/logo.png';
 import { Link } from 'react-router-dom';
+import { routesConfig } from '../config/routesConfig';
 
 function Navbar() {
     return (
@@ -11,10 +12,10 @@ function Navbar() {
                     <p className="text-base">SocialNet</p>
                 </div>
                 <nav className="flex gap-[10px]">
-                    <Link to={'/register'} className="border border-mainBlue p-[8px] rounded-[10px] uppercase">
+                    <Link to={routesConfig.REGISTER.path} className="border border-mainBlue p-[8px] rounded-[10px] uppercase">
                         Register
                     </Link>
-                    <Link to={'/'} className="border border-mainBlue p-[8px] rounded-[10px] uppercase">
+                    <Link to={routesConfig.LOGIN.path} className="border border-mainBlue p-[8px] rounded-[10px] uppercase">
                         Login
                     </Link>
                 </nav>

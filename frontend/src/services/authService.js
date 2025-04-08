@@ -18,3 +18,21 @@ export const login = async (data) => {
         };
     }
 };
+
+export const register = async (data) => {
+    try {
+        const res = await axios.post('/api/auth/register', data);
+        if (res.status === 200 && res.data.status === 'success') {
+            return {
+                status: res.data.status,
+                message: res.data.message,
+            };
+        }
+    } catch (err) {
+        console.error(err, 'err iz servisa register');
+        return {
+            status: err.response.data.error.status,
+            message: err.response.data.message,
+        };
+    }
+};

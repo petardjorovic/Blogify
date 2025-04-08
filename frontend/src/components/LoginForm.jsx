@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import Label from './Label';
 import Input from './Input';
 import Button from './Button';
@@ -6,54 +5,73 @@ import { login } from '../services/authService';
 import { toast } from 'react-toastify';
 import { localStorageConfig } from '../config/localStorageConfig';
 import { useNavigate } from 'react-router-dom';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import { routesConfig } from '../config/routesConfig';
 
 function LoginForm() {
-    const [data, setData] = useState({
-        email: '',
-        password: '',
-    });
     const navigate = useNavigate();
+    const formik = useFormik({
+        initialValues: {
+            email: '',
+            password: '',
+        },
+        validationSchema: Yup.object({
+            email: Yup.string()
+                .required('Email is required')
+                .matches(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/, 'Email is not valid'),
+            password: Yup.string().required('Password is required').min(4, 'Password must be at least 4 characters'),
+        }),
+        onSubmit: async (values) => {
+            console.log(values);
+            const res = await login(values);
+            if (res.status === 'success') {
+                localStorage.setItem(localStorageConfig.TOKEN, `Bearer ${res.token}`);
+                toast(res.message, {
+                    type: 'success',
+                    toastId: 1,
+                });
+                navigate(routesConfig.POSTS.path);
+                formik.resetForm();
+            } else {
+                toast(res.message, {
+                    type: 'error',
+                    toastId: 1,
+                });
+            }
+        },
+    });
 
-    const handleChange = (e) => {
-        const { id, value } = e.target;
-        setData({ ...data, [id]: value });
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        const res = await login(data);
-        if (res.status === 'success') {
-            localStorage.setItem(localStorageConfig.TOKEN, `Bearer ${res.token}`);
-            toast.success(res.message);
-            navigate('/posts');
-        } else {
-            toast.error(res.message);
-        }
-    };
+    const showErrors = (inputName) => formik.errors[inputName] && formik.touched[inputName] && formik.errors[inputName];
 
     return (
-        <form className="box flex flex-col gap-[15px]" onSubmit={handleSubmit}>
+        <form className="box flex flex-col gap-[15px]" onSubmit={formik.handleSubmit}>
             <div className="flex flex-col">
-                <Label className={'px-[12px]'}>Email</Label>
+                <Label className={`px-[12px] ${showErrors('email') && 'text-red-600'}`}>
+                    {showErrors('email') ? showErrors('email') : 'Email'}
+                </Label>
                 <Input
                     placeholder={'Email'}
                     className={'py-[6px] px-[12px] border rounded-[6px] outline-none'}
                     type={'email'}
-                    onChange={handleChange}
+                    onChange={formik.handleChange}
                     id={'email'}
-                    value={data.email}
+                    value={formik.values.email}
+                    name={'email'}
                 />
             </div>
             <div className="flex flex-col">
-                <Label className={'px-[12px]'}>Password</Label>
+                <Label className={`px-[12px] ${showErrors('password') && 'text-red-600'}`}>
+                    {showErrors('password') ? showErrors('password') : 'Password'}
+                </Label>
                 <Input
                     placeholder={'Password'}
                     className={'py-[6px] px-[12px] border rounded-[6px] outline-none'}
                     type={'password'}
                     id={'password'}
-                    onChange={handleChange}
-                    value={data.password}
+                    onChange={formik.handleChange}
+                    value={formik.values.password}
+                    name={'password'}
                 />
             </div>
 

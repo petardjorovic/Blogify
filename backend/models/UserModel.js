@@ -47,6 +47,10 @@ const userSchema = new Schema({
         type: String,
         default: null,
     },
+    age: {
+        type: Number,
+        default: null,
+    },
     image: {
         type: String,
         default: 'avatar.png',

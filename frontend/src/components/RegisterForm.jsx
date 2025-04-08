@@ -4,8 +4,13 @@ import Label from './Label';
 import Input from './Input';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { register } from '../services/authService';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { routesConfig } from '../config/routesConfig';
 
 function RegisterForm() {
+    const navigate = useNavigate();
     const formik = useFormik({
         initialValues: {
             firstName: '',
@@ -19,20 +24,33 @@ function RegisterForm() {
             lastName: Yup.string().required('Last Name is required').min(2, 'Last name must be at least 2 characters'),
             email: Yup.string()
                 .required('Email is required')
-                .matches(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/, 'is not valid'),
+                .matches(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/, 'Email is not valid'),
             password: Yup.string().required('Password is required').min(4),
             confirmPassword: Yup.string()
                 .oneOf([Yup.ref('password'), null], 'Passwords must match')
                 .required('Confirm is required'),
         }),
-        onSubmit: (values) => {
-            console.log(values);
+        onSubmit: async (values) => {
+            const res = await register(values);
+            if (res.status === 'success') {
+                formik.resetForm();
+                toast(res.message, {
+                    type: 'success',
+                    toastId: 1,
+                });
+                navigate(routesConfig.LOGIN.path);
+            } else {
+                toast(res.message, {
+                    type: 'error',
+                    toastId: 1,
+                });
+            }
         },
     });
 
     const showErrors = (inputName) => formik.errors[inputName] && formik.touched[inputName] && formik.errors[inputName];
     return (
-        <form className="box flex flex-col gap-[10px]" onSubmit={formik.handleSubmit}>
+        <form className="box flex flex-col gap-[5px]" onSubmit={formik.handleSubmit}>
             <div className="flex flex-col">
                 <Label className={`px-[12px] ${showErrors('firstName') && 'text-red-600'}`}>
                     {showErrors('firstName') ? showErrors('firstName') : 'First Name'}
