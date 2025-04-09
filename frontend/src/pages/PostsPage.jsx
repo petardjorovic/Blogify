@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getAllPosts } from '../services/postService';
+import PostCard from '../components/PostCard';
 
 function PostsPage() {
     const [posts, setPosts] = useState([]);
@@ -8,6 +9,7 @@ function PostsPage() {
         const res = await getAllPosts();
         if (res.status === 'success') {
             setPosts(res.posts);
+            console.log(res.posts);
         }
     };
 
@@ -15,14 +17,14 @@ function PostsPage() {
         fetchPosts();
     }, []);
     return (
-        <div className="container mx-auto">
-            <div className="px-[16px]">
-                <h1 className="text-3xl">Posts Page</h1>
-                {posts.length > 0 &&
-                    posts.map((post, index) => {
-                        return <div key={index}>{post.title}</div>;
-                    })}
-            </div>
+        <div className="flex flex-wrap items-center justify-between w-full gap-y-5">
+            {posts.length > 0 ? (
+                posts.map((post) => {
+                    return <PostCard key={post._id} post={post} />;
+                })
+            ) : (
+                <p>Loading...</p>
+            )}
         </div>
     );
 }

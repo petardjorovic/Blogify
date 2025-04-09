@@ -4,6 +4,8 @@ import LoginPage from '../pages/LoginPage';
 import PostsPage from '../pages/PostsPage';
 import RegisterPage from '../pages/RegisterPage';
 import RouteProtect from '../components/RouteProtect';
+import { routesConfig } from '../config/routesConfig';
+import PostsLayout from '../pages/PostsLayout';
 
 const router = createBrowserRouter([
     {
@@ -11,24 +13,30 @@ const router = createBrowserRouter([
         element: <App />,
         children: [
             {
-                path: '/',
+                path: routesConfig.LOGIN.path,
                 element: <LoginPage />,
             },
             {
-                path: '/register',
+                path: routesConfig.REGISTER.path,
                 element: <RegisterPage />,
             },
             {
-                path: '/posts',
-                element: (
-                    <RouteProtect>
-                        <PostsPage />
-                    </RouteProtect>
-                ),
+                path: routesConfig.DASHBOARD.path,
+                element: <h1>Dashboard</h1>,
             },
             {
-                path: '/dashboard',
-                element: <h1>Dashboard</h1>,
+                path: routesConfig.POSTS.path,
+                element: (
+                    <RouteProtect>
+                        <PostsLayout />
+                    </RouteProtect>
+                ),
+                children: [
+                    {
+                        path: '',
+                        element: <PostsPage />,
+                    },
+                ],
             },
         ],
     },
