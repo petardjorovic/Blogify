@@ -1,13 +1,18 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const tagSchema = new Schema({
-    name: {
-        type: String,
+const tagSchema = new Schema(
+    {
+        name: {
+            type: String,
+            required: true,
+        },
     },
-    _id: false,
-    versionKey: false,
-});
+    {
+        _id: false,
+        versionKey: false,
+    }
+);
 
 const postSchema = new Schema({
     body: {
