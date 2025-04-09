@@ -12,7 +12,7 @@ const addSchema = new Schema({
     },
     image: {
         type: String,
-        required: [true, 'Image is required'],
+        default: null,
     },
     startDate: {
         type: Date,

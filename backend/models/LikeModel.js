@@ -2,10 +2,6 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const likeSchema = new Schema({
-    createdAt: {
-        type: Date,
-        default: () => new Date().getTime(),
-    },
     firstName: {
         type: String,
         required: [true, 'First Name is required'],
@@ -21,6 +17,10 @@ const likeSchema = new Schema({
     userId: {
         type: Schema.Types.ObjectId,
         required: [true, 'UserId is required'],
+    },
+    createdAt: {
+        type: Date,
+        default: () => new Date().getTime(),
     },
 });
 

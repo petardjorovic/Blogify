@@ -6,24 +6,22 @@ const tagSchema = new Schema({
         type: String,
     },
     _id: false,
+    versionKey: false,
 });
 
 const postSchema = new Schema({
     body: {
         type: String,
-        default: '',
-    },
-    createdAt: {
-        type: Date,
-        default: () => new Date().getTime(),
+        required: true,
     },
     image: {
         type: String,
         default: null,
+        required: true,
     },
     isPublic: {
         type: Boolean,
-        default: true,
+        default: false,
     },
     reactions: {
         type: Number,
@@ -39,6 +37,10 @@ const postSchema = new Schema({
     userId: {
         type: Schema.Types.ObjectId,
         required: true,
+    },
+    createdAt: {
+        type: Date,
+        default: () => new Date().getTime(),
     },
 });
 
