@@ -1,20 +1,18 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
+import SearchForm from '../components/SearchForm';
+import CreateMemory from '../components/CreateMemory';
 
 function PostsLayout() {
     return (
         <div className="container mx-auto">
             <div className="flex px-[16px] gap-[20px]">
-                <div className="w-3/4">
+                <div className="w-2/3">
                     <Outlet />
                 </div>
-                <div className="w-1/4 flex flex-col gap-[20px]">
-                    <div className="box w-full">
-                        <h3>Search Post</h3>
-                    </div>
-                    <div className="box w-full">
-                        <h3>Create memory</h3>
-                    </div>
+                <div className="w-1/3 flex flex-col gap-[20px]">
+                    <SearchForm />
+                    <CreateMemory />
                 </div>
             </div>
         </div>

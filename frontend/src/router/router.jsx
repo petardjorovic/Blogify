@@ -6,6 +6,9 @@ import RegisterPage from '../pages/RegisterPage';
 import RouteProtect from '../components/RouteProtect';
 import { routesConfig } from '../config/routesConfig';
 import PostsLayout from '../pages/PostsLayout';
+import PostByTagPage from '../pages/PostByTagPage';
+import AuthorPage from '../pages/AuthorPage';
+import SinglePostPage from '../pages/SinglePostPage';
 
 const router = createBrowserRouter([
     {
@@ -21,11 +24,7 @@ const router = createBrowserRouter([
                 element: <RegisterPage />,
             },
             {
-                path: routesConfig.DASHBOARD.path,
-                element: <h1>Dashboard</h1>,
-            },
-            {
-                path: routesConfig.POSTS.path,
+                path: routesConfig.POST.path,
                 element: (
                     <RouteProtect>
                         <PostsLayout />
@@ -33,10 +32,26 @@ const router = createBrowserRouter([
                 ),
                 children: [
                     {
-                        path: '',
+                        path: routesConfig.POST.path,
                         element: <PostsPage />,
                     },
+                    {
+                        path: routesConfig.POST_TAG.path,
+                        element: <PostByTagPage />,
+                    },
+                    {
+                        path: routesConfig.POST_AUTHOR.path,
+                        element: <AuthorPage />,
+                    },
                 ],
+            },
+            {
+                path: routesConfig.SINGLE_POST.path,
+                element: <SinglePostPage />,
+            },
+            {
+                path: routesConfig.DASHBOARD.path,
+                element: <h1>Dashboard</h1>,
             },
         ],
     },

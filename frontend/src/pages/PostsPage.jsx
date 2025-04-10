@@ -9,7 +9,6 @@ function PostsPage() {
         const res = await getAllPosts();
         if (res.status === 'success') {
             setPosts(res.posts);
-            console.log(res.posts);
         }
     };
 

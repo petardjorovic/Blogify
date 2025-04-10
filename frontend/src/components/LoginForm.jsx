@@ -31,7 +31,7 @@ function LoginForm() {
                     type: 'success',
                     toastId: 1,
                 });
-                navigate(routesConfig.POSTS.path);
+                navigate(routesConfig.POST.path);
                 formik.resetForm();
             } else {
                 toast(res.message, {
