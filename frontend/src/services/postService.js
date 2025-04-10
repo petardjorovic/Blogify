@@ -53,3 +53,21 @@ export const getPostsByTag = async (tagName) => {
         };
     }
 };
+
+export const getPostsByUser = async (userId) => {
+    try {
+        const res = await axios.get(`/api/post/user/${userId}`);
+        if (res.status === 200 && res.data.status === 'success') {
+            return {
+                status: res.data.status,
+                posts: res.data.posts,
+            };
+        }
+    } catch (err) {
+        console.error(err, 'err iz servisa get posts by user');
+        return {
+            status: err.response.data.error.status,
+            message: err.response.data.message,
+        };
+    }
+};

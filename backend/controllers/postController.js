@@ -21,6 +21,9 @@ const getAllPosts = asyncErrorHandler(async (req, res, next) => {
 });
 
 const getSinglePost = asyncErrorHandler(async (req, res, next) => {
+    if (!mongoose.Types.ObjectId.isValid(req.params.postId)) {
+        return next(new CustomError('Invalid postId format', 400));
+    }
     const [post] = await PostModel.aggregate([
         {
             $match: { _id: new mongoose.Types.ObjectId(req.params.postId) },
@@ -55,4 +58,25 @@ const getPostsByTag = asyncErrorHandler(async (req, res, next) => {
     });
 });
 
-module.exports = { getAllPosts, getPostsByTag, getSinglePost };
+const getPostsByUser = asyncErrorHandler(async (req, res, next) => {
+    if (!mongoose.Types.ObjectId.isValid(req.params.userId)) {
+        return next(new CustomError('Invalid userId format', 400));
+    }
+    const posts = await PostModel.aggregate([
+        {
+            $match: { userId: new mongoose.Types.ObjectId(req.params.userId) },
+        },
+        {
+            $limit: 9,
+        },
+        ...joinUserToPost,
+    ]);
+    if (!posts) return next(new CustomError(`There are no posts by user with id ${req.params.userId}`, 404));
+
+    res.status(200).json({
+        status: 'success',
+        posts,
+    });
+});
+
+module.exports = { getAllPosts, getPostsByTag, getSinglePost, getPostsByUser };

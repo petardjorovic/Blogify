@@ -7,7 +7,7 @@ import RouteProtect from '../components/RouteProtect';
 import { routesConfig } from '../config/routesConfig';
 import PostsLayout from '../pages/PostsLayout';
 import PostByTagPage from '../pages/PostByTagPage';
-import AuthorPage from '../pages/AuthorPage';
+import PostByUserPage from '../pages/PostByUserPage';
 import SinglePostPage from '../pages/SinglePostPage';
 
 const router = createBrowserRouter([
@@ -41,7 +41,7 @@ const router = createBrowserRouter([
                     },
                     {
                         path: routesConfig.POST_AUTHOR.path,
-                        element: <AuthorPage />,
+                        element: <PostByUserPage />,
                     },
                 ],
             },

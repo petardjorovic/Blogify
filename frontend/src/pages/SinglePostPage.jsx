@@ -4,6 +4,7 @@ import { getSinglePost } from '../services/postService';
 import { toast } from 'react-toastify';
 import { formatDate } from '../utils/formatDate';
 import Comment from '../components/Comment';
+import { routesConfig } from '../config/routesConfig';
 
 function SinglePostPage() {
     const { postId } = useParams();
@@ -14,7 +15,6 @@ function SinglePostPage() {
             const res = await getSinglePost(postId);
             if (res.status === 'success') {
                 setPost(res.post);
-                console.log(res, 'res sa fronta');
             } else {
                 toast(res.message, {
                     type: 'error',
@@ -36,7 +36,11 @@ function SinglePostPage() {
                             <div className="mb-[10px]">
                                 {post.tags.length > 0 ? (
                                     post.tags.map((tag, index) => {
-                                        return <Link key={index}>#{tag.name}</Link>;
+                                        return (
+                                            <Link to={routesConfig.POST_TAG.realPath(tag.name)} key={index}>
+                                                #{tag.name}
+                                            </Link>
+                                        );
                                     })
                                 ) : (
                                     <span>There are no tags</span>

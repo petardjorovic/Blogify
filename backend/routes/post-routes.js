@@ -9,4 +9,6 @@ router.get('/:postId', authenticationValidation.protect, postController.getSingl
 
 router.get('/tag/:tagName', authenticationValidation.protect, postController.getPostsByTag);
 
+router.get('/user/:userId', authenticationValidation.protect, postController.getPostsByUser);
+
 module.exports = router;
