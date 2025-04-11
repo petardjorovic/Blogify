@@ -14,40 +14,45 @@ const tagSchema = new Schema(
     }
 );
 
-const postSchema = new Schema({
-    body: {
-        type: String,
-        required: true,
+const postSchema = new Schema(
+    {
+        body: {
+            type: String,
+            required: true,
+        },
+        image: {
+            type: String,
+            default: null,
+            required: true,
+        },
+        isPublic: {
+            type: Boolean,
+            default: false,
+        },
+        reactions: {
+            type: Number,
+            default: 0,
+        },
+        tags: {
+            type: [tagSchema],
+            validate: {
+                validator: (field) => field.length > 0,
+                message: 'You have to choose at least one tag',
+            },
+        },
+        title: {
+            type: String,
+            required: true,
+        },
+        userId: {
+            type: Schema.Types.ObjectId,
+            required: true,
+        },
     },
-    image: {
-        type: String,
-        default: null,
-        required: true,
-    },
-    isPublic: {
-        type: Boolean,
-        default: false,
-    },
-    reactions: {
-        type: Number,
-        default: 0,
-    },
-    tags: {
-        type: [tagSchema],
-    },
-    title: {
-        type: String,
-        required: true,
-    },
-    userId: {
-        type: Schema.Types.ObjectId,
-        required: true,
-    },
-    createdAt: {
-        type: Date,
-        default: () => new Date().getTime(),
-    },
-});
+    {
+        timestamps: true,
+    }
+);
 
 const PostModel = mongoose.model('Post', postSchema);
 module.exports = PostModel;

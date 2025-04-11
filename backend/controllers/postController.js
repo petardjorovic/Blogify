@@ -3,6 +3,7 @@ const asyncErrorHandler = require('../utils/asyncErrorHandler');
 const CustomError = require('../utils/CustomError');
 const PostModel = require('../models/PostModel');
 const joinUserToPost = require('../joins/joinUserToPost');
+const joinCommentsToPost = require('../joins/joinCommentsToPost');
 
 const getAllPosts = asyncErrorHandler(async (req, res, next) => {
     const posts = await PostModel.aggregate([
@@ -26,10 +27,12 @@ const getSinglePost = asyncErrorHandler(async (req, res, next) => {
     }
     const [post] = await PostModel.aggregate([
         {
-            $match: { _id: new mongoose.Types.ObjectId(req.params.postId) },
+            $match: { $expr: { $eq: ['$_id', { $toObjectId: req.params.postId }] } }, // { _id: new mongoose.Types.ObjectId(req.params.postId) }
         },
         ...joinUserToPost,
+        ...joinCommentsToPost,
     ]);
+
     if (!post) return next(new CustomError(`Post with id ${req.params.postId} not found.`));
 
     res.status(200).json({
@@ -64,7 +67,7 @@ const getPostsByUser = asyncErrorHandler(async (req, res, next) => {
     }
     const posts = await PostModel.aggregate([
         {
-            $match: { userId: new mongoose.Types.ObjectId(req.params.userId) },
+            $match: { $expr: { $eq: ['$userId', { $toObjectId: req.params.userId }] } }, // { userId: new mongoose.Types.ObjectId(req.params.userId) }
         },
         {
             $limit: 9,
