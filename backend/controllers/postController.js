@@ -82,4 +82,35 @@ const getPostsByUser = asyncErrorHandler(async (req, res, next) => {
     });
 });
 
-module.exports = { getAllPosts, getPostsByTag, getSinglePost, getPostsByUser };
+const getPostsBySearch = asyncErrorHandler(async (req, res, next) => {
+    let searchTerm = [];
+    if (typeof req.query.keyword === 'string') {
+        searchTerm.push({ title: { $regex: req.query.keyword, $options: 'i' } }, { body: { $regex: req.query.keyword, $options: 'i' } });
+    } else {
+        for (let i = 0; i < req.query.keyword.length; i++) {
+            searchTerm.push(
+                { title: { $regex: req.query.keyword[i], $options: 'i' } },
+                { body: { $regex: req.query.keyword[i], $options: 'i' } }
+            );
+        }
+    }
+
+    const posts = await PostModel.aggregate([
+        {
+            $match: {
+                $or: searchTerm,
+            },
+        },
+        {
+            $limit: 9,
+        },
+        ...joinUserToPost,
+    ]);
+
+    res.status(200).json({
+        status: 'success',
+        posts,
+    });
+});
+
+module.exports = { getAllPosts, getPostsByTag, getSinglePost, getPostsByUser, getPostsBySearch };

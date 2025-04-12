@@ -71,3 +71,21 @@ export const getPostsByUser = async (userId) => {
         };
     }
 };
+
+export const getPostsBySearch = async (data) => {
+    try {
+        const res = await axios.get(`/api/post/search?${data}`);
+        if (res.status === 200 && res.data.status === 'success') {
+            return {
+                status: res.data.status,
+                posts: res.data.posts,
+            };
+        }
+    } catch (err) {
+        console.error(err, 'err iz servisa getpostbysearch');
+        return {
+            status: err.response.data.error.status,
+            message: err.response.data.message,
+        };
+    }
+};

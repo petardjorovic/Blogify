@@ -20,6 +20,9 @@ export const routesConfig = {
         path: '/post/:postId',
         realPath: (postId) => `/post/${postId}`,
     },
+    SEARCH_POST: {
+        path: '/post/search',
+    },
     DASHBOARD: {
         path: '/dashboard',
     },

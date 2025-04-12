@@ -9,6 +9,7 @@ import PostsLayout from '../pages/PostsLayout';
 import PostByTagPage from '../pages/PostByTagPage';
 import PostByUserPage from '../pages/PostByUserPage';
 import SinglePostPage from '../pages/SinglePostPage';
+import PostBySearchPage from '../pages/PostBySearchPage';
 
 const router = createBrowserRouter([
     {
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
                     {
                         path: routesConfig.POST_AUTHOR.path,
                         element: <PostByUserPage />,
+                    },
+                    {
+                        path: routesConfig.SEARCH_POST.path,
+                        element: <PostBySearchPage />,
                     },
                 ],
             },

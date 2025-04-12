@@ -3,9 +3,6 @@ import Input from './Input';
 import Label from './Label';
 
 function CreateMemory() {
-    useEffect(() => {
-        console.log('CreateMemory');
-    }, []);
     return (
         <div className="box w-full">
             <h3 className="font-semibold text-xl text-center mb-[12px]">Create memory</h3>
