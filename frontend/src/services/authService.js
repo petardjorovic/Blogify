@@ -3,10 +3,12 @@ import axios from 'axios';
 export const login = async (data) => {
     try {
         const res = await axios.post('/api/auth/login', data);
+
         if (res.status === 200 && res.data.status === 'success') {
             return {
                 status: res.data.status,
                 message: res.data.message,
+                user: res.data.user,
                 token: res.data.token,
             };
         }

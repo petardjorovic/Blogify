@@ -8,8 +8,12 @@ import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { routesConfig } from '../config/routesConfig';
+import { useDispatch } from 'react-redux';
+import { showLoader } from '../store/loaderSlice';
+import { setUser } from '../store/userSlice';
 
 function LoginForm() {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const formik = useFormik({
         initialValues: {
@@ -23,9 +27,12 @@ function LoginForm() {
             password: Yup.string().required('Password is required').min(4, 'Password must be at least 4 characters'),
         }),
         onSubmit: async (values) => {
-            console.log(values);
+            dispatch(showLoader(true));
             const res = await login(values);
+            dispatch(showLoader(false));
+
             if (res.status === 'success') {
+                dispatch(setUser(res.data.user));
                 localStorage.setItem(localStorageConfig.TOKEN, `Bearer ${res.token}`);
                 toast(res.message, {
                     type: 'success',

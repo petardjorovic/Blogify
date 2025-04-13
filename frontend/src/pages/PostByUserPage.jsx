@@ -2,17 +2,21 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getPostsByUser } from '../services/postService';
 import PostCard from '../components/PostCard';
+import { useDispatch } from 'react-redux';
+import { showLoader } from '../store/loaderSlice';
 
 function PostByUserPage() {
     const [posts, setPosts] = useState([]);
     const { userId } = useParams();
+    const dispacth = useDispatch();
 
     useEffect(() => {
         const fetchPosts = async () => {
+            dispacth(showLoader(true));
             const res = await getPostsByUser(userId);
+            dispacth(showLoader(false));
             if (res.status === 'success') {
                 setPosts(res.posts);
-                console.log(res);
             }
         };
         fetchPosts();

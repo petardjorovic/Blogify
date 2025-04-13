@@ -16,3 +16,15 @@ axios.interceptors.request.use(
         return Promise.reject(error);
     }
 );
+
+axios.interceptors.response.use(
+    function (response) {
+        return response;
+    },
+    function (error) {
+        if (error.response?.status === 401) {
+            window.location.href = '/';
+        }
+        return Promise.reject(error); // važno!
+    }
+);

@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { getSinglePost } from '../services/postService';
-import { toast } from 'react-toastify';
 import { formatDate } from '../utils/formatDate';
 import AddCommentForm from '../components/AddCommentForm';
 import { routesConfig } from '../config/routesConfig';
 import Comment from '../components/Comment';
-import { useQuery } from '@tanstack/react-query';
+import { useDispatch } from 'react-redux';
+import { showLoader } from '../store/loaderSlice';
+// import { useQuery } from '@tanstack/react-query';
 
 function SinglePostPage() {
     const { postId } = useParams();
     const [post, setPost] = useState({});
+    const dispatch = useDispatch();
 
     //* Ovo je fetchovanje pomocu tanstack/react-query
     // const { data, isSuccess } = useQuery({
@@ -21,7 +23,9 @@ function SinglePostPage() {
     // let { post } = isSuccess && data;
 
     const fetchPost = async () => {
+        dispatch(showLoader(true));
         const res = await getSinglePost(postId);
+        dispatch(showLoader(false));
         if (res.status === 'success') {
             setPost(res.post);
         }

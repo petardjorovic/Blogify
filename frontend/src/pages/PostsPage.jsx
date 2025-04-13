@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { getAllPosts } from '../services/postService';
 import PostCard from '../components/PostCard';
+import { useDispatch } from 'react-redux';
+import { showLoader } from '../store/loaderSlice';
 
 function PostsPage() {
     const [posts, setPosts] = useState([]);
+    const dispatch = useDispatch();
 
     const fetchPosts = async () => {
+        dispatch(showLoader(true));
         const res = await getAllPosts();
+        dispatch(showLoader(false));
         if (res.status === 'success') {
             setPosts(res.posts);
         }

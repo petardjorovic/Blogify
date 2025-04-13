@@ -4,8 +4,11 @@ import Button from './Button';
 import Label from './Label';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { useDispatch } from 'react-redux';
+import { showLoader } from '../store/loaderSlice';
 
 function AddCommentForm({ postId, rerenderView }) {
+    const dispatch = useDispatch();
     const formik = useFormik({
         initialValues: {
             body: '',
@@ -17,8 +20,9 @@ function AddCommentForm({ postId, rerenderView }) {
                 .max(100, 'comment must be at most 100 characters'),
         }),
         onSubmit: async (values) => {
-            console.log(values);
+            dispatch(showLoader(true));
             const res = await addComment({ ...values, postId });
+            dispatch(showLoader(false));
             if (res.status === 'success') {
                 toast(res.message, {
                     type: 'success',

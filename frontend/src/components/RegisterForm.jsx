@@ -8,8 +8,11 @@ import { register } from '../services/authService';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { routesConfig } from '../config/routesConfig';
+import { useDispatch } from 'react-redux';
+import { showLoader } from '../store/loaderSlice';
 
 function RegisterForm() {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const formik = useFormik({
         initialValues: {
@@ -31,7 +34,9 @@ function RegisterForm() {
                 .required('Confirm is required'),
         }),
         onSubmit: async (values) => {
+            dispatch(showLoader(true));
             const res = await register(values);
+            dispatch(showLoader(false));
             if (res.status === 'success') {
                 formik.resetForm();
                 toast(res.message, {
