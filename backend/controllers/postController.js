@@ -4,6 +4,7 @@ const CustomError = require('../utils/CustomError');
 const PostModel = require('../models/PostModel');
 const joinUserToPost = require('../joins/joinUserToPost');
 const joinCommentsToPost = require('../joins/joinCommentsToPost');
+const joinLikesToPost = require('../joins/joinLikesToPost');
 
 const getAllPosts = asyncErrorHandler(async (req, res, next) => {
     const posts = await PostModel.aggregate([
@@ -11,6 +12,7 @@ const getAllPosts = asyncErrorHandler(async (req, res, next) => {
             $limit: 9,
         },
         ...joinUserToPost,
+        ...joinLikesToPost,
     ]);
 
     if (!posts) return next(new CustomError('There are no posts', 404));
@@ -31,6 +33,7 @@ const getSinglePost = asyncErrorHandler(async (req, res, next) => {
         },
         ...joinUserToPost,
         ...joinCommentsToPost,
+        ...joinLikesToPost,
     ]);
 
     if (!post) return next(new CustomError(`Post with id ${req.params.postId} not found.`));
@@ -51,6 +54,7 @@ const getPostsByTag = asyncErrorHandler(async (req, res, next) => {
             $limit: 9,
         },
         ...joinUserToPost,
+        ...joinLikesToPost,
     ]);
 
     if (!posts) return next(new CustomError(`There are no posts by tag name ${tagName}`, 404));
@@ -73,6 +77,7 @@ const getPostsByUser = asyncErrorHandler(async (req, res, next) => {
             $limit: 9,
         },
         ...joinUserToPost,
+        ...joinLikesToPost,
     ]);
     if (!posts) return next(new CustomError(`There are no posts by user with id ${req.params.userId}`, 404));
 
@@ -105,6 +110,7 @@ const getPostsBySearch = asyncErrorHandler(async (req, res, next) => {
             $limit: 9,
         },
         ...joinUserToPost,
+        ...joinLikesToPost,
     ]);
 
     res.status(200).json({

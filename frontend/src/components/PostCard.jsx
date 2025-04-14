@@ -1,13 +1,33 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Button from './Button';
-import { SlLike } from 'react-icons/sl';
+import { BiLike, BiSolidLike } from 'react-icons/bi';
 import { formatDate } from '../utils/formatDate';
 import { routesConfig } from '../config/routesConfig';
+import { useDispatch, useSelector } from 'react-redux';
+import { handlePostLike } from '../services/likeService';
+import { toast } from 'react-toastify';
+import { showLoader } from '../store/loaderSlice';
 
-function PostCard({ post }) {
+function PostCard({ post, rerenderView }) {
+    const { user } = useSelector((state) => state.userStore);
+    const dispatch = useDispatch();
+
+    const handleLike = async () => {
+        dispatch(showLoader(true));
+        const res = await handlePostLike(post._id);
+        dispatch(showLoader(false));
+        if (res.status === 'success') {
+            rerenderView();
+        } else {
+            toast(res.message, {
+                type: 'error',
+                toastId: 1,
+            });
+        }
+    };
     return (
-        <div className="w-[220px] lg:w-[31%] h-[400px] rounded-lg relative shadow-custom overflow-hidden">
+        <div className="w-full md:w-[220px] lg:w-[31%] h-[400px] rounded-lg relative shadow-custom overflow-hidden">
             <div className="bg-black bg-opacity-70 w-full absolute top-0 left-0 rounded-t-lg text-white py-[3px] px-[5px]">
                 <Link to={routesConfig.POST_AUTHOR.realPath(post.userId)}>
                     {post.user ? post.user.firstName + ' ' + post.user.lastName : 'Unknown'}
@@ -38,7 +58,12 @@ function PostCard({ post }) {
                 </div>
                 <div className="w-full bg-gray-100 px-[15px] h-[35px] rounded-b-lg border-t flex items-center justify-between mt-[12px]">
                     <span className="flex items-center gap-[6px] flex-row text-sm">
-                        <SlLike /> {post.reactions} LIKE
+                        {post.likes.map((el) => el.userId).includes(user?._id) ? (
+                            <BiSolidLike size={18} className="cursor-pointer" onClick={handleLike} />
+                        ) : (
+                            <BiLike size={18} className="cursor-pointer" onClick={handleLike} />
+                        )}{' '}
+                        {post.likes.length} LIKE
                     </span>
                     <span className="text-sm">{formatDate(post.createdAt)}</span>
                 </div>

@@ -32,8 +32,8 @@ function LoginForm() {
             dispatch(showLoader(false));
 
             if (res.status === 'success') {
-                dispatch(setUser(res.data.user));
                 localStorage.setItem(localStorageConfig.TOKEN, `Bearer ${res.token}`);
+                dispatch(setUser(res.user));
                 toast(res.message, {
                     type: 'success',
                     toastId: 1,

@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { localStorageConfig } from '../config/localStorageConfig';
 
 const userSlice = createSlice({
     name: 'user',
@@ -8,9 +9,21 @@ const userSlice = createSlice({
     reducers: {
         setUser: (state, action) => {
             state.user = action.payload;
+            localStorage.setItem(localStorageConfig.USER, JSON.stringify(action.payload));
+        },
+        restoreUser: (state) => {
+            if (localStorage.getItem(localStorageConfig.USER)) {
+                const resUser = JSON.parse(localStorage.getItem(localStorageConfig.USER));
+                state.user = resUser;
+            }
+        },
+        logout: (state) => {
+            state.user = null;
+            localStorage.removeItem(localStorageConfig.TOKEN);
+            localStorage.removeItem(localStorageConfig.USER);
         },
     },
 });
 
-export const { setUser } = userSlice.actions;
+export const { setUser, restoreUser, logout } = userSlice.actions;
 export default userSlice.reducer;

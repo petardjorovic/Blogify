@@ -10,28 +10,25 @@ function PostByTagPage() {
     const [posts, setPosts] = useState([]);
     const dispatch = useDispatch();
 
+    const fetchPosts = async () => {
+        dispatch(showLoader(true));
+        const res = await getPostsByTag(tagName);
+        dispatch(showLoader(false));
+        if (res.status === 'success') {
+            setPosts(res.posts);
+        }
+    };
     useEffect(() => {
         setPosts([]);
-        const fetchPost = async () => {
-            dispatch(showLoader(true));
-            const res = await getPostsByTag(tagName);
-            dispatch(showLoader(false));
-            if (res.status === 'success') {
-                setPosts(res.posts);
-            }
-        };
-        fetchPost();
-    }, [tagName]);
+        fetchPosts();
+    }, []);
 
     return (
         <div className="flex flex-wrap items-center justify-between w-full gap-y-5">
-            {posts.length > 0 ? (
+            {posts.length > 0 &&
                 posts.map((post) => {
-                    return <PostCard key={post._id} post={post} />;
-                })
-            ) : (
-                <p>Loading...</p>
-            )}
+                    return <PostCard key={post._id} post={post} rerenderView={fetchPosts} />;
+                })}
         </div>
     );
 }

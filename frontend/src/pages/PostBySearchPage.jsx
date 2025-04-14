@@ -10,22 +10,22 @@ function PostBySearchPage() {
     const [posts, setPosts] = useState([]);
     const dispatch = useDispatch();
 
+    const fetchPosts = async () => {
+        dispatch(showLoader(true));
+        const res = await getPostsBySearch(searchParams.toString());
+        dispatch(showLoader(false));
+        if (res.status === 'success') {
+            setPosts(res.posts);
+        }
+    };
     useEffect(() => {
-        const fetchPosts = async () => {
-            dispatch(showLoader(true));
-            const res = await getPostsBySearch(searchParams.toString());
-            dispatch(showLoader(false));
-            if (res.status === 'success') {
-                setPosts(res.posts);
-            }
-        };
         fetchPosts();
-    }, [searchParams]);
+    }, []);
     return (
         <div className="flex flex-wrap items-center justify-evenly w-full gap-y-5">
             {posts.length > 0 ? (
                 posts.map((post) => {
-                    return <PostCard key={post._id} post={post} />;
+                    return <PostCard key={post._id} post={post} rerenderView={fetchPosts} />;
                 })
             ) : (
                 <div className="text-center w-full pt-[50px]">

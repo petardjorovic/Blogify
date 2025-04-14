@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { localStorageConfig } from './localStorageConfig';
+import { Navigate } from 'react-router-dom';
 
 axios.defaults.baseURL = 'http://localhost:4000';
 
@@ -23,6 +24,7 @@ axios.interceptors.response.use(
     },
     function (error) {
         if (error.response?.status === 401) {
+            localStorage.removeItem(localStorageConfig.TOKEN);
             window.location.href = '/';
         }
         return Promise.reject(error); // važno!

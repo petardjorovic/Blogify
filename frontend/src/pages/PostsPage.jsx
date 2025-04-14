@@ -12,6 +12,7 @@ function PostsPage() {
         dispatch(showLoader(true));
         const res = await getAllPosts();
         dispatch(showLoader(false));
+
         if (res.status === 'success') {
             setPosts(res.posts);
         }
@@ -22,13 +23,10 @@ function PostsPage() {
     }, []);
     return (
         <div className="flex flex-wrap items-center justify-between w-full gap-y-5">
-            {posts.length > 0 ? (
+            {posts.length > 0 &&
                 posts.map((post) => {
-                    return <PostCard key={post._id} post={post} />;
-                })
-            ) : (
-                <p>Loading...</p>
-            )}
+                    return <PostCard key={post._id} post={post} rerenderView={fetchPosts} />;
+                })}
         </div>
     );
 }

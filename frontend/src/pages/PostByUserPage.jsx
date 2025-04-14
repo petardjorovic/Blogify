@@ -10,26 +10,23 @@ function PostByUserPage() {
     const { userId } = useParams();
     const dispacth = useDispatch();
 
+    const fetchPosts = async () => {
+        dispacth(showLoader(true));
+        const res = await getPostsByUser(userId);
+        dispacth(showLoader(false));
+        if (res.status === 'success') {
+            setPosts(res.posts);
+        }
+    };
     useEffect(() => {
-        const fetchPosts = async () => {
-            dispacth(showLoader(true));
-            const res = await getPostsByUser(userId);
-            dispacth(showLoader(false));
-            if (res.status === 'success') {
-                setPosts(res.posts);
-            }
-        };
         fetchPosts();
-    }, [userId]);
+    }, []);
     return (
         <div className="flex flex-wrap items-center justify-evenly w-full gap-y-5">
-            {posts.length > 0 ? (
+            {posts.length > 0 &&
                 posts.map((post) => {
-                    return <PostCard key={post._id} post={post} />;
-                })
-            ) : (
-                <p>Loading...</p>
-            )}
+                    return <PostCard key={post._id} post={post} rerenderView={fetchPosts} />;
+                })}
         </div>
     );
 }
