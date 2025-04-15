@@ -1,10 +1,11 @@
 import { Navigate } from 'react-router-dom';
-import { localStorageConfig } from '../config/localStorageConfig';
 import { routesConfig } from '../config/routesConfig';
+import { useSelector } from 'react-redux';
+import Loader from './Loader';
 
 function RouteProtect({ children }) {
-    const isLoged = localStorage.getItem(localStorageConfig.TOKEN);
-    return isLoged ? children : <Navigate to={routesConfig.LOGIN.path} />;
+    const { user, status } = useSelector((state) => state.userStore);
+    return user ? children : <Navigate to={routesConfig.LOGIN.path} replace />;
 }
 
 export default RouteProtect;

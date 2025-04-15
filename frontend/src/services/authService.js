@@ -38,3 +38,21 @@ export const register = async (data) => {
         };
     }
 };
+
+export const fetchUserFromToken = async () => {
+    try {
+        const res = await axios.get('/api/auth/me');
+        if (res.status === 200 && res.data.status === 'success') {
+            return {
+                status: res.data.status,
+                user: res.data.user,
+            };
+        }
+    } catch (err) {
+        console.error(err, 'err iz servisa fetchUserFromToken');
+        return {
+            status: err.response.data.error.status,
+            message: err.response.data.message,
+        };
+    }
+};

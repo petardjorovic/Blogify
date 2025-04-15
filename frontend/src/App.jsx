@@ -5,15 +5,19 @@ import Navbar from './components/Navbar';
 import Loader from './components/Loader';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
-import { restoreUser } from './store/userSlice';
+import { logout, restoreUser, setUser } from './store/userSlice';
+import { localStorageConfig } from './config/localStorageConfig';
+import { fetchUserFromToken } from './services/authService';
 
 function App() {
     const { loader } = useSelector((state) => state.loaderStore);
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(restoreUser());
-    }, [dispatch]);
+        if (localStorage.getItem(localStorageConfig.TOKEN)) {
+            dispatch(restoreUser());
+        }
+    }, []);
 
     return (
         <>

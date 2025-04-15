@@ -12,10 +12,8 @@ const userSlice = createSlice({
             localStorage.setItem(localStorageConfig.USER, JSON.stringify(action.payload));
         },
         restoreUser: (state) => {
-            if (localStorage.getItem(localStorageConfig.USER)) {
-                const resUser = JSON.parse(localStorage.getItem(localStorageConfig.USER));
-                state.user = resUser;
-            }
+            const resUser = JSON.parse(localStorage.getItem(localStorageConfig.USER));
+            state.user = resUser;
         },
         logout: (state) => {
             state.user = null;

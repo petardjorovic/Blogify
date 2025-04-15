@@ -3,11 +3,14 @@ const router = express();
 const postController = require('../controllers/postController');
 const commentController = require('../controllers/commentController');
 const likeController = require('../controllers/likeController');
+const tagController = require('../controllers/tagController');
 const authenticationValidation = require('../utils/authenticationValidation');
 
 router.get('/', authenticationValidation.protect, postController.getAllPosts);
 
 router.get('/search', authenticationValidation.protect, postController.getPostsBySearch);
+
+router.get('/tag', authenticationValidation.protect, tagController.getAllTags);
 
 router.get('/:postId', authenticationValidation.protect, postController.getSinglePost);
 
