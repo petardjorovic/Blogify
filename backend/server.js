@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const fileUpload = require('express-fileupload');
+const path = require('path');
 const errorController = require('./controllers/errorController');
 const CustomError = require('./utils/CustomError');
 if (process.env.NODE_ENV !== 'production') {
@@ -19,6 +21,8 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors());
+app.use(fileUpload());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/', require('./routes'));
 

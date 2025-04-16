@@ -21,7 +21,7 @@ function PostByTagPage() {
     useEffect(() => {
         setPosts([]);
         fetchPosts();
-    }, []);
+    }, [tagName]);
 
     return (
         <div className="flex flex-wrap items-center justify-between w-full gap-y-5">

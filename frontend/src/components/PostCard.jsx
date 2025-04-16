@@ -33,7 +33,11 @@ function PostCard({ post, rerenderView }) {
                     {post.user ? post.user.firstName + ' ' + post.user.lastName : 'Unknown'}
                 </Link>
             </div>
-            <img src={post.image} alt="" className="rounded-t-lg h-[45%] object-cover w-full" />
+            <img
+                src={post.image.includes('uploads') ? 'http://localhost:4000/' + post.image : post.image}
+                alt=""
+                className="rounded-t-lg h-[45%] object-cover w-full"
+            />
             <div className="flex flex-col h-[55%] justify-between">
                 <div className="flex flex-col px-[15px] pt-[10px] items-start justify-start h-full">
                     <div className="">

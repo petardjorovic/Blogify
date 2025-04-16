@@ -5,9 +5,13 @@ const PostModel = require('../models/PostModel');
 const joinUserToPost = require('../joins/joinUserToPost');
 const joinCommentsToPost = require('../joins/joinCommentsToPost');
 const joinLikesToPost = require('../joins/joinLikesToPost');
+const path = require('path');
 
 const getAllPosts = asyncErrorHandler(async (req, res, next) => {
     const posts = await PostModel.aggregate([
+        {
+            $sort: { createdAt: -1 },
+        },
         {
             $limit: 9,
         },
@@ -48,6 +52,9 @@ const getPostsByTag = asyncErrorHandler(async (req, res, next) => {
     const { tagName } = req.params;
     const posts = await PostModel.aggregate([
         {
+            $sort: { createdAt: -1 },
+        },
+        {
             $match: { 'tags.name': tagName },
         },
         {
@@ -70,6 +77,9 @@ const getPostsByUser = asyncErrorHandler(async (req, res, next) => {
         return next(new CustomError('Invalid userId format', 400));
     }
     const posts = await PostModel.aggregate([
+        {
+            $sort: { createdAt: -1 },
+        },
         {
             $match: { $expr: { $eq: ['$userId', { $toObjectId: req.params.userId }] } }, // { userId: new mongoose.Types.ObjectId(req.params.userId) }
         },
@@ -119,4 +129,30 @@ const getPostsBySearch = asyncErrorHandler(async (req, res, next) => {
     });
 });
 
-module.exports = { getAllPosts, getPostsByTag, getSinglePost, getPostsByUser, getPostsBySearch };
+const addNewPost = asyncErrorHandler(async (req, res, next) => {
+    const userData = JSON.parse(req.body.data);
+    const newTags = userData.tags.map((tag) => {
+        return { name: tag };
+    });
+    userData.tags = newTags;
+    const image = req.files.image;
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
+    if (!allowedTypes.includes(image.mimetype)) {
+        return next(new CustomError('Invalid image type. Allowed types are: JPG, PNG, WEBP, GIF, SVG.', 400));
+    }
+    if (image.size > 524288) {
+        return next(new CustomError('Image cannot be bigger than 500 KB', 400));
+    }
+    let imageName = image.name.split('.')[0] + new Date().getTime().toString() + '.' + image.name.split('.')[1];
+    let savedImage = await image.mv(path.join(__dirname, '..', 'uploads', 'posts', imageName));
+    const newPost = new PostModel({ ...userData, image: path.join('uploads', 'posts', imageName), userId: req.user._id });
+    const savedPost = await newPost.save();
+    if (!savedPost) return next(new CustomError('An error occurred, please try later', 500));
+
+    res.status(200).json({
+        status: 'success',
+        message: 'You have successufully added new Post',
+    });
+});
+
+module.exports = { getAllPosts, getPostsByTag, getSinglePost, getPostsByUser, getPostsBySearch, addNewPost };

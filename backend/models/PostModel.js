@@ -5,7 +5,7 @@ const tagSchema = new Schema(
     {
         name: {
             type: String,
-            required: true,
+            required: [true, 'Tag name is required'],
         },
     },
     {
@@ -18,12 +18,12 @@ const postSchema = new Schema(
     {
         body: {
             type: String,
-            required: true,
+            required: [true, 'Message for post is required'],
         },
         image: {
             type: String,
             default: null,
-            required: true,
+            required: [true, 'Post Image is required'],
         },
         isPublic: {
             type: Boolean,
@@ -42,7 +42,7 @@ const postSchema = new Schema(
         },
         title: {
             type: String,
-            required: true,
+            required: [true, 'Post title is required'],
         },
         userId: {
             type: Schema.Types.ObjectId,

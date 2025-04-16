@@ -14,8 +14,16 @@ function App() {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        const fetchUser = async () => {
+            const res = await fetchUserFromToken();
+            if (res.status === 'success') {
+                dispatch(setUser(res.user));
+            } else {
+                dispatch(logout());
+            }
+        };
         if (localStorage.getItem(localStorageConfig.TOKEN)) {
-            dispatch(restoreUser());
+            fetchUser();
         }
     }, []);
 

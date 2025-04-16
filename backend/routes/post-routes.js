@@ -18,6 +18,8 @@ router.get('/tag/:tagName', authenticationValidation.protect, postController.get
 
 router.get('/user/:userId', authenticationValidation.protect, postController.getPostsByUser);
 
+router.post('/', authenticationValidation.protect, postController.addNewPost);
+
 router.post('/comment', authenticationValidation.protect, commentController.addComment);
 
 router.post('/like', authenticationValidation.protect, likeController.handlePostLike);

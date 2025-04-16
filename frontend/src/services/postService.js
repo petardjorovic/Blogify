@@ -89,3 +89,21 @@ export const getPostsBySearch = async (data) => {
         };
     }
 };
+
+export const addNewPost = async (data) => {
+    try {
+        const res = await axios.post('/api/post', data);
+        if (res.status === 200 && res.data.status === 'success') {
+            return {
+                status: res.data.status,
+                message: res.data.message,
+            };
+        }
+    } catch (err) {
+        console.error(err, 'err iz servisa add new post');
+        return {
+            status: err.response.data.error.status,
+            message: err.response.data.message,
+        };
+    }
+};
