@@ -17,3 +17,21 @@ export const addComment = async (data) => {
         };
     }
 };
+
+export const deleteComment = async (commentId) => {
+    try {
+        const res = await axios.delete(`/api/post/comment/${commentId}`);
+        if (res.status === 200 && res.data.status === 'success') {
+            return {
+                status: res.data.status,
+                message: res.data.message,
+            };
+        }
+    } catch (err) {
+        console.error(err, 'err iz servisa deleteComment');
+        return {
+            status: err.response.data.error.status,
+            message: err.response.data.message,
+        };
+    }
+};

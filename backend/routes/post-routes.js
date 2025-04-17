@@ -20,8 +20,10 @@ router.get('/user/:userId', authenticationValidation.protect, postController.get
 
 router.post('/', authenticationValidation.protect, postController.addNewPost);
 
+router.post('/like', authenticationValidation.protect, likeController.handlePostLike);
+
 router.post('/comment', authenticationValidation.protect, commentController.addComment);
 
-router.post('/like', authenticationValidation.protect, likeController.handlePostLike);
+router.delete('/comment/:commentId', authenticationValidation.protect, commentController.deleteComment);
 
 module.exports = router;

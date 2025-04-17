@@ -7,6 +7,7 @@ import { routesConfig } from '../config/routesConfig';
 import Comment from '../components/Comment';
 import { useDispatch } from 'react-redux';
 import { showLoader } from '../store/loaderSlice';
+import CommentsList from '../components/CommentsList';
 // import { useQuery } from '@tanstack/react-query';
 
 function SinglePostPage() {
@@ -58,18 +59,12 @@ function SinglePostPage() {
                             </div>
                             <p className="mb-[10px]">{post.body}</p>
                             <Link to={routesConfig.POST_AUTHOR.realPath(post.userId)} className="font-medium text-lg mb-[10px]">
-                                {post.user.firstName + ' ' + post.user.lastName}
+                                {post.user?.firstName + ' ' + post.user?.lastName}
                             </Link>
                             <p className="text-gray-700 mb-[18px]">Published: {formatDate(post.createdAt)}</p>
                             <AddCommentForm postId={post._id} rerenderView={fetchPost} />
                             {/* Comments list */}
-                            <div>
-                                <h3 className="text-2xl font-medium mt-[15px]">Comments:</h3>
-                                {post.comments.length > 0 &&
-                                    post.comments.map((com, index) => {
-                                        return <Comment key={index} comment={com} />;
-                                    })}
-                            </div>
+                            {post.comments.length > 0 && <CommentsList post={post} rerenderView={fetchPost} />}
                         </div>
                         {/* RIGHT */}
                         <div className="w-full md:w-1/2 p-[10px]">
