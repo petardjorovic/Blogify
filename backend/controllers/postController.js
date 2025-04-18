@@ -8,22 +8,32 @@ const joinLikesToPost = require('../joins/joinLikesToPost');
 const path = require('path');
 
 const getAllPosts = asyncErrorHandler(async (req, res, next) => {
+    const matchConditions =
+        req.user.role === 'admin'
+            ? { $match: {} }
+            : {
+                  $match: {
+                      $or: [{ isPublic: true }, { isPublic: false, userId: req.user._id }],
+                  },
+              };
+    const page = parseInt(req.query.page);
+    const limit = parseInt(req.query.limit);
     const posts = await PostModel.aggregate([
-        {
-            $sort: { createdAt: -1 },
-        },
-        {
-            $limit: 9,
-        },
+        matchConditions,
+        { $sort: { createdAt: -1 } },
+        { $skip: (page - 1) * limit },
+        { $limit: limit },
         ...joinUserToPost,
         ...joinLikesToPost,
     ]);
+    const postsCount = await PostModel.countDocuments(matchConditions.$match);
 
     if (!posts) return next(new CustomError('There are no posts', 404));
 
     res.status(200).json({
         status: 'success',
         posts,
+        postsCount,
     });
 });
 

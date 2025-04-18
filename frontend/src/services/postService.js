@@ -1,12 +1,13 @@
 import axios from 'axios';
 
-export const getAllPosts = async () => {
+export const getAllPosts = async (page, limit) => {
     try {
-        const res = await axios.get('/api/post/');
+        const res = await axios.get(`/api/post?page=${page}&limit=${limit}`);
         if (res.status === 200 && res.data.status === 'success') {
             return {
                 status: res.data.status,
                 posts: res.data.posts,
+                postsCount: res.data.postsCount,
             };
         }
     } catch (err) {

@@ -12,6 +12,14 @@
         animation: spin 2s infinite linear;
     }
 
+    .page-number {
+        @apply border border-mainBlue rounded-[5px] w-[35px] h-[35px] text-xl font-semibold;
+    }
+
+    .page-number-active {
+        @apply bg-mainBlue text-white rounded-[5px] w-[35px] h-[35px] text-xl font-semibold;
+    }
+
     @keyframes spin {
         to {
             transform: rotate(1turn);
