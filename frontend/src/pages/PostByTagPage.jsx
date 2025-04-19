@@ -9,6 +9,8 @@ function PostByTagPage() {
     const { tagName } = useParams();
     const [posts, setPosts] = useState([]);
     const dispatch = useDispatch();
+    const [itemsLimit, setItemsLimit] = useState(12);
+    const [currentPage, setCurrentPage] = useState(1);
 
     const fetchPosts = async () => {
         dispatch(showLoader(true));

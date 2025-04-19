@@ -6,21 +6,15 @@ import {
     MdOutlineKeyboardDoubleArrowRight,
 } from 'react-icons/md';
 import { useSearchParams } from 'react-router-dom';
+import { setPageNumber } from '../utils/setPageNumber';
 
-function Pagination({ itemsCount }) {
+function Pagination({ itemsCount, itemsLimit, currentPage, setCurrentPage }) {
     const [searchParams, setSearchParams] = useSearchParams();
-    const [itemsLimit, setItemsLimit] = useState(12);
     const [pagesCount, setPagesCount] = useState(Math.ceil(itemsCount / itemsLimit));
-    const [currentPage, setCurrentPage] = useState(1);
-
-    // useEffect(() => {
-    //     // searchParams.set('page', currentPage);
-    //     // searchParams.set('limit', itemsLimit);
-    //     setSearchParams({ page: currentPage, limit: itemsLimit });
-    // }, []);
 
     useEffect(() => {
         setSearchParams({ page: currentPage, limit: itemsLimit });
+        setPagesCount(Math.ceil(itemsCount / itemsLimit));
     }, [currentPage, itemsLimit]);
 
     const handleNext = () => {
@@ -32,7 +26,7 @@ function Pagination({ itemsCount }) {
     };
 
     return (
-        <div className="flex box items-center justify-center relative">
+        <div className="flex box items-center justify-center">
             <div className="flex items-center">
                 <div className="flex items-center">
                     <button className=" text-4xl" onClick={() => setCurrentPage(1)}>
@@ -43,9 +37,17 @@ function Pagination({ itemsCount }) {
                     </button>
                 </div>
                 <div className="flex items-center gap-[5px]">
-                    <button className="page-number-active">1</button>
-                    <button className="page-number">2</button>
-                    <button className="page-number">3</button>
+                    {setPageNumber(currentPage, pagesCount).map((page, index) => {
+                        return (
+                            <button
+                                className={currentPage === page ? 'page-number-active' : 'page-number'}
+                                key={index}
+                                onClick={() => setCurrentPage(page)}
+                            >
+                                {page}
+                            </button>
+                        );
+                    })}
                 </div>
                 <div className="flex items-center">
                     <button className="text-4xl" onClick={handleNext}>
@@ -55,19 +57,6 @@ function Pagination({ itemsCount }) {
                         <MdOutlineKeyboardDoubleArrowRight />
                     </button>
                 </div>
-            </div>
-            <div className="w-[45px] border border-gray-400 rounded-md overflow-hidden absolute right-[20px] my-auto">
-                <select
-                    name="itemsLimit"
-                    id="itemsLimit"
-                    value={itemsLimit}
-                    onChange={(e) => setItemsLimit(e.target.value)}
-                    className="outline-none w-full"
-                >
-                    <option value={12}>12</option>
-                    <option value={24}>24</option>
-                    <option value={48}>48</option>
-                </select>
             </div>
         </div>
     );

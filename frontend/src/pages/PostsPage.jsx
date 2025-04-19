@@ -23,7 +23,6 @@ function PostsPage() {
         if (res.status === 'success') {
             setPosts(res.posts);
             setPostsCount(res.postsCount);
-            console.log(res.postsCount, 'postsCount');
         }
     };
 
@@ -33,13 +32,7 @@ function PostsPage() {
     return (
         <>
             {posts.length > 0 && (
-                <Pagination
-                    itemsCount={postsCount}
-                    itemsLimit={itemsLimit}
-                    setItemsLimit={setItemsLimit}
-                    currentPage={currentPage}
-                    setCurrentPage={setCurrentPage}
-                />
+                <Pagination itemsCount={postsCount} itemsLimit={itemsLimit} currentPage={currentPage} setCurrentPage={setCurrentPage} />
             )}
             <div className="flex flex-wrap items-center justify-between w-full gap-y-5 my-[15px]">
                 {posts.length > 0 &&
@@ -48,13 +41,7 @@ function PostsPage() {
                     })}
             </div>
             {posts.length > 0 && (
-                <Pagination
-                    itemsCount={postsCount}
-                    itemsLimit={itemsLimit}
-                    setItemsLimit={setItemsLimit}
-                    currentPage={currentPage}
-                    setCurrentPage={setCurrentPage}
-                />
+                <Pagination itemsCount={postsCount} itemsLimit={itemsLimit} currentPage={currentPage} setCurrentPage={setCurrentPage} />
             )}
         </>
     );
