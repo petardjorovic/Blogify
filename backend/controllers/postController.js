@@ -6,6 +6,7 @@ const joinUserToPost = require('../joins/joinUserToPost');
 const joinCommentsToPost = require('../joins/joinCommentsToPost');
 const joinLikesToPost = require('../joins/joinLikesToPost');
 const path = require('path');
+const ObjectId = mongoose.Types.ObjectId;
 
 const getAllPosts = asyncErrorHandler(async (req, res, next) => {
     const matchConditions =
@@ -59,26 +60,39 @@ const getSinglePost = asyncErrorHandler(async (req, res, next) => {
 });
 
 const getPostsByTag = asyncErrorHandler(async (req, res, next) => {
+    const page = parseInt(req.query.page);
+    const limit = parseInt(req.query.limit);
     const { tagName } = req.params;
+    const matchConditions =
+        req.user.role === 'admin'
+            ? { $match: { 'tags.name': tagName } }
+            : {
+                  $match: {
+                      $or: [
+                          { 'tags.name': tagName, isPublic: true },
+                          { 'tags.name': tagName, isPublic: false, userId: req.user._id },
+                      ],
+                  },
+              };
     const posts = await PostModel.aggregate([
+        matchConditions,
         {
             $sort: { createdAt: -1 },
         },
+        { $skip: (page - 1) * limit },
         {
-            $match: { 'tags.name': tagName },
-        },
-        {
-            $limit: 9,
+            $limit: limit,
         },
         ...joinUserToPost,
         ...joinLikesToPost,
     ]);
-
+    const postsCount = await PostModel.countDocuments(matchConditions.$match);
     if (!posts) return next(new CustomError(`There are no posts by tag name ${tagName}`, 404));
 
     res.status(200).json({
         status: 'success',
         posts,
+        postsCount,
     });
 });
 
@@ -86,24 +100,33 @@ const getPostsByUser = asyncErrorHandler(async (req, res, next) => {
     if (!mongoose.Types.ObjectId.isValid(req.params.userId)) {
         return next(new CustomError('Invalid userId format', 400));
     }
+    const page = parseInt(req.query.page);
+    const limit = parseInt(req.query.limit);
+
+    const matchConditions =
+        req.user.role === 'admin' || req.user._id.toString() === req.params.userId
+            ? { $match: { userId: new ObjectId(req.params.userId) } }
+            : { $match: { userId: new ObjectId(req.params.userId), isPublic: true } };
+
     const posts = await PostModel.aggregate([
+        matchConditions,
         {
             $sort: { createdAt: -1 },
         },
+        { $skip: (page - 1) * limit },
         {
-            $match: { $expr: { $eq: ['$userId', { $toObjectId: req.params.userId }] } }, // { userId: new mongoose.Types.ObjectId(req.params.userId) }
-        },
-        {
-            $limit: 9,
+            $limit: limit,
         },
         ...joinUserToPost,
         ...joinLikesToPost,
     ]);
+    const postsCount = await PostModel.countDocuments(matchConditions.$match);
     if (!posts) return next(new CustomError(`There are no posts by user with id ${req.params.userId}`, 404));
 
     res.status(200).json({
         status: 'success',
         posts,
+        postsCount,
     });
 });
 

@@ -48,7 +48,11 @@ function Navbar() {
                                 </li>
                                 <li>
                                     <Link to={routesConfig.DASHBOARD.path}>
-                                        <img src={user.image} alt="avatar" className="w-[45px] h-[45px] rounded-full border object-cover" />
+                                        <img
+                                            src={user.image.includes('uploads') ? `http://localhost:4000/${user.image}` : user.image}
+                                            alt="avatar"
+                                            className="w-[45px] h-[45px] rounded-full border object-cover"
+                                        />
                                     </Link>
                                 </li>
                             </>

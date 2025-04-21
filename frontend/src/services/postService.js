@@ -37,13 +37,15 @@ export const getSinglePost = async (postId) => {
     }
 };
 
-export const getPostsByTag = async (tagName) => {
+export const getPostsByTag = async (tagName, page, limit) => {
     try {
-        const res = await axios.get(`/api/post/tag/${tagName}`);
+        const res = await axios.get(`/api/post/tag/${tagName}?page=${page}&limit=${limit}`);
+
         if (res.status === 200 && res.data.status === 'success') {
             return {
                 status: res.data.status,
                 posts: res.data.posts,
+                postsCount: res.data.postsCount,
             };
         }
     } catch (err) {
@@ -55,13 +57,14 @@ export const getPostsByTag = async (tagName) => {
     }
 };
 
-export const getPostsByUser = async (userId) => {
+export const getPostsByUser = async (userId, page, limit) => {
     try {
-        const res = await axios.get(`/api/post/user/${userId}`);
+        const res = await axios.get(`/api/post/user/${userId}?page=${page}&limit=${limit}`);
         if (res.status === 200 && res.data.status === 'success') {
             return {
                 status: res.data.status,
                 posts: res.data.posts,
+                postsCount: res.data.postsCount,
             };
         }
     } catch (err) {

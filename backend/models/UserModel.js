@@ -54,7 +54,7 @@ const userSchema = new Schema(
         },
         image: {
             type: String,
-            default: 'avatar.png',
+            default: 'uploads/users/avatar.png',
         },
         birthDate: {
             type: Date,
