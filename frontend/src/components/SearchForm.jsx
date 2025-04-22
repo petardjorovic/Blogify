@@ -32,10 +32,14 @@ function SearchPost() {
             setClose(false);
             setSearchTerm('');
             searchParams.delete('keyword');
+            searchParams.delete('page');
+            searchParams.delete('limit');
             setSearchParams(searchParams);
             return;
         }
         searchParams.delete('keyword');
+        searchParams.delete('page');
+        searchParams.delete('limit');
         searchTerm.split(';').forEach((term) => {
             searchParams.append('keyword', term.trim());
         });

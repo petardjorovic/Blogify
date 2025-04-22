@@ -10,6 +10,8 @@ import PostByTagPage from '../pages/PostByTagPage';
 import PostByUserPage from '../pages/PostByUserPage';
 import SinglePostPage from '../pages/SinglePostPage';
 import PostBySearchPage from '../pages/PostBySearchPage';
+import MemberLayout from '../pages/MemberLayout';
+import MembersPage from '../pages/MembersPage';
 
 const router = createBrowserRouter([
     {
@@ -47,6 +49,16 @@ const router = createBrowserRouter([
                     {
                         path: routesConfig.SEARCH_POST.path,
                         element: <PostBySearchPage />,
+                    },
+                ],
+            },
+            {
+                path: routesConfig.MEMBER.path,
+                element: <MemberLayout />,
+                children: [
+                    {
+                        path: routesConfig.MEMBER.path,
+                        element: <MembersPage />,
                     },
                 ],
             },

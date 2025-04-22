@@ -23,6 +23,9 @@ export const routesConfig = {
     SEARCH_POST: {
         path: '/post/search',
     },
+    MEMBER: {
+        path: '/member',
+    },
     DASHBOARD: {
         path: '/dashboard',
     },

@@ -131,6 +131,7 @@ const getPostsByUser = asyncErrorHandler(async (req, res, next) => {
 });
 
 const getPostsBySearch = asyncErrorHandler(async (req, res, next) => {
+    console.log(req.query);
     let searchTerm = [];
     if (typeof req.query.keyword === 'string') {
         searchTerm.push({ title: { $regex: req.query.keyword, $options: 'i' } }, { body: { $regex: req.query.keyword, $options: 'i' } });
