@@ -78,11 +78,12 @@ export const getPostsByUser = async (userId, page, limit) => {
 
 export const getPostsBySearch = async (data, page, limit) => {
     try {
-        const res = await axios.get(`/api/post/search?${data}`);
+        const res = await axios.get(`/api/post/search/${page}/${limit}?${data}`);
         if (res.status === 200 && res.data.status === 'success') {
             return {
                 status: res.data.status,
                 posts: res.data.posts,
+                postsCount: res.data.postsCount,
             };
         }
     } catch (err) {

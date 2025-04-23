@@ -131,16 +131,45 @@ const getPostsByUser = asyncErrorHandler(async (req, res, next) => {
 });
 
 const getPostsBySearch = asyncErrorHandler(async (req, res, next) => {
-    console.log(req.query);
+    const page = parseInt(req.params.page);
+    const limit = parseInt(req.params.limit);
     let searchTerm = [];
-    if (typeof req.query.keyword === 'string') {
-        searchTerm.push({ title: { $regex: req.query.keyword, $options: 'i' } }, { body: { $regex: req.query.keyword, $options: 'i' } });
-    } else {
-        for (let i = 0; i < req.query.keyword.length; i++) {
+    if (req.user.role === 'admin') {
+        if (typeof req.query.keyword === 'string') {
             searchTerm.push(
-                { title: { $regex: req.query.keyword[i], $options: 'i' } },
-                { body: { $regex: req.query.keyword[i], $options: 'i' } }
+                { title: { $regex: req.query.keyword, $options: 'i' } },
+                { body: { $regex: req.query.keyword, $options: 'i' } }
             );
+        } else {
+            for (let i = 0; i < req.query.keyword.length; i++) {
+                searchTerm.push(
+                    { title: { $regex: req.query.keyword[i], $options: 'i' } },
+                    { body: { $regex: req.query.keyword[i], $options: 'i' } }
+                );
+            }
+        }
+    } else {
+        if (typeof req.query.keyword === 'string') {
+            searchTerm.push(
+                {
+                    title: { $regex: req.query.keyword, $options: 'i' },
+                    $or: [{ isPublic: true }, { isPublic: false, userId: req.user._id }],
+                },
+                { body: { $regex: req.query.keyword, $options: 'i' }, $or: [{ isPublic: true }, { isPublic: false, userId: req.user._id }] }
+            );
+        } else {
+            for (let i = 0; i < req.query.keyword.length; i++) {
+                searchTerm.push(
+                    {
+                        title: { $regex: req.query.keyword[i], $options: 'i' },
+                        $or: [{ isPublic: true }, { isPublic: false, userId: req.user._id }],
+                    },
+                    {
+                        body: { $regex: req.query.keyword[i], $options: 'i' },
+                        $or: [{ isPublic: true }, { isPublic: false, userId: req.user._id }],
+                    }
+                );
+            }
         }
     }
 
@@ -150,16 +179,21 @@ const getPostsBySearch = asyncErrorHandler(async (req, res, next) => {
                 $or: searchTerm,
             },
         },
+        { $skip: (page - 1) * limit },
         {
-            $limit: 9,
+            $limit: limit,
         },
         ...joinUserToPost,
         ...joinLikesToPost,
     ]);
+    const postsCount = await PostModel.countDocuments({
+        $or: searchTerm,
+    });
 
     res.status(200).json({
         status: 'success',
         posts,
+        postsCount,
     });
 });
 

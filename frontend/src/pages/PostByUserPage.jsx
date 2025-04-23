@@ -34,7 +34,7 @@ function PostByUserPage() {
             {posts.length > 0 && (
                 <Pagination itemsCount={postsCount} itemsLimit={itemsLimit} currentPage={currentPage} setCurrentPage={setCurrentPage} />
             )}
-            <div className="flex flex-wrap items-center justify-between w-full gap-y-5 my-[15px]">
+            <div className="flex flex-wrap items-center gap-[34px] w-full gap-y-5 my-[15px]">
                 {posts.length > 0 ? (
                     posts.map((post) => {
                         return <PostCard key={post._id} post={post} rerenderView={fetchPosts} />;

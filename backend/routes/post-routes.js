@@ -8,9 +8,9 @@ const authenticationValidation = require('../utils/authenticationValidation');
 
 router.get('/', authenticationValidation.protect, postController.getAllPosts);
 
-router.get('/search', authenticationValidation.protect, postController.getPostsBySearch);
-
 router.get('/tag', authenticationValidation.protect, tagController.getAllTags);
+
+router.get('/search/:page/:limit', authenticationValidation.protect, postController.getPostsBySearch);
 
 router.get('/:postId', authenticationValidation.protect, postController.getSinglePost);
 

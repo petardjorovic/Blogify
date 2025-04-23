@@ -16,15 +16,15 @@ function MemberCard({ member, setMemberInfo }) {
         if (res.status === 'success') setMemberInfo(res.member);
     };
     return (
-        <div className="box flex items-center justify-between">
-            <div className="flex items-center gap-[20px]">
+        <div className="box flex flex-col md:flex-row items-center justify-between">
+            <div className="flex flex-col md:flex-row items-center gap-[20px]">
                 <img
                     src={member.image.includes('uploads') ? `http://localhost:4000/${member.image}` : member.image}
                     alt="avatar"
                     className="w-[70px] h-[70px] object-cover rounded-full border"
                 />
                 <div>
-                    <h5 className="text-lg font-semibold">{member.firstName + ' ' + member.lastName}</h5>
+                    <h5 className="text-lg font-semibold text-center md:text-start">{member.firstName + ' ' + member.lastName}</h5>
                     <p>
                         <span className="font-semibold">Gender:</span> {member.gender}
                     </p>
@@ -33,8 +33,8 @@ function MemberCard({ member, setMemberInfo }) {
                     </p>
                 </div>
             </div>
-            <div>
-                <p>
+            <div className="">
+                <p className="">
                     <span className="font-semibold">Role:</span> {member.role}
                 </p>
             </div>
@@ -46,7 +46,7 @@ function MemberCard({ member, setMemberInfo }) {
                     <span className="font-semibold">Member from:</span> {formatDate(member.createdAt)}
                 </p>
             </div>
-            <div className="flex flex-col gap-[10px]">
+            <div className="flex md:flex-col gap-[10px]">
                 <Link
                     to={routesConfig.POST_AUTHOR.realPath(member._id)}
                     className="w-[30px] h-[30px] bg-teal-500 rounded-md flex items-center justify-center"

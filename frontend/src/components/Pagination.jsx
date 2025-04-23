@@ -13,23 +13,58 @@ function Pagination({ itemsCount, itemsLimit, currentPage, setCurrentPage }) {
     const [pagesCount, setPagesCount] = useState(Math.ceil(itemsCount / itemsLimit));
 
     useEffect(() => {
-        setSearchParams({ page: currentPage, limit: itemsLimit });
+        // setSearchParams({ page: currentPage, limit: itemsLimit });
+
         setPagesCount(Math.ceil(itemsCount / itemsLimit));
-    }, [currentPage, itemsLimit]);
+        // searchParams.set('limit', itemsLimit);
+        // searchParams.set('page', 1);
+        // setSearchParams(searchParams);
+    }, [itemsLimit]);
 
     const handleNext = () => {
-        if (currentPage < pagesCount) setCurrentPage(currentPage + 1);
+        if (currentPage < pagesCount) {
+            searchParams.set('page', currentPage + 1);
+            searchParams.set('limit', itemsLimit);
+            setSearchParams(searchParams);
+            setCurrentPage(currentPage + 1);
+        }
     };
 
     const handlePrevious = () => {
-        if (currentPage > 1) setCurrentPage(currentPage - 1);
+        if (currentPage > 1) {
+            searchParams.set('page', currentPage - 1);
+            searchParams.set('limit', itemsLimit);
+            setSearchParams(searchParams);
+            setCurrentPage(currentPage - 1);
+        }
+    };
+
+    const backToStart = () => {
+        searchParams.set('page', 1);
+        searchParams.set('limit', itemsLimit);
+        setSearchParams(searchParams);
+        setCurrentPage(1);
+    };
+
+    const handleCurrentPage = (page) => {
+        searchParams.set('page', page);
+        searchParams.set('limit', itemsLimit);
+        setSearchParams(searchParams);
+        setCurrentPage(page);
+    };
+
+    const goToEnd = () => {
+        searchParams.set('page', pagesCount);
+        searchParams.set('limit', itemsLimit);
+        setSearchParams(searchParams);
+        setCurrentPage(pagesCount);
     };
 
     return (
         <div className="flex box items-center justify-center">
             <div className="flex items-center">
                 <div className="flex items-center">
-                    <button className=" text-4xl" onClick={() => setCurrentPage(1)}>
+                    <button className=" text-4xl" onClick={backToStart}>
                         <MdOutlineKeyboardDoubleArrowLeft />
                     </button>
                     <button className="text-4xl" onClick={handlePrevious}>
@@ -42,7 +77,7 @@ function Pagination({ itemsCount, itemsLimit, currentPage, setCurrentPage }) {
                             <button
                                 className={currentPage === page ? 'page-number-active' : 'page-number'}
                                 key={index}
-                                onClick={() => setCurrentPage(page)}
+                                onClick={() => handleCurrentPage(page)}
                             >
                                 {page}
                             </button>
@@ -53,7 +88,7 @@ function Pagination({ itemsCount, itemsLimit, currentPage, setCurrentPage }) {
                     <button className="text-4xl" onClick={handleNext}>
                         <MdOutlineKeyboardArrowRight />
                     </button>
-                    <button className="text-4xl" onClick={() => setCurrentPage(pagesCount)}>
+                    <button className="text-4xl" onClick={goToEnd}>
                         <MdOutlineKeyboardDoubleArrowRight />
                     </button>
                 </div>
