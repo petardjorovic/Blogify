@@ -6,15 +6,18 @@ import { routesConfig } from '../config/routesConfig';
 import { useDispatch } from 'react-redux';
 import { getMemberInfo } from '../services/memberService';
 import { showLoader } from '../store/loaderSlice';
+import { setMemberInfo } from '../store/memberSlice';
 
-function MemberCard({ member, setMemberInfo }) {
+function MemberCard({ member }) {
     const dispatch = useDispatch();
+
     const handleMemberInfo = async () => {
         dispatch(showLoader(true));
         const res = await getMemberInfo(member._id);
         dispatch(showLoader(false));
-        if (res.status === 'success') setMemberInfo(res.member);
+        if (res.status === 'success') dispatch(setMemberInfo(res.member));
     };
+
     return (
         <div className="box flex flex-col md:flex-row items-center justify-between">
             <div className="flex flex-col md:flex-row items-center gap-[20px]">

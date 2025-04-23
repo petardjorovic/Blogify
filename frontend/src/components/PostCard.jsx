@@ -13,9 +13,9 @@ function PostCard({ post, rerenderView }) {
     const { user } = useSelector((state) => state.userStore);
     const dispatch = useDispatch();
 
-    const handleLike = async () => {
+    const handleLike = async (userLike) => {
         dispatch(showLoader(true));
-        const res = await handlePostLike(post._id);
+        const res = await handlePostLike(post._id, userLike);
         dispatch(showLoader(false));
         if (res.status === 'success') {
             rerenderView();
@@ -26,6 +26,7 @@ function PostCard({ post, rerenderView }) {
             });
         }
     };
+
     return (
         <div className="w-full md:w-[220px] lg:w-[31%] h-[400px] rounded-lg relative shadow-custom overflow-hidden">
             <div className="bg-black bg-opacity-70 w-full absolute top-0 left-0 rounded-t-lg text-white py-[3px] px-[5px]">
@@ -63,9 +64,9 @@ function PostCard({ post, rerenderView }) {
                 <div className="w-full bg-gray-100 px-[15px] h-[35px] rounded-b-lg border-t flex items-center justify-between mt-[12px]">
                     <span className="flex items-center gap-[6px] flex-row text-sm">
                         {post.likes.map((el) => el.userId).includes(user?._id) ? (
-                            <BiSolidLike size={18} className="cursor-pointer" onClick={handleLike} />
+                            <BiSolidLike size={18} className="cursor-pointer" onClick={() => handleLike('dislike')} />
                         ) : (
-                            <BiLike size={18} className="cursor-pointer" onClick={handleLike} />
+                            <BiLike size={18} className="cursor-pointer" onClick={() => handleLike('like')} />
                         )}{' '}
                         {post.likes.length} LIKE
                     </span>

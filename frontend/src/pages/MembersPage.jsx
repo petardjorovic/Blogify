@@ -3,11 +3,10 @@ import { useDispatch } from 'react-redux';
 import Pagination from '../components/Pagination';
 import MemberCard from '../components/MemberCard';
 import { showLoader } from '../store/loaderSlice';
-import { useOutletContext, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { getAllUsers } from '../services/memberService';
 
 function MambersPage() {
-    const { setMemberInfo } = useOutletContext();
     const [searchParams, setSearchParams] = useSearchParams();
     const [members, setMembers] = useState([]);
     const dispatch = useDispatch();
@@ -39,7 +38,7 @@ function MambersPage() {
             <div className="my-[15px] flex flex-col gap-[10px]">
                 {members.length > 0 &&
                     members.map((member) => {
-                        return <MemberCard member={member} key={member._id} setMemberInfo={setMemberInfo} />;
+                        return <MemberCard member={member} key={member._id} />;
                     })}
             </div>
             {members.length > 0 && (

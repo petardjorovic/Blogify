@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-export const handlePostLike = async (postId) => {
+export const handlePostLike = async (postId, userLike) => {
     try {
-        const res = await axios.post('/api/post/like', { postId });
+        const res = await axios.put(`/api/post/like/${postId}/${userLike}`);
         if (res.status === 200 && res.data.status === 'success') {
             return {
                 status: res.data.status,
