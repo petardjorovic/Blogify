@@ -5,6 +5,8 @@ import MemberCard from '../components/MemberCard';
 import { showLoader } from '../store/loaderSlice';
 import { useSearchParams } from 'react-router-dom';
 import { getAllUsers } from '../services/memberService';
+import { fadeInDown } from '../utils/animations';
+import { motion } from 'framer-motion';
 
 function MambersPage() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -37,8 +39,22 @@ function MambersPage() {
             )}
             <div className="my-[15px] flex flex-col gap-[10px]">
                 {members.length > 0 &&
-                    members.map((member) => {
-                        return <MemberCard member={member} key={member._id} />;
+                    members.map((member, index) => {
+                        return (
+                            <motion.div
+                                key={member._id}
+                                /* jednostavna varijanta, koja radi isto 
+                                 initial={{ opacity: 0, y: 100 }}
+                                 animate={{ opacity: 1, y: 0 }}
+                                 transition={{ delay: index * 0.1, duration: 0.6 }} */
+                                custom={index}
+                                variants={fadeInDown}
+                                initial="hidden"
+                                animate="visible"
+                            >
+                                <MemberCard member={member} key={member._id} />
+                            </motion.div>
+                        );
                     })}
             </div>
             {members.length > 0 && (

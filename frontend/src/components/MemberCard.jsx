@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import { getMemberInfo } from '../services/memberService';
 import { showLoader } from '../store/loaderSlice';
 import { setMemberInfo } from '../store/memberSlice';
+import { motion } from 'framer-motion';
 
 function MemberCard({ member }) {
     const dispatch = useDispatch();
