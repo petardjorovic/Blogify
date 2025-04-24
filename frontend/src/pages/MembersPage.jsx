@@ -37,16 +37,16 @@ function MambersPage() {
             {members.length > 0 && (
                 <Pagination itemsCount={membersCount} currentPage={currentPage} setCurrentPage={setCurrentPage} itemsLimit={itemsLimit} />
             )}
-            <div className="my-[15px] flex flex-col gap-[10px]">
+            <div className="my-[15px] flex flex-col gap-[10px] overflow-y-hidden">
                 {members.length > 0 &&
                     members.map((member, index) => {
                         return (
                             <motion.div
                                 key={member._id}
-                                /* jednostavna varijanta, koja radi isto 
-                                 initial={{ opacity: 0, y: 100 }}
-                                 animate={{ opacity: 1, y: 0 }}
-                                 transition={{ delay: index * 0.1, duration: 0.6 }} */
+                                //  jednostavna varijanta, koja radi isto
+                                // initial={index % 2 === 0 ? { opacity: 0, x: 100 }:{ opacity: 0, x: 100 }}
+                                // animate={{ opacity: 1, x: 0 }}
+                                // transition={{ delay: index * 0.1, duration: 0.6 }}
                                 custom={index}
                                 variants={fadeInDown}
                                 initial="hidden"

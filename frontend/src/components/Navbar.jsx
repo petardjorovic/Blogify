@@ -5,11 +5,15 @@ import { routesConfig } from '../config/routesConfig';
 import Button from '../components/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../store/userSlice';
+import useWindowScroll from '../utils/useWindowScroll';
+import useIsSmallScreen from '../utils/useIsSmallScreen';
 
 function Navbar() {
     const { user } = useSelector((state) => state.userStore);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [x, y] = useWindowScroll();
+    const isSmallScreen = useIsSmallScreen();
 
     const logoutUser = () => {
         navigate(routesConfig.LOGIN.path, { replace: true });
@@ -17,7 +21,7 @@ function Navbar() {
     };
     return (
         <header className="container mx-auto px-[16px]">
-            <div className="box flex items-center justify-between mt-[15px] mb-[40px]">
+            <div className={`box flex items-center justify-between mt-[15px] mb-[40px]`}>
                 <div className="flex items-center gap-[5px]">
                     <Link to={routesConfig.POST.path}>
                         <img src={logo} alt="logo" className="w-[50px]" />

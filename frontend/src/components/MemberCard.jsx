@@ -20,7 +20,7 @@ function MemberCard({ member }) {
     };
 
     return (
-        <div className="box flex flex-col md:flex-row items-center justify-between">
+        <div className="box flex flex-col md:flex-row items-center justify-between overflow-y-hidden">
             <div className="flex flex-col md:flex-row items-center gap-[20px]">
                 <img
                     src={member.image.includes('uploads') ? `http://localhost:4000/${member.image}` : member.image}
