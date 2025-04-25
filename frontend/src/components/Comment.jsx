@@ -4,10 +4,15 @@ import { formatDatetime } from '../utils/formatDatetime';
 import { FaRegTrashCan } from 'react-icons/fa6';
 import { useDispatch } from 'react-redux';
 import { showLoader } from '../store/loaderSlice';
+import { useState } from 'react';
+import DeleteCommentModal from '../components/DeleteCommentModal';
 
 function Comment({ comment, rerenderView, postAuthorId, user }) {
     const dispatch = useDispatch();
+    const [isDeleteCommentModal, setIsDeleteCommentModal] = useState(false);
+
     const handleDelete = async () => {
+        setIsDeleteCommentModal(false);
         dispatch(showLoader(true));
         const res = await deleteComment(comment._id);
         dispatch(showLoader(false));
@@ -34,11 +39,14 @@ function Comment({ comment, rerenderView, postAuthorId, user }) {
             {user.role === 'admin' || user._id === comment.user.id || user._id === postAuthorId ? (
                 <div
                     className="absolute top-[10px] right-[10px] bg-red-600 p-[4px] text-sm rounded-full text-white flex items-center justify-center cursor-pointer"
-                    onClick={handleDelete}
+                    onClick={() => setIsDeleteCommentModal(true)}
                 >
                     <FaRegTrashCan />
                 </div>
             ) : null}
+            {isDeleteCommentModal && (
+                <DeleteCommentModal setIsDeleteCommentModal={setIsDeleteCommentModal} handleDelete={handleDelete} comment={comment} />
+            )}
         </div>
     );
 }

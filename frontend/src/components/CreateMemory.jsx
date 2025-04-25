@@ -58,7 +58,9 @@ function CreateMemory({ onPostCreated }) {
         let { image, ...userData } = data;
         formInputs.append('image', image);
         formInputs.append('data', JSON.stringify(userData));
+        dispatch(showLoader(true));
         const res = await addNewPost(formInputs);
+        dispatch(showLoader(false));
         if (res.status === 'success') {
             onPostCreated?.();
             setData({

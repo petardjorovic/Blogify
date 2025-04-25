@@ -21,7 +21,7 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors());
-app.use(fileUpload());
+// app.use(fileUpload());  // posto koristis multer ovo mora da se zakomentarise
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/', require('./routes'));

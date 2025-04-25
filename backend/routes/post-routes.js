@@ -5,6 +5,7 @@ const commentController = require('../controllers/commentController');
 const likeController = require('../controllers/likeController');
 const tagController = require('../controllers/tagController');
 const authenticationValidation = require('../utils/authenticationValidation');
+const parser = require('../middleware/uploadPostImage');
 
 router.get('/', authenticationValidation.protect, postController.getAllPosts);
 
@@ -18,11 +19,13 @@ router.get('/tag/:tagName', authenticationValidation.protect, postController.get
 
 router.get('/user/:userId', authenticationValidation.protect, postController.getPostsByUser);
 
-router.post('/', authenticationValidation.protect, postController.addNewPost);
+router.post('/', authenticationValidation.protect, parser.single('image'), postController.addNewPost);
 
 router.put('/like/:postId/:userLike', authenticationValidation.protect, likeController.handlePostLike);
 
 router.post('/comment', authenticationValidation.protect, commentController.addComment);
+
+router.delete('/:postId', authenticationValidation.protect, postController.deleteSinglePost);
 
 router.delete('/comment/:commentId', authenticationValidation.protect, commentController.deleteComment);
 

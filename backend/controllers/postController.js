@@ -7,6 +7,9 @@ const joinCommentsToPost = require('../joins/joinCommentsToPost');
 const joinLikesToPost = require('../joins/joinLikesToPost');
 const path = require('path');
 const ObjectId = mongoose.Types.ObjectId;
+const cloudinary = require('cloudinary').v2;
+const CommentModel = require('../models/CommentModel');
+const LikeModel = require('../models/LikeModel');
 
 const getAllPosts = asyncErrorHandler(async (req, res, next) => {
     const matchConditions =
@@ -203,17 +206,21 @@ const addNewPost = asyncErrorHandler(async (req, res, next) => {
         return { name: tag };
     });
     userData.tags = newTags;
-    const image = req.files.image;
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
-    if (!allowedTypes.includes(image.mimetype)) {
-        return next(new CustomError('Invalid image type. Allowed types are: JPG, PNG, WEBP, GIF, SVG.', 400));
-    }
-    if (image.size > 524288) {
-        return next(new CustomError('Image cannot be bigger than 500 KB', 400));
-    }
-    let imageName = image.name.split('.')[0] + new Date().getTime().toString() + '.' + image.name.split('.')[1];
-    let savedImage = await image.mv(path.join(__dirname, '..', 'uploads', 'posts', imageName));
-    const newPost = new PostModel({ ...userData, image: path.join('uploads', 'posts', imageName), userId: req.user._id });
+
+    //* OVO SAM KORISTIO KAD SAM POMOCU FILEUPLOAD CUVAO SLIKU NA SERVERU
+    // const image = req.files.image;
+    // const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/bmp', 'image/tiff', 'image/svg+xml'];
+    // if (!allowedTypes.includes(image.mimetype)) {
+    //     return next(new CustomError('Invalid image type. Allowed types are: JPG, PNG, WEBP, GIF, SVG.', 400));
+    // }
+    // if (image.size > 524288) {
+    //     return next(new CustomError('Image cannot be bigger than 500 KB', 400));
+    // }
+    // let imageName = image.name.split('.')[0] + new Date().getTime().toString() + '.' + image.name.split('.')[1];
+    // let savedImage = await image.mv(path.join(__dirname, '..', 'uploads', 'posts', imageName));
+    // const newPost = new PostModel({ ...userData, image: path.join('uploads', 'posts', imageName), userId: req.user._id });
+
+    const newPost = new PostModel({ ...userData, image: req.file.path, userId: req.user._id }); //* ovo je jedina izmena
     const savedPost = await newPost.save();
     if (!savedPost) return next(new CustomError('An error occurred, please try later', 500));
 
@@ -223,4 +230,26 @@ const addNewPost = asyncErrorHandler(async (req, res, next) => {
     });
 });
 
-module.exports = { getAllPosts, getPostsByTag, getSinglePost, getPostsByUser, getPostsBySearch, addNewPost };
+const deleteSinglePost = asyncErrorHandler(async (req, res, next) => {
+    const { postId } = req.params;
+    const deletedPost = await PostModel.findByIdAndDelete(postId);
+    if (!deletedPost) return next(new CustomError('An error occurred, post has not been deleted. Please try later.', 500));
+    const deletedComments = await CommentModel.deleteMany({ postId });
+    if (!deletedComments.acknowledged)
+        return next(new CustomError('An error occurred, post comments have not been deleted. Please try later.', 500));
+    const deletedLikes = await LikeModel.deleteMany({ postId });
+    if (!deletedLikes.acknowledged)
+        return next(new CustomError('An error occurred, post likes have not been deleted. Please try later.', 500));
+    const parts = deletedPost.image.split('/');
+    const imageName = parts.pop().split('.')[0];
+    const folderName = parts[parts.length - 1];
+    const deletedImage = await cloudinary.uploader.destroy(`${folderName}/${imageName}`);
+    if (deletedImage.result !== 'ok') return next(new CustomError('An error occurred, image has not been deleted.', 500));
+
+    res.status(200).json({
+        status: 'success',
+        message: 'Post has been deleted successufully',
+    });
+});
+
+module.exports = { getAllPosts, getPostsByTag, getSinglePost, getPostsByUser, getPostsBySearch, addNewPost, deleteSinglePost };

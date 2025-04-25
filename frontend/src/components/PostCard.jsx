@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import Button from './Button';
 import { BiLike, BiSolidLike } from 'react-icons/bi';
 import { formatDate } from '../utils/formatDate';
 import { routesConfig } from '../config/routesConfig';
@@ -8,10 +7,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { handlePostLike } from '../services/likeService';
 import { toast } from 'react-toastify';
 import { showLoader } from '../store/loaderSlice';
+import { FaRegTrashCan } from 'react-icons/fa6';
+import DeletePostModal from '../components/DeletePostModal';
 
 function PostCard({ post, rerenderView }) {
     const { user } = useSelector((state) => state.userStore);
     const dispatch = useDispatch();
+    const [isDeletePostModal, setIsDeletePostModal] = useState(false);
 
     const handleLike = async (userLike) => {
         dispatch(showLoader(true));
@@ -28,7 +30,7 @@ function PostCard({ post, rerenderView }) {
     };
 
     return (
-        <div className="w-full md:w-[220px] lg:w-[31%] h-[400px] rounded-lg relative shadow-custom overflow-hidden">
+        <div className="w-full md:w-[220px] lg:w-[31%] h-[400px] rounded-lg relative shadow-custom">
             <div className="bg-black bg-opacity-70 w-full absolute top-0 left-0 rounded-t-lg text-white py-[3px] px-[5px]">
                 <Link to={routesConfig.POST_AUTHOR.realPath(post.userId)}>
                     {post.user ? post.user.firstName + ' ' + post.user.lastName : 'Unknown'}
@@ -73,6 +75,15 @@ function PostCard({ post, rerenderView }) {
                     <span className="text-sm">{formatDate(post.createdAt)}</span>
                 </div>
             </div>
+            {(user.role === 'admin' || user._id === post.userId) && (
+                <button
+                    onClick={() => setIsDeletePostModal(true)}
+                    className="absolute top-[-7px] right-[-7px] rounded-md text-sm p-[4px] bg-red-600 text-white outline-none"
+                >
+                    <FaRegTrashCan />
+                </button>
+            )}
+            {isDeletePostModal && <DeletePostModal setIsDeletePostModal={setIsDeletePostModal} post={post} rerenderView={rerenderView} />}
         </div>
     );
 }

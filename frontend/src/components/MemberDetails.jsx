@@ -2,12 +2,19 @@ import { BsEye } from 'react-icons/bs';
 import { formatDate } from '../utils/formatDate';
 import { Link } from 'react-router-dom';
 import { routesConfig } from '../config/routesConfig';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { AnimatePresence, motion } from 'framer-motion';
 import { scaleIn } from '../utils/animations';
+import { useEffect } from 'react';
+import { setMemberInfo } from '../store/memberSlice';
 
 function MemberDetails() {
     const { memberInfo } = useSelector((state) => state.memberStore);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(setMemberInfo({}));
+    }, [dispatch]);
 
     return (
         <motion.div
@@ -15,7 +22,7 @@ function MemberDetails() {
             initial="hidden"
             animate="visible"
             key={memberInfo._id}
-            className="box mt-[10px] text-center sticky top-[10px]"
+            className="box text-center sticky top-[10px]"
         >
             {Object.hasOwn(memberInfo, '_id') ? (
                 <div>
