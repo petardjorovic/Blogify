@@ -3,6 +3,7 @@ const CommentModel = require('../models/CommentModel');
 const CustomError = require('../utils/CustomError');
 const PostModel = require('../models/PostModel');
 const joinPostToComment = require('../joins/joinPostToComment');
+const mongoose = require('mongoose');
 
 const addComment = asyncErrorHandler(async (req, res, next) => {
     const user = {
@@ -21,12 +22,16 @@ const addComment = asyncErrorHandler(async (req, res, next) => {
 });
 
 const deleteComment = asyncErrorHandler(async (req, res, next) => {
+    if (!mongoose.Types.ObjectId.isValid(req.params.commentId)) {
+        return next(new CustomError('Invalid commentId format', 400));
+    }
     const [comment] = await CommentModel.aggregate([
         {
             $match: { $expr: { $eq: ['$_id', { $toObjectId: req.params.commentId }] } },
         },
         ...joinPostToComment,
     ]);
+    if (!comment) return next(new CustomError('There is not comment with this id.', 404));
     const isAdmin = req.user.role === 'admin';
     const isCommentAuthor = req.user._id.toString() === comment.user.id.toString();
     const isPostAuthor = req.user._id.toString() === comment.post.userId.toString();

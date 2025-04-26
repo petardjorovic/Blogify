@@ -54,7 +54,7 @@ const userSchema = new Schema(
         },
         image: {
             type: String,
-            default: 'uploads/users/avatar.png',
+            default: 'https://res.cloudinary.com/dhfzyyycz/image/upload/v1745679699/avatar_cychqb.png',
         },
         birthDate: {
             type: Date,

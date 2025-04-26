@@ -6,11 +6,12 @@ import { toast } from 'react-toastify';
 
 function DeletePostModal({ setIsDeletePostModal, post, rerenderView }) {
     const dispatch = useDispatch();
+    console.log(post);
 
     const handleDeletePost = async () => {
         setIsDeletePostModal(false);
         dispatch(showLoader(true));
-        const res = await deleteSinglePost(post._id);
+        const res = await deleteSinglePost(post._id, post.userId);
         dispatch(showLoader(false));
         if (res.status === 'success') {
             rerenderView();

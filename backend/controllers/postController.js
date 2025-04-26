@@ -10,6 +10,7 @@ const ObjectId = mongoose.Types.ObjectId;
 const cloudinary = require('cloudinary').v2;
 const CommentModel = require('../models/CommentModel');
 const LikeModel = require('../models/LikeModel');
+const fs = require('fs');
 
 const getAllPosts = asyncErrorHandler(async (req, res, next) => {
     const matchConditions =
@@ -231,20 +232,27 @@ const addNewPost = asyncErrorHandler(async (req, res, next) => {
 });
 
 const deleteSinglePost = asyncErrorHandler(async (req, res, next) => {
-    const { postId } = req.params;
+    const user = req.user;
+    const { postId, userId } = req.params;
+    if (user.role !== 'admin' && user._id.toString() !== userId) {
+        return next(new CustomError('You do not have permission to delete this post.', 403));
+    }
     const deletedPost = await PostModel.findByIdAndDelete(postId);
     if (!deletedPost) return next(new CustomError('An error occurred, post has not been deleted. Please try later.', 500));
     const deletedComments = await CommentModel.deleteMany({ postId });
+    const deletedLikes = await LikeModel.deleteMany({ postId });
+    // const parts = deletedPost.image.split('/');
+    // const imageName = parts.pop().split('.')[0];
+    // const folderName = parts[parts.length - 1];
+    // const deletedImage = await cloudinary.uploader.destroy(`${folderName}/${imageName}`);
+    fs.unlink(deletedPost.image, (err) => {
+        if (err) return next(new CustomError('Image og post has not been deleted.', 500));
+    });
     if (!deletedComments.acknowledged)
         return next(new CustomError('An error occurred, post comments have not been deleted. Please try later.', 500));
-    const deletedLikes = await LikeModel.deleteMany({ postId });
     if (!deletedLikes.acknowledged)
         return next(new CustomError('An error occurred, post likes have not been deleted. Please try later.', 500));
-    const parts = deletedPost.image.split('/');
-    const imageName = parts.pop().split('.')[0];
-    const folderName = parts[parts.length - 1];
-    const deletedImage = await cloudinary.uploader.destroy(`${folderName}/${imageName}`);
-    if (deletedImage.result !== 'ok') return next(new CustomError('An error occurred, image has not been deleted.', 500));
+    // if (deletedImage.result !== 'ok') return next(new CustomError('An error occurred, image has not been deleted.', 500));
 
     res.status(200).json({
         status: 'success',

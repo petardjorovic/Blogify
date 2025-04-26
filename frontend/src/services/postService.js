@@ -113,9 +113,9 @@ export const addNewPost = async (data) => {
     }
 };
 
-export const deleteSinglePost = async (postId) => {
+export const deleteSinglePost = async (postId, userId) => {
     try {
-        const res = await axios.delete(`/api/post/${postId}`);
+        const res = await axios.delete(`/api/post/${postId}/${userId}`);
         if (res.status === 200 && res.data.status === 'success') {
             return {
                 status: res.data.status,

@@ -25,8 +25,8 @@ router.put('/like/:postId/:userLike', authenticationValidation.protect, likeCont
 
 router.post('/comment', authenticationValidation.protect, commentController.addComment);
 
-router.delete('/:postId', authenticationValidation.protect, postController.deleteSinglePost);
-
 router.delete('/comment/:commentId', authenticationValidation.protect, commentController.deleteComment);
+
+router.delete('/:postId/:userId', authenticationValidation.protect, postController.deleteSinglePost);
 
 module.exports = router;
