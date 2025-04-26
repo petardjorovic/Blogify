@@ -68,14 +68,14 @@ function Comment({ comment, rerenderView, postAuthorId, user, indexKey }) {
                     <motion.div
                         key={'content'}
                         initial={{ height: 0 }}
-                        animate={{ height: isOpen ? 70 : 0 }}
+                        animate={{ height: isOpen ? 'auto' : 0 }}
                         transition={{ duration: 0.5, ease: 'easeInOut' }}
                         exit={{ height: 0 }}
                         className="border-[2px] border-t-0 border-borderGray rounded-b-md overflow-hidden"
                     >
-                        <div className="h-[70px] py-[5px] px-[10px]">
+                        <div className="py-[5px] px-[10px]">
                             <p>{comment.body}</p>
-                            <div className="flex items-center justify-between mt-[5px]">
+                            <div className="flex flex-col items-start lg:flex-row justify-between mt-[5px]">
                                 <p className="flex items-center text-slate-500">
                                     {user.role === 'admin' || user._id === comment.user.id || user._id === postAuthorId ? (
                                         <span
@@ -94,7 +94,7 @@ function Comment({ comment, rerenderView, postAuthorId, user, indexKey }) {
                                     &nbsp;•&nbsp;
                                     <span className="text-sm text-gray-500 select-none transition duration-300 ease-in-out">Translate</span>
                                 </p>
-                                <p className="text-sm mt-[10px] text-slate-500 italic text-end">{formatDatetime(comment.createdAt)}</p>
+                                <p className="text-sm text-slate-500 italic text-end">{formatDatetime(comment.createdAt)}</p>
                             </div>
                         </div>
                     </motion.div>
