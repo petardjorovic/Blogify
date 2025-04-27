@@ -1,6 +1,6 @@
 export const routesConfig = {
     LOGIN: {
-        path: '/',
+        path: '/login',
     },
     REGISTER: {
         path: '/register',

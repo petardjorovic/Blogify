@@ -5,7 +5,7 @@ import Navbar from './components/Navbar';
 import Loader from './components/Loader';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
-import { logout, restoreUser, setUser } from './store/userSlice';
+import { logout, setUser } from './store/userSlice';
 import { localStorageConfig } from './config/localStorageConfig';
 import { fetchUserFromToken } from './services/authService';
 
@@ -25,7 +25,7 @@ function App() {
         if (localStorage.getItem(localStorageConfig.TOKEN)) {
             fetchUser();
         }
-    }, []);
+    }, [dispatch]);
 
     return (
         <>

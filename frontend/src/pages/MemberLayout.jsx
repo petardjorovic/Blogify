@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import SearchFormMember from '../components/SearchFormMember';
 import MemberDetails from '../components/MemberDetails';
 
 function MemberLayout() {
-    const [memberInfo, setMemberInfo] = useState(null);
     return (
         <div className="container mx-auto">
             <div className="flex flex-col lg:flex-row px-[16px] gap-[20px]">

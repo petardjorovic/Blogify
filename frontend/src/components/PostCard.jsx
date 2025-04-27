@@ -75,7 +75,7 @@ function PostCard({ post, rerenderView }) {
                     <span className="text-sm">{formatDate(post.createdAt)}</span>
                 </div>
             </div>
-            {(user.role === 'admin' || user._id === post.userId) && (
+            {(user?.role === 'admin' || user?._id === post.userId) && (
                 <button
                     onClick={() => setIsDeletePostModal(true)}
                     className="absolute top-[-7px] right-[-7px] rounded-md text-sm p-[4px] bg-red-600 text-white outline-none"

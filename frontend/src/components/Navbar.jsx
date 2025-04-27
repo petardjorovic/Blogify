@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import logo from '../assets/logo.png';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { routesConfig } from '../config/routesConfig';
 import Button from '../components/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../store/userSlice';
-import useWindowScroll from '../utils/useWindowScroll';
 import useIsSmallScreen from '../utils/useIsSmallScreen';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FaArrowRight } from 'react-icons/fa6';
+import useLockScroll from '../utils/useLockScroll';
 
 function Navbar() {
-    const [openBurgerMenu, setOpenBurgerMenu] = useState(false);
     const { user } = useSelector((state) => state.userStore);
+    const [openBurgerMenu, setOpenBurgerMenu] = useState(false);
+    useLockScroll(openBurgerMenu);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [x, y] = useWindowScroll();
     const isSmallScreen = useIsSmallScreen();
 
     const logoutUser = () => {
@@ -26,8 +26,8 @@ function Navbar() {
     };
 
     return (
-        <header className="container mx-auto px-[16px]">
-            <div className={`box flex items-center justify-between mt-[15px] mb-[40px]`}>
+        <header className="container mx-auto px-[16px] sticky top-0 mt-[15px] z-10 bg-white">
+            <div className={`box flex items-center justify-between mb-[40px]`}>
                 <div className="flex items-center gap-[5px]">
                     <Link to={routesConfig.POST.path}>
                         <img src={logo} alt="logo" className="w-[50px]" />
@@ -47,15 +47,20 @@ function Navbar() {
                                         />
                                     </Link>
 
-                                    <button
-                                        className={`p-[10px] text-[30px] text-mainBlue z-50 ${openBurgerMenu && 'text-white'}`}
-                                        onClick={() => setOpenBurgerMenu(!openBurgerMenu)}
-                                    >
-                                        {openBurgerMenu ? <FaArrowRight /> : <GiHamburgerMenu />}
+                                    <button className={`p-[10px] text-[30px] text-mainBlue`} onClick={() => setOpenBurgerMenu(true)}>
+                                        <GiHamburgerMenu />
                                     </button>
                                 </>
                             ) : (
                                 <>
+                                    <li>
+                                        <NavLink
+                                            to={routesConfig.DASHBOARD.path}
+                                            className="border border-mainBlue p-[8px] rounded-[10px] uppercase"
+                                        >
+                                            Dashboard
+                                        </NavLink>
+                                    </li>
                                     <li>
                                         <NavLink
                                             to={routesConfig.POST.path}
@@ -87,11 +92,8 @@ function Navbar() {
                             )
                         ) : isSmallScreen ? (
                             <>
-                                <button
-                                    className={`p-[10px] text-[30px] text-mainBlue z-50 ${openBurgerMenu && 'text-white'}`}
-                                    onClick={() => setOpenBurgerMenu(!openBurgerMenu)}
-                                >
-                                    {openBurgerMenu ? <FaArrowRight /> : <GiHamburgerMenu />}
+                                <button className={`p-[10px] text-[30px] text-mainBlue`} onClick={() => setOpenBurgerMenu(true)}>
+                                    <GiHamburgerMenu />
                                 </button>
                             </>
                         ) : (
@@ -128,15 +130,23 @@ function Navbar() {
                         />
                         {/* Burger menu */}
                         <motion.div
-                            className="absolute top-0 right-0 h-screen w-[130px] bg-mainBlue bg-opacity-90 text-white z-40 p-5 flex flex-col gap-6 rounded-l-sm"
-                            variants={{ hidden: { x: 130 }, visible: { x: 0 } }}
+                            className="absolute top-[-15px] right-0 h-screen w-[180px] bg-mainBlue text-white z-40 p-5 flex flex-col gap-6 rounded-l-sm"
+                            variants={{ hidden: { x: 180 }, visible: { x: 0 } }}
                             initial={'hidden'}
                             transition={{ type: 'spring', stiffness: 200, damping: 30 }}
                             animate={'visible'}
                             exit={'hidden'}
                         >
                             {user ? (
-                                <ul className="flex flex-col text-lg gap-6 mt-[60px]">
+                                <ul className="flex flex-col text-lg gap-6 mt-[20px]">
+                                    <li className="text-white text-[30px]" onClick={() => setOpenBurgerMenu(false)}>
+                                        <FaArrowRight className="mx-auto" />
+                                    </li>
+                                    <li className="border-2 uppercase font-medium border-white rounded-md p-[4px] text-center w-auto">
+                                        <NavLink to={routesConfig.DASHBOARD.path} className="" onClick={() => setOpenBurgerMenu(false)}>
+                                            Dashboard
+                                        </NavLink>
+                                    </li>
                                     <li className="border-2 uppercase font-medium border-white rounded-md p-[4px] text-center">
                                         <NavLink to={routesConfig.POST.path} className="" onClick={() => setOpenBurgerMenu(false)}>
                                             Posts
@@ -154,7 +164,10 @@ function Navbar() {
                                     </li>
                                 </ul>
                             ) : (
-                                <ul className="flex flex-col text-lg gap-6 mt-[60px]">
+                                <ul className="flex flex-col text-lg gap-6 mt-[20px]">
+                                    <li className="text-white text-[30px]" onClick={() => setOpenBurgerMenu(false)}>
+                                        <FaArrowRight className="mx-auto" />
+                                    </li>
                                     <li className="border-2 uppercase font-medium border-white rounded-md p-[4px] text-center">
                                         <Link to={routesConfig.REGISTER.path} className="" onClick={() => setOpenBurgerMenu(false)}>
                                             Register

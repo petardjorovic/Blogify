@@ -22,7 +22,7 @@ function MemberDetails() {
             initial="hidden"
             animate="visible"
             key={memberInfo._id}
-            className="box text-center sticky top-[10px]"
+            className="box text-center sticky top-[80px]"
         >
             {Object.hasOwn(memberInfo, '_id') ? (
                 <div>
