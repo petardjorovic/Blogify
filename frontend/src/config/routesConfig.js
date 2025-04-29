@@ -29,4 +29,7 @@ export const routesConfig = {
     DASHBOARD: {
         path: '/dashboard',
     },
+    ACTIVATION: {
+        path: '/activation/:activationToken',
+    },
 };

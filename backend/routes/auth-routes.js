@@ -9,4 +9,6 @@ router.post('/register', authController.register);
 
 router.get('/me', authenticationValidation.protect, authController.restoreUser);
 
+router.post('/activation/:token', authController.checkUserActivation);
+
 module.exports = router;

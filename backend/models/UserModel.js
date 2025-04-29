@@ -85,5 +85,15 @@ userSchema.methods.isPasswordCorrect = async (candidatePassword, currentPassword
     return await bcrypt.compare(candidatePassword, currentPassword);
 };
 
+// userSchema.methods.passwordChangedAfter = function (JWTTimestamp) {
+//     if (this.passwordChangedAt) {
+//         const changedTimestamp = this.passwordChangedAt.getTime() / 1000;
+//         return JWTTimestamp < changedTimestamp;
+//     }
+
+//     // false znači da nije promenio lozinku posle izdavanja tokena
+//     return false;
+// };
+
 const UserModel = mongoose.model('User', userSchema);
 module.exports = UserModel;

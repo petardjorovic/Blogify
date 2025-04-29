@@ -14,6 +14,7 @@ import MemberLayout from '../pages/MemberLayout';
 import MembersPage from '../pages/MembersPage';
 import ClientLayout from '../pages/ClientLayout';
 import DashboardPage from '../pages/DashboardPage';
+import ActivationUserPage from '../pages/ActivationUserPage';
 
 const router = createBrowserRouter([
     {
@@ -83,6 +84,10 @@ const router = createBrowserRouter([
                 ),
             },
         ],
+    },
+    {
+        path: routesConfig.ACTIVATION.path,
+        element: <ActivationUserPage />,
     },
 ]);
 

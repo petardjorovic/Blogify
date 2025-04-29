@@ -1,6 +1,6 @@
 html
   head
-    title Welcome to Our Social Network
+    title #{subject}
     style.
       body {
         font-family: Arial, sans-serif;
@@ -39,16 +39,12 @@ html
       }
   body
     .container
-      h1 Welcome, #{firstname}!
+      h1 Welcome, #{firstName}!
       p
-        | Thank you for registering at #{serviceName}! We are excited to have you on board.
+        | Thank you for registering at Social Network! We are excited to have you on board.
       p
         | To activate your account and get started, please click the button below:
-      a.button(href=activationUrl target='_blank') Activate Account
-      p
-        | Or copy and paste this link into your browser:
-        br
-        a(href=activationUrl target='_blank') #{activationUrl}
+      a.button(href=url target='_blank') Activate Account
       p
         | Please note: The activation link will expire in 24 hours.
       p.footer

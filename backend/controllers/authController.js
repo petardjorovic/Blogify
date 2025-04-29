@@ -4,6 +4,10 @@ const CustomError = require('../utils/CustomError');
 const asyncErrorHandler = require('../utils/asyncErrorHandler');
 const SALT = 10;
 const signToken = require('../utils/signToken');
+const Email = require('../utils/Email');
+const activationToken = require('../utils/activationToken');
+const jwt = require('jsonwebtoken');
+const { promisify } = require('util');
 
 const login = asyncErrorHandler(async (req, res, next) => {
     const foundUser = await UserModel.findOne({ email: req.body.email }).select('+password');
@@ -30,6 +34,12 @@ const register = asyncErrorHandler(async (req, res, next) => {
     if (checkUser) return next(new CustomError('There is already user with this email', 400));
     const user = new UserModel({ ...req.body });
     const savedUser = await user.save();
+    if (!Object.hasOwn(savedUser?.toObject(), '_id')) {
+        return next(new CustomError('Something went wrong, please try again later.', 500));
+    }
+    const newUser = savedUser.toObject();
+    const actToken = activationToken({ id: newUser._id });
+    await new Email({ email: newUser.email, firstName: newUser.firstName }, `http://localhost:5173/activation/${actToken}`).sendWelcome();
     res.status(200).json({
         status: 'success',
         message: 'You have successufully registered',
@@ -43,4 +53,20 @@ const restoreUser = asyncErrorHandler(async (req, res, next) => {
     });
 });
 
-module.exports = { login, register, restoreUser };
+const checkUserActivation = asyncErrorHandler(async (req, res, next) => {
+    const { token } = req.params;
+    let decoded;
+    try {
+        decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET_KEY);
+    } catch (error) {
+        return next(new CustomError('Your token has been expired.', 403));
+    }
+    const user = await UserModel.findByIdAndUpdate(decoded.id, { activate: true }, { new: false });
+    console.log(user.activate, 'user');
+    res.status(200).json({
+        status: 'success',
+        message: 'You have successufully activated your account.',
+    });
+});
+
+module.exports = { login, register, restoreUser, checkUserActivation };
