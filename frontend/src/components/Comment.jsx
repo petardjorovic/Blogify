@@ -8,12 +8,14 @@ import { useState } from 'react';
 import DeleteCommentModal from '../components/DeleteCommentModal';
 import { AnimatePresence, motion } from 'framer-motion';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
+import useLockScroll from '../utils/useLockScroll';
 
 function Comment({ comment, rerenderView, postAuthorId, user, indexKey }) {
     const [expanded, setExpanded] = useState([0]);
     const [autoClose, setAutoClose] = useState(true);
     const dispatch = useDispatch();
     const [isDeleteCommentModal, setIsDeleteCommentModal] = useState(false);
+    useLockScroll(isDeleteCommentModal);
 
     const handleDelete = async () => {
         setIsDeleteCommentModal(false);

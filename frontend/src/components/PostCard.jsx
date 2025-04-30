@@ -9,11 +9,13 @@ import { toast } from 'react-toastify';
 import { showLoader } from '../store/loaderSlice';
 import { FaRegTrashCan } from 'react-icons/fa6';
 import DeletePostModal from '../components/DeletePostModal';
+import useLockScroll from '../utils/useLockScroll';
 
 function PostCard({ post, rerenderView }) {
     const { user } = useSelector((state) => state.userStore);
     const dispatch = useDispatch();
     const [isDeletePostModal, setIsDeletePostModal] = useState(false);
+    useLockScroll(isDeletePostModal);
 
     const handleLike = async (userLike) => {
         dispatch(showLoader(true));

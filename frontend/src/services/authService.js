@@ -61,9 +61,17 @@ export const checkUserActivation = async (token) => {
     try {
         const res = await axios.post(`/api/auth/activation/${token}`);
         console.log(res, 'res iz servisa checkuserActivation');
-        return res;
+        if (res.status === 200) {
+            return {
+                status: res.data.status,
+                message: res.data.message,
+            };
+        }
     } catch (err) {
         console.error(err, 'err iz servisa check user activation');
-        return err;
+        return {
+            status: err.response.data.error.status,
+            message: err.response.data.message,
+        };
     }
 };

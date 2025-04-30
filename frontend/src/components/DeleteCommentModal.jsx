@@ -1,5 +1,4 @@
 import React from 'react';
-import { FaWindowClose } from 'react-icons/fa';
 import { IoClose } from 'react-icons/io5';
 import { HiTrash } from 'react-icons/hi';
 

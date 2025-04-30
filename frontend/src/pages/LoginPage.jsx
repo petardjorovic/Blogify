@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import LoginForm from '../components/LoginForm';
 import loginImg from '../assets/login.jpg';
 import { Link } from 'react-router-dom';
 import { routesConfig } from '../config/routesConfig';
+import ForgotPasswordModal from '../components/ForgotPasswordModal';
 
 function LoginPage() {
+    const [isForgotPasswordModal, setIsForgotPasswordModal] = useState(false);
     return (
         <div className="container mx-auto">
             <div className="flex flex-col gap-[20px] lg:flex-row px-[16px] items-stretch">
@@ -26,6 +28,17 @@ function LoginPage() {
                         </p>
                     </div>
                     <LoginForm />
+                    <div className="box">
+                        <p className="text-center">
+                            Forgot your password?{' '}
+                            <span
+                                onClick={() => setIsForgotPasswordModal(true)}
+                                className="text-mainBlue font-bold cursor-pointer hover:text-violet-700 transition duration-300 easy-in-out select-none"
+                            >
+                                Click here to reset it.
+                            </span>
+                        </p>
+                    </div>
                     <div className="box text-center">
                         <p>Don't have account?</p>
                         <p>
@@ -37,6 +50,7 @@ function LoginPage() {
                     </div>
                 </div>
             </div>
+            {isForgotPasswordModal && <ForgotPasswordModal setIsForgotPasswordModal={setIsForgotPasswordModal} />}
         </div>
     );
 }

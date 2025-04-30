@@ -10,12 +10,12 @@ const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
 
 const login = asyncErrorHandler(async (req, res, next) => {
-    const foundUser = await UserModel.findOne({ email: req.body.email }).select('+password');
+    const foundUser = await UserModel.findOne({ email: req.body.email, activate: true }).select('+password');
     if (!foundUser) {
-        return next(new CustomError("User with this email doesn't exist. Please register first", 404));
+        return next(new CustomError('Invalid login credentials or inactive account.', 400));
     }
     const isPasswordValid = await foundUser.isPasswordCorrect(req.body.password, foundUser.password);
-    if (!isPasswordValid) return next(new CustomError('Wrong credentials', 400));
+    if (!isPasswordValid) return next(new CustomError('Invalid login credentials', 400));
 
     const payload = { id: foundUser._id, role: foundUser.role };
     const token = signToken(payload);
@@ -42,7 +42,7 @@ const register = asyncErrorHandler(async (req, res, next) => {
     await new Email({ email: newUser.email, firstName: newUser.firstName }, `http://localhost:5173/activation/${actToken}`).sendWelcome();
     res.status(200).json({
         status: 'success',
-        message: 'You have successufully registered',
+        message: 'Registration successful! Please check your email for the activation link (valid for 24 hours).',
     });
 });
 
@@ -59,10 +59,20 @@ const checkUserActivation = asyncErrorHandler(async (req, res, next) => {
     try {
         decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET_KEY);
     } catch (error) {
-        return next(new CustomError('Your token has been expired.', 403));
+        console.error(error);
+        return next(new CustomError('Your token has been expired or not valid.', 403));
     }
-    const user = await UserModel.findByIdAndUpdate(decoded.id, { activate: true }, { new: false });
-    console.log(user.activate, 'user');
+    const user = await UserModel.findById(decoded.id);
+    if (!user) return next('User not found', 404);
+    if (user.activate) {
+        return res.status(200).json({
+            status: 'info',
+            message: 'You have already activated your account.',
+        });
+    }
+    user.activate = true;
+    await user.save({ validateBeforeSave: false });
+
     res.status(200).json({
         status: 'success',
         message: 'You have successufully activated your account.',
