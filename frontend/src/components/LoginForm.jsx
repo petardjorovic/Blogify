@@ -34,10 +34,10 @@ function LoginForm() {
             if (res.status === 'success') {
                 localStorage.setItem(localStorageConfig.TOKEN, `Bearer ${res.token}`);
                 dispatch(setUser(res.user));
-                toast(res.message, {
-                    type: 'success',
-                    toastId: 1,
-                });
+                // toast(res.message, {
+                //     type: 'success',
+                //     toastId: 1,
+                // });
                 navigate(routesConfig.POST.path);
                 formik.resetForm();
             } else {

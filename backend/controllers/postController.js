@@ -241,18 +241,18 @@ const deleteSinglePost = asyncErrorHandler(async (req, res, next) => {
     if (!deletedPost) return next(new CustomError('An error occurred, post has not been deleted. Please try later.', 500));
     const deletedComments = await CommentModel.deleteMany({ postId });
     const deletedLikes = await LikeModel.deleteMany({ postId });
-    // const parts = deletedPost.image.split('/');
-    // const imageName = parts.pop().split('.')[0];
-    // const folderName = parts[parts.length - 1];
-    // const deletedImage = await cloudinary.uploader.destroy(`${folderName}/${imageName}`);
-    fs.unlink(deletedPost.image, (err) => {
-        if (err) return next(new CustomError('Image og post has not been deleted.', 500));
-    });
+    const parts = deletedPost.image.split('/');
+    const imageName = parts.pop().split('.')[0];
+    const folderName = parts[parts.length - 1];
+    const deletedImage = await cloudinary.uploader.destroy(`${folderName}/${imageName}`);
+    // fs.unlink(deletedPost.image, (err) => {
+    //     if (err) return next(new CustomError('Image of post has not been deleted.', 500));
+    // });
     if (!deletedComments.acknowledged)
         return next(new CustomError('An error occurred, post comments have not been deleted. Please try later.', 500));
     if (!deletedLikes.acknowledged)
         return next(new CustomError('An error occurred, post likes have not been deleted. Please try later.', 500));
-    // if (deletedImage.result !== 'ok') return next(new CustomError('An error occurred, image has not been deleted.', 500));
+    if (deletedImage.result !== 'ok') return next(new CustomError('An error occurred, image has not been deleted.', 500));
 
     res.status(200).json({
         status: 'success',

@@ -36,3 +36,21 @@ export const getMemberInfo = async (userId) => {
         };
     }
 };
+
+export const deleteMemmber = async (memberId) => {
+    try {
+        const res = await axios.delete(`/api/member/${memberId}`);
+        if (res.status === 200 && res.data.status === 'success') {
+            return {
+                status: res.data.status,
+                message: res.data.message,
+            };
+        }
+    } catch (err) {
+        console.error(err, 'err iz servisa delete member');
+        return {
+            status: err.response.data.error.status,
+            message: err.response.data.message,
+        };
+    }
+};

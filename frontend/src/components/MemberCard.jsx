@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { formatDate } from '../utils/formatDate';
 import { BsBinoculars, BsEye, BsTrash } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
@@ -8,9 +8,11 @@ import { getMemberInfo } from '../services/memberService';
 import { showLoader } from '../store/loaderSlice';
 import { setMemberInfo } from '../store/memberSlice';
 import { motion } from 'framer-motion';
+import DeleteMemberModal from './DeleteMemberModal';
 
-function MemberCard({ member }) {
+function MemberCard({ member, user }) {
     const dispatch = useDispatch();
+    const [isDeleteMemberModal, setIsDeleteMemberModal] = useState(false);
 
     const handleMemberInfo = async () => {
         dispatch(showLoader(true));
@@ -32,7 +34,7 @@ function MemberCard({ member }) {
                     <p>
                         <span className="font-semibold">Gender:</span> {member.gender}
                     </p>
-                    <p>
+                    <p className="break-words">
                         <span className="font-semibold">Email:</span> {member.email}
                     </p>
                 </div>
@@ -63,10 +65,16 @@ function MemberCard({ member }) {
                 >
                     <BsEye />
                 </button>
-                <button className="w-[30px] h-[30px] bg-red-700 rounded-md flex items-center justify-center text-white">
-                    <BsTrash />
-                </button>
+                {user.role === 'admin' && (
+                    <button
+                        onClick={() => setIsDeleteMemberModal(true)}
+                        className="w-[30px] h-[30px] bg-red-700 rounded-md flex items-center justify-center text-white"
+                    >
+                        <BsTrash />
+                    </button>
+                )}
             </div>
+            {isDeleteMemberModal && <DeleteMemberModal setIsDeleteMemberModal={setIsDeleteMemberModal} member={member} />}
         </div>
     );
 }

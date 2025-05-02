@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Pagination from '../components/Pagination';
 import MemberCard from '../components/MemberCard';
 import { showLoader } from '../store/loaderSlice';
@@ -9,6 +9,7 @@ import { fadeInDown } from '../utils/animations';
 import { motion } from 'framer-motion';
 
 function MambersPage() {
+    const { user } = useSelector((state) => state.userStore);
     const [searchParams, setSearchParams] = useSearchParams();
     const [members, setMembers] = useState([]);
     const dispatch = useDispatch();
@@ -33,7 +34,7 @@ function MambersPage() {
     }, [searchParams]);
 
     return (
-        <>
+        <div className="mb-[20px]">
             {members.length > 0 && (
                 <Pagination itemsCount={membersCount} currentPage={currentPage} setCurrentPage={setCurrentPage} itemsLimit={itemsLimit} />
             )}
@@ -52,7 +53,7 @@ function MambersPage() {
                                 initial="hidden"
                                 animate="visible"
                             >
-                                <MemberCard member={member} key={member._id} />
+                                <MemberCard member={member} key={member._id} user={user} />
                             </motion.div>
                         );
                     })}
@@ -60,7 +61,7 @@ function MambersPage() {
             {members.length > 0 && (
                 <Pagination itemsCount={membersCount} currentPage={currentPage} setCurrentPage={setCurrentPage} itemsLimit={itemsLimit} />
             )}
-        </>
+        </div>
     );
 }
 
