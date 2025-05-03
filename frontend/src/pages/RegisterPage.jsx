@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import registerImg from '../assets/register.jpg';
 import RegisterForm from '../components/RegisterForm';
-import { useDispatch } from 'react-redux';
 import ResendActivationLinkModal from '../components/ResendActivationLinkModal';
 import useLockScroll from '../utils/useLockScroll';
 
 function RegisterPage() {
-    const dispatch = useDispatch();
     const [isModal, setIsModal] = useState(false);
     useLockScroll(isModal);
 

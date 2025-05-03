@@ -4,8 +4,8 @@ import { HiTrash } from 'react-icons/hi';
 
 function DeletePostModal({ setIsDeleteCommentModal, handleDelete, comment }) {
     return (
-        <div className="w-screen h-screen flex justify-center items-center bg-black bg-opacity-70 z-50 fixed top-0 left-0 px-[16px]">
-            <div className="relative p-4 rounded-lg text-center bg-white shadow">
+        <div className="w-screen h-screen flex justify-center items-center bg-black bg-opacity-70 z-50 fixed top-0 left-0 px-4 transition-all duration-300 ease-out">
+            <div className="relative p-6 rounded-2xl text-center bg-white shadow-lg w-[320px] animate-fadeInScale">
                 <button
                     className="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-[22px] p-1.5 ml-auto inline-flex items-center"
                     onClick={() => setIsDeleteCommentModal(false)}
