@@ -53,7 +53,7 @@ function MambersPage() {
                                 initial="hidden"
                                 animate="visible"
                             >
-                                <MemberCard member={member} key={member._id} user={user} />
+                                <MemberCard member={member} key={member._id} rerenderView={fetchMembers} user={user} />
                             </motion.div>
                         );
                     })}

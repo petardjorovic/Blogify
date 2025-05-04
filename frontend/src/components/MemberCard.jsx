@@ -1,18 +1,20 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { formatDate } from '../utils/formatDate';
 import { BsBinoculars, BsEye, BsTrash } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
 import { routesConfig } from '../config/routesConfig';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getMemberInfo } from '../services/memberService';
 import { showLoader } from '../store/loaderSlice';
 import { setMemberInfo } from '../store/memberSlice';
 import { motion } from 'framer-motion';
 import DeleteMemberModal from './DeleteMemberModal';
+import useLockScroll from '../utils/useLockScroll';
 
-function MemberCard({ member, user }) {
+function MemberCard({ member, user, rerenderView }) {
     const dispatch = useDispatch();
     const [isDeleteMemberModal, setIsDeleteMemberModal] = useState(false);
+    useLockScroll(isDeleteMemberModal);
 
     const handleMemberInfo = async () => {
         dispatch(showLoader(true));
@@ -73,8 +75,10 @@ function MemberCard({ member, user }) {
                         <BsTrash />
                     </button>
                 )}
+                {isDeleteMemberModal && (
+                    <DeleteMemberModal setIsDeleteMemberModal={setIsDeleteMemberModal} member={member} rerenderView={rerenderView} />
+                )}
             </div>
-            {isDeleteMemberModal && <DeleteMemberModal setIsDeleteMemberModal={setIsDeleteMemberModal} member={member} />}
         </div>
     );
 }

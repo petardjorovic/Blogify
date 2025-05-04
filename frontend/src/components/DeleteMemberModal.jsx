@@ -5,10 +5,11 @@ import { showLoader } from '../store/loaderSlice';
 import { deleteMemmber } from '../services/memberService';
 import { toast } from 'react-toastify';
 
-function DeleteMemberModal({ setIsDeleteMemberModal, member }) {
-    setIsDeleteMemberModal(false);
+function DeleteMemberModal({ setIsDeleteMemberModal, member, rerenderView }) {
     const dispatch = useDispatch();
+
     const handleDeleteMember = async () => {
+        setIsDeleteMemberModal(false);
         dispatch(showLoader(true));
         const res = await deleteMemmber(member._id);
         dispatch(showLoader(false));
