@@ -4,6 +4,7 @@ const CustomError = require('../utils/CustomError');
 const CommentModel = require('../models/CommentModel');
 const LikeModel = require('../models/LikeModel');
 const PostModel = require('../models/PostModel');
+const cloudinary = require('cloudinary').v2;
 
 const deleteUserCascade = async (userId) => {
     const session = await mongoose.startSession();
@@ -29,6 +30,17 @@ const deleteUserCascade = async (userId) => {
             // 5. Obrisi postove
             await PostModel.deleteMany({ _id: { $in: postsIds } }).session(session);
         }
+
+        // ! paznja
+        // if (user.image?.publicId) {
+        //     await cloudinary.uploader.destroy(user.image.publicId);
+        // }
+
+        // for (const post of posts) {
+        //     if (post.image?.publicId) {
+        //         await cloudinary.uploader.destroy(post.image.publicId);
+        //     }
+        // }
 
         // 6. Commit transakcije
         await session.commitTransaction();
