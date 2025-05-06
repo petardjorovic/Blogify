@@ -14,6 +14,7 @@ function DeleteMemberModal({ setIsDeleteMemberModal, member, rerenderView }) {
         const res = await deleteMemmber(member._id);
         dispatch(showLoader(false));
         if (res.status === 'success') {
+            rerenderView();
             toast.success(res.message);
         } else {
             toast.error(res.message);

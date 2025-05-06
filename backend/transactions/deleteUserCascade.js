@@ -31,16 +31,23 @@ const deleteUserCascade = async (userId) => {
             await PostModel.deleteMany({ _id: { $in: postsIds } }).session(session);
         }
 
-        // ! paznja
-        // if (user.image?.publicId) {
-        //     await cloudinary.uploader.destroy(user.image.publicId);
-        // }
+        // Obrisi user image
+        if (user.image !== 'https://res.cloudinary.com/dhfzyyycz/image/upload/v1745679699/avatar_cychqb.png') {
+            const parts = user.image.split('/');
+            const imageName = parts.pop().split('.')[0];
+            const folderName = parts[parts.length - 1];
+            await cloudinary.uploader.destroy(`${folderName}/${imageName}`);
+        }
 
-        // for (const post of posts) {
-        //     if (post.image?.publicId) {
-        //         await cloudinary.uploader.destroy(post.image.publicId);
-        //     }
-        // }
+        // Obrisi posts images
+        for (const post of posts) {
+            if (post.image) {
+                const parts = post.image.split('/');
+                const imageName = parts.pop().split('.')[0];
+                const folderName = parts[parts.length - 1];
+                await cloudinary.uploader.destroy(`${folderName}/${imageName}`);
+            }
+        }
 
         // 6. Commit transakcije
         await session.commitTransaction();
