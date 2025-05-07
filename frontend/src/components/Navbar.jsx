@@ -10,6 +10,7 @@ import { GiHamburgerMenu } from 'react-icons/gi';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FaArrowRight } from 'react-icons/fa6';
 import useLockScroll from '../utils/useLockScroll';
+import DashboardSidebar from '../components/DashboardSidebar';
 
 function Navbar() {
     const { user } = useSelector((state) => state.userStore);
@@ -18,6 +19,8 @@ function Navbar() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const isSmallScreen = useIsSmallScreen();
+    const [isDashboardSidebar, setIsDashboardSidebar] = useState(false);
+    const [activeDashboardLink, setActiveDashboardLink] = useState('Home');
 
     const logoutUser = () => {
         setOpenBurgerMenu(false);
@@ -39,7 +42,7 @@ function Navbar() {
                         {user ? (
                             isSmallScreen ? (
                                 <>
-                                    <Link to={routesConfig.DASHBOARD.path}>
+                                    <Link to={routesConfig.DASHBOARD_ROOT.path}>
                                         <img
                                             src={user.image.includes('uploads') ? `http://localhost:4000/${user.image}` : user.image}
                                             alt="avatar"
@@ -55,23 +58,38 @@ function Navbar() {
                                 <>
                                     <li>
                                         <NavLink
-                                            to={routesConfig.DASHBOARD.path}
-                                            className="border border-mainBlue p-[8px] rounded-[10px] uppercase"
-                                        >
-                                            Dashboard
-                                        </NavLink>
-                                    </li>
-                                    <li>
-                                        <NavLink
                                             to={routesConfig.POST.path}
-                                            className="border border-mainBlue p-[8px] rounded-[10px] uppercase"
+                                            className={({ isActive }) =>
+                                                isActive
+                                                    ? `border border-mainBlue p-[8px] rounded-[10px] uppercase text-mainBlue font-bold`
+                                                    : `border border-mainBlue p-[8px] rounded-[10px] uppercase`
+                                            }
                                         >
                                             Posts
                                         </NavLink>
                                     </li>
                                     <li>
-                                        <NavLink to={'/member'} className="border border-mainBlue p-[8px] rounded-[10px] uppercase">
-                                            Member
+                                        <NavLink
+                                            to={'/member'}
+                                            className={({ isActive }) =>
+                                                isActive
+                                                    ? `border border-mainBlue p-[8px] rounded-[10px] uppercase text-mainBlue font-bold`
+                                                    : `border border-mainBlue p-[8px] rounded-[10px] uppercase`
+                                            }
+                                        >
+                                            Members
+                                        </NavLink>
+                                    </li>
+                                    <li>
+                                        <NavLink
+                                            to={routesConfig.DASHBOARD_ROOT.path}
+                                            className={({ isActive }) =>
+                                                isActive
+                                                    ? `border border-mainBlue p-[8px] rounded-[10px] uppercase text-mainBlue font-bold`
+                                                    : `border border-mainBlue p-[8px] rounded-[10px] uppercase`
+                                            }
+                                        >
+                                            Dashboard
                                         </NavLink>
                                     </li>
                                     <li>
@@ -80,7 +98,7 @@ function Navbar() {
                                         </Button>
                                     </li>
                                     <li>
-                                        <Link to={routesConfig.DASHBOARD.path} onClick={() => setOpenBurgerMenu(false)}>
+                                        <Link to={routesConfig.DASHBOARD_ROOT.path} onClick={() => setOpenBurgerMenu(false)}>
                                             <img
                                                 src={user.image.includes('uploads') ? `http://localhost:4000/${user.image}` : user.image}
                                                 alt="avatar"
@@ -99,17 +117,28 @@ function Navbar() {
                         ) : (
                             <>
                                 <li>
-                                    <Link
-                                        to={routesConfig.REGISTER.path}
-                                        className="border border-mainBlue p-[8px] rounded-[10px] uppercase"
+                                    <NavLink
+                                        to={routesConfig.LOGIN.path}
+                                        className={({ isActive }) =>
+                                            isActive
+                                                ? `border border-mainBlue p-[8px] rounded-[10px] uppercase text-mainBlue font-bold`
+                                                : `border border-mainBlue p-[8px] rounded-[10px] uppercase`
+                                        }
                                     >
-                                        Register
-                                    </Link>
+                                        Login
+                                    </NavLink>
                                 </li>
                                 <li>
-                                    <Link to={routesConfig.LOGIN.path} className="border border-mainBlue p-[8px] rounded-[10px] uppercase">
-                                        Login
-                                    </Link>
+                                    <NavLink
+                                        to={routesConfig.REGISTER.path}
+                                        className={({ isActive }) =>
+                                            isActive
+                                                ? `border border-mainBlue p-[8px] rounded-[10px] uppercase text-mainBlue font-bold`
+                                                : `border border-mainBlue p-[8px] rounded-[10px] uppercase`
+                                        }
+                                    >
+                                        Register
+                                    </NavLink>
                                 </li>
                             </>
                         )}
@@ -142,20 +171,92 @@ function Navbar() {
                                     <li className="text-white text-[30px]" onClick={() => setOpenBurgerMenu(false)}>
                                         <FaArrowRight className="mx-auto" />
                                     </li>
-                                    <li className="border-2 uppercase font-medium border-white rounded-md p-[4px] text-center w-auto">
-                                        <NavLink to={routesConfig.DASHBOARD.path} className="" onClick={() => setOpenBurgerMenu(false)}>
-                                            Dashboard
-                                        </NavLink>
-                                    </li>
-                                    <li className="border-2 uppercase font-medium border-white rounded-md p-[4px] text-center">
-                                        <NavLink to={routesConfig.POST.path} className="" onClick={() => setOpenBurgerMenu(false)}>
+                                    <li className="w-full" onClick={() => setIsDashboardSidebar(false)}>
+                                        <NavLink
+                                            to={routesConfig.POST.path}
+                                            className={({ isActive }) =>
+                                                isActive
+                                                    ? `block border-2 uppercase font-medium border-white rounded-md p-[4px] text-center w-full bg-white text-mainBlue`
+                                                    : `block border-2 uppercase font-medium border-white rounded-md p-[4px] text-center w-full`
+                                            }
+                                            onClick={() => setOpenBurgerMenu(false)}
+                                        >
                                             Posts
                                         </NavLink>
                                     </li>
-                                    <li className="border-2 uppercase font-medium border-white rounded-md p-[4px] text-center">
-                                        <NavLink to={'/member'} className="" onClick={() => setOpenBurgerMenu(false)}>
-                                            Member
+                                    <li className="w-full" onClick={() => setIsDashboardSidebar(false)}>
+                                        <NavLink
+                                            to={'/member'}
+                                            className={({ isActive }) =>
+                                                isActive
+                                                    ? `block border-2 uppercase font-medium border-white rounded-md p-[4px] text-center w-full bg-white text-mainBlue`
+                                                    : `block border-2 uppercase font-medium border-white rounded-md p-[4px] text-center w-full`
+                                            }
+                                            onClick={() => setOpenBurgerMenu(false)}
+                                        >
+                                            Members
                                         </NavLink>
+                                    </li>
+                                    <li className="w-full flex flex-col items-end" onClick={() => setIsDashboardSidebar(true)}>
+                                        <NavLink
+                                            to={routesConfig.DASHBOARD_ROOT.path}
+                                            className={({ isActive }) =>
+                                                isActive
+                                                    ? `block border-2 uppercase font-medium border-white rounded-md p-[4px] text-center w-full bg-white text-mainBlue`
+                                                    : `block border-2 uppercase font-medium border-white rounded-md p-[4px] text-center w-full`
+                                            }
+                                            // onClick={() => setOpenBurgerMenu(false)}
+                                        >
+                                            Dashboard
+                                        </NavLink>
+                                        {isDashboardSidebar && (
+                                            <ul className="w-[80%] flex flex-col mt-[5px] gap-[3px]">
+                                                <li onClick={() => setOpenBurgerMenu(false)} className="w-full">
+                                                    <Link
+                                                        to={routesConfig.DASHBOARD_ROOT.path}
+                                                        onClick={() => setActiveDashboardLink('Home')}
+                                                        className={`border-2 text-sm border-white rounded-md px-[4px] text-center block ${
+                                                            activeDashboardLink === 'Home' && 'bg-white text-mainBlue'
+                                                        }`}
+                                                    >
+                                                        Home
+                                                    </Link>
+                                                </li>
+                                                <li onClick={() => setOpenBurgerMenu(false)}>
+                                                    <Link
+                                                        to={routesConfig.DASHBOARD_PROFILE.realPath(user?._id)}
+                                                        onClick={() => setActiveDashboardLink('Profile')}
+                                                        className={`border-2 text-sm border-white rounded-md px-[4px] text-center block ${
+                                                            activeDashboardLink === 'Profile' && 'bg-white text-mainBlue'
+                                                        }`}
+                                                    >
+                                                        Profile
+                                                    </Link>
+                                                </li>
+                                                <li onClick={() => setOpenBurgerMenu(false)}>
+                                                    <Link
+                                                        to={routesConfig.DASHBOARD_POSTS.realPath(user?._id)}
+                                                        onClick={() => setActiveDashboardLink('My posts')}
+                                                        className={`border-2 text-sm border-white rounded-md px-[4px] text-center block ${
+                                                            activeDashboardLink === 'My posts' && 'bg-white text-mainBlue'
+                                                        }`}
+                                                    >
+                                                        My posts
+                                                    </Link>
+                                                </li>
+                                                <li onClick={() => setOpenBurgerMenu(false)}>
+                                                    <Link
+                                                        to={routesConfig.DASHBOARD_REACTIONS.realPath(user?._id)}
+                                                        onClick={() => setActiveDashboardLink('My reactions')}
+                                                        className={`border-2 text-sm border-white rounded-md px-[4px] text-center block ${
+                                                            activeDashboardLink === 'My reactions' && 'bg-white text-mainBlue'
+                                                        }`}
+                                                    >
+                                                        My reactions
+                                                    </Link>
+                                                </li>
+                                            </ul>
+                                        )}
                                     </li>
                                     <li className="border-2 uppercase font-medium border-white rounded-md text-center">
                                         <Button className="uppercase p-[4px] m-0 text-lg" onClick={logoutUser}>
@@ -168,15 +269,31 @@ function Navbar() {
                                     <li className="text-white text-[30px]" onClick={() => setOpenBurgerMenu(false)}>
                                         <FaArrowRight className="mx-auto" />
                                     </li>
-                                    <li className="border-2 uppercase font-medium border-white rounded-md p-[4px] text-center">
-                                        <Link to={routesConfig.REGISTER.path} className="" onClick={() => setOpenBurgerMenu(false)}>
-                                            Register
-                                        </Link>
-                                    </li>
-                                    <li className="border-2 uppercase font-medium border-white rounded-md p-[4px] text-center">
-                                        <Link to={routesConfig.LOGIN.path} className="" onClick={() => setOpenBurgerMenu(false)}>
+                                    <li className="w-full">
+                                        <NavLink
+                                            to={routesConfig.LOGIN.path}
+                                            className={({ isActive }) =>
+                                                isActive
+                                                    ? `block border-2 uppercase font-medium border-white rounded-md p-[4px] text-center w-full bg-white text-mainBlue`
+                                                    : `block border-2 uppercase font-medium border-white rounded-md p-[4px] text-center w-full`
+                                            }
+                                            onClick={() => setOpenBurgerMenu(false)}
+                                        >
                                             Login
-                                        </Link>
+                                        </NavLink>
+                                    </li>
+                                    <li className="w-full">
+                                        <NavLink
+                                            to={routesConfig.REGISTER.path}
+                                            className={({ isActive }) =>
+                                                isActive
+                                                    ? `block border-2 uppercase font-medium border-white rounded-md p-[4px] text-center w-full bg-white text-mainBlue`
+                                                    : `block border-2 uppercase font-medium border-white rounded-md p-[4px] text-center w-full`
+                                            }
+                                            onClick={() => setOpenBurgerMenu(false)}
+                                        >
+                                            Register
+                                        </NavLink>
                                     </li>
                                 </ul>
                             )}

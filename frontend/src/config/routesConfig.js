@@ -26,8 +26,20 @@ export const routesConfig = {
     MEMBER: {
         path: '/member',
     },
-    DASHBOARD: {
+    DASHBOARD_ROOT: {
         path: '/dashboard',
+    },
+    DASHBOARD_PROFILE: {
+        path: '/dashboard/:userId',
+        realPath: (userId) => `/dashboard/${userId}`,
+    },
+    DASHBOARD_POSTS: {
+        path: '/dashboard/posts/:userId',
+        realPath: (userId) => `/dashboard/posts/${userId}`,
+    },
+    DASHBOARD_REACTIONS: {
+        path: '/dashboard/reactions/:userId',
+        realPath: (userId) => `/dashboard/reactions/${userId}`,
     },
     ACTIVATION: {
         path: '/activation/:activationToken',

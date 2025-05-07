@@ -13,8 +13,12 @@ import PostBySearchPage from '../pages/PostBySearchPage';
 import MemberLayout from '../pages/MemberLayout';
 import MembersPage from '../pages/MembersPage';
 import ClientLayout from '../pages/ClientLayout';
-import DashboardPage from '../pages/DashboardPage';
 import ActivationUserPage from '../pages/ActivationUserPage';
+import DashboardLayout from '../pages/DashboardLayout';
+import DashboardProfilePage from '../pages/DashboardProfilePage';
+import DashboardHome from '../pages/DashboardHome';
+import DashboardMyPosts from '../pages/DashboardMyPosts';
+import DashboardMyReactions from '../pages/DashboardMyReactions';
 
 const router = createBrowserRouter([
     {
@@ -65,6 +69,32 @@ const router = createBrowserRouter([
                         path: routesConfig.SINGLE_POST.path,
                         element: <SinglePostPage />,
                     },
+                    {
+                        path: routesConfig.DASHBOARD_ROOT.path,
+                        element: (
+                            <RouteProtect>
+                                <DashboardLayout />
+                            </RouteProtect>
+                        ),
+                        children: [
+                            {
+                                path: routesConfig.DASHBOARD_ROOT.path,
+                                element: <DashboardHome />,
+                            },
+                            {
+                                path: routesConfig.DASHBOARD_PROFILE.path,
+                                element: <DashboardProfilePage />,
+                            },
+                            {
+                                path: routesConfig.DASHBOARD_POSTS.path,
+                                element: <DashboardMyPosts />,
+                            },
+                            {
+                                path: routesConfig.DASHBOARD_REACTIONS.path,
+                                element: <DashboardMyReactions />,
+                            },
+                        ],
+                    },
                 ],
             },
             {
@@ -74,14 +104,6 @@ const router = createBrowserRouter([
             {
                 path: routesConfig.REGISTER.path,
                 element: <RegisterPage />,
-            },
-            {
-                path: routesConfig.DASHBOARD.path,
-                element: (
-                    <RouteProtect>
-                        <DashboardPage />
-                    </RouteProtect>
-                ),
             },
         ],
     },

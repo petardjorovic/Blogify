@@ -53,17 +53,6 @@ function ActivationUserPage() {
     }, [counter]);
 
     return (
-        // <div className="container mx-auto p-4">
-        //     <h1 className="text-2xl font-bold mb-4">Acccount Activation</h1>
-        //     <p className="mb-2">{message}</p>
-        //     <p className="mb-4">
-        //         You will be redirected to the <strong>{destination}</strong> page in : <span>{counter}</span>{' '}
-        //         {counter <= 1 ? 'second' : 'seconds'}.
-        //         {counter < 1 &&
-        //             (destination === 'Login' ? <Navigate to={routesConfig.LOGIN.path} /> : <Navigate to={routesConfig.REGISTER.path} />)}
-        //     </p>
-        //     {loader && <Loader />}
-        // </div>
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
             <div className="bg-white shadow-lg rounded-2xl p-8 max-w-md w-full text-center">
                 <h1 className="text-2xl font-bold mb-4 text-gray-800">Account Activation</h1>
@@ -85,7 +74,11 @@ function ActivationUserPage() {
 
                 {loader && <Loader />}
                 {counter <= 0 &&
-                    (destination === 'Login' ? <Navigate to={routesConfig.LOGIN.path} /> : <Navigate to={routesConfig.REGISTER.path} />)}
+                    (destination === 'Login' ? (
+                        <Navigate to={routesConfig.LOGIN.path} replace={true} />
+                    ) : (
+                        <Navigate to={routesConfig.REGISTER.path} replace={true} />
+                    ))}
             </div>
         </div>
     );

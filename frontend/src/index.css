@@ -17,7 +17,7 @@
     }
 
     .active {
-        @apply text-red-600;
+        @apply font-semibold;
     }
 
     .page-number-active {
