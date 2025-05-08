@@ -30,8 +30,8 @@ export const routesConfig = {
         path: '/dashboard',
     },
     DASHBOARD_PROFILE: {
-        path: '/dashboard/:userId',
-        realPath: (userId) => `/dashboard/${userId}`,
+        path: '/dashboard/profile/:userId',
+        realPath: (userId) => `/dashboard/profile/${userId}`,
     },
     DASHBOARD_POSTS: {
         path: '/dashboard/posts/:userId',

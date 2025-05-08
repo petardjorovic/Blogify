@@ -11,6 +11,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { FaArrowRight } from 'react-icons/fa6';
 import useLockScroll from '../utils/useLockScroll';
 import DashboardSidebar from '../components/DashboardSidebar';
+import { IoMdArrowDropdown } from 'react-icons/io';
 
 function Navbar() {
     const { user } = useSelector((state) => state.userStore);
@@ -20,7 +21,6 @@ function Navbar() {
     const navigate = useNavigate();
     const isSmallScreen = useIsSmallScreen();
     const [isDashboardSidebar, setIsDashboardSidebar] = useState(false);
-    const [activeDashboardLink, setActiveDashboardLink] = useState('Home');
 
     const logoutUser = () => {
         setOpenBurgerMenu(false);
@@ -151,7 +151,10 @@ function Navbar() {
                         {/* Overlay koji zatvara klikom */}
                         <motion.div
                             className="fixed inset-0 bg-black/30 backdrop-blur-sm z-30"
-                            onClick={() => setOpenBurgerMenu(false)}
+                            onClick={() => {
+                                setOpenBurgerMenu(false);
+                                setIsDashboardSidebar(false);
+                            }}
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
@@ -168,95 +171,93 @@ function Navbar() {
                         >
                             {user ? (
                                 <ul className="flex flex-col text-lg gap-6 mt-[20px]">
-                                    <li className="text-white text-[30px]" onClick={() => setOpenBurgerMenu(false)}>
+                                    <li
+                                        className="text-white text-[30px]"
+                                        onClick={() => {
+                                            setOpenBurgerMenu(false);
+                                            setIsDashboardSidebar(false);
+                                        }}
+                                    >
                                         <FaArrowRight className="mx-auto" />
                                     </li>
-                                    <li className="w-full" onClick={() => setIsDashboardSidebar(false)}>
+                                    <li className="w-full">
                                         <NavLink
                                             to={routesConfig.POST.path}
-                                            className={({ isActive }) =>
-                                                isActive
-                                                    ? `block border-2 uppercase font-medium border-white rounded-md p-[4px] text-center w-full bg-white text-mainBlue`
-                                                    : `block border-2 uppercase font-medium border-white rounded-md p-[4px] text-center w-full`
-                                            }
+                                            className="block border-2 uppercase font-medium border-white rounded-md p-[4px] text-center w-full"
                                             onClick={() => setOpenBurgerMenu(false)}
                                         >
                                             Posts
                                         </NavLink>
                                     </li>
-                                    <li className="w-full" onClick={() => setIsDashboardSidebar(false)}>
+                                    <li className="w-full">
                                         <NavLink
                                             to={'/member'}
-                                            className={({ isActive }) =>
-                                                isActive
-                                                    ? `block border-2 uppercase font-medium border-white rounded-md p-[4px] text-center w-full bg-white text-mainBlue`
-                                                    : `block border-2 uppercase font-medium border-white rounded-md p-[4px] text-center w-full`
-                                            }
+                                            className="block border-2 uppercase font-medium border-white rounded-md p-[4px] text-center w-full"
                                             onClick={() => setOpenBurgerMenu(false)}
                                         >
                                             Members
                                         </NavLink>
                                     </li>
-                                    <li className="w-full flex flex-col items-end" onClick={() => setIsDashboardSidebar(true)}>
-                                        <NavLink
-                                            to={routesConfig.DASHBOARD_ROOT.path}
-                                            className={({ isActive }) =>
-                                                isActive
-                                                    ? `block border-2 uppercase font-medium border-white rounded-md p-[4px] text-center w-full bg-white text-mainBlue`
-                                                    : `block border-2 uppercase font-medium border-white rounded-md p-[4px] text-center w-full`
-                                            }
-                                            // onClick={() => setOpenBurgerMenu(false)}
-                                        >
-                                            Dashboard
-                                        </NavLink>
-                                        {isDashboardSidebar && (
-                                            <ul className="w-[80%] flex flex-col mt-[5px] gap-[3px]">
-                                                <li onClick={() => setOpenBurgerMenu(false)} className="w-full">
-                                                    <Link
-                                                        to={routesConfig.DASHBOARD_ROOT.path}
-                                                        onClick={() => setActiveDashboardLink('Home')}
-                                                        className={`border-2 text-sm border-white rounded-md px-[4px] text-center block ${
-                                                            activeDashboardLink === 'Home' && 'bg-white text-mainBlue'
-                                                        }`}
-                                                    >
-                                                        Home
-                                                    </Link>
-                                                </li>
-                                                <li onClick={() => setOpenBurgerMenu(false)}>
-                                                    <Link
-                                                        to={routesConfig.DASHBOARD_PROFILE.realPath(user?._id)}
-                                                        onClick={() => setActiveDashboardLink('Profile')}
-                                                        className={`border-2 text-sm border-white rounded-md px-[4px] text-center block ${
-                                                            activeDashboardLink === 'Profile' && 'bg-white text-mainBlue'
-                                                        }`}
-                                                    >
-                                                        Profile
-                                                    </Link>
-                                                </li>
-                                                <li onClick={() => setOpenBurgerMenu(false)}>
-                                                    <Link
-                                                        to={routesConfig.DASHBOARD_POSTS.realPath(user?._id)}
-                                                        onClick={() => setActiveDashboardLink('My posts')}
-                                                        className={`border-2 text-sm border-white rounded-md px-[4px] text-center block ${
-                                                            activeDashboardLink === 'My posts' && 'bg-white text-mainBlue'
-                                                        }`}
-                                                    >
-                                                        My posts
-                                                    </Link>
-                                                </li>
-                                                <li onClick={() => setOpenBurgerMenu(false)}>
-                                                    <Link
-                                                        to={routesConfig.DASHBOARD_REACTIONS.realPath(user?._id)}
-                                                        onClick={() => setActiveDashboardLink('My reactions')}
-                                                        className={`border-2 text-sm border-white rounded-md px-[4px] text-center block ${
-                                                            activeDashboardLink === 'My reactions' && 'bg-white text-mainBlue'
-                                                        }`}
-                                                    >
-                                                        My reactions
-                                                    </Link>
-                                                </li>
-                                            </ul>
-                                        )}
+                                    <li
+                                        className="w-full flex flex-col items-end"
+                                        onClick={() => setIsDashboardSidebar(!isDashboardSidebar)}
+                                    >
+                                        <button className="flex items-center gap-1 border-2 uppercase font-medium border-white rounded-md p-[4px] text-center w-full">
+                                            Dashboard{' '}
+                                            <motion.span
+                                                animate={{ rotate: isDashboardSidebar ? 180 : 0 }}
+                                                transition={{ duration: 0.3 }}
+                                                className="inline-block"
+                                            >
+                                                <IoMdArrowDropdown />
+                                            </motion.span>
+                                        </button>
+                                        <AnimatePresence>
+                                            {isDashboardSidebar && (
+                                                <motion.div
+                                                    className="w-[80%] overflow-hidden"
+                                                    initial={{ height: 0, opacity: 0 }}
+                                                    animate={{ height: 'auto', opacity: 1 }}
+                                                    transition={{ duration: 0.3 }}
+                                                    exit={{ height: 0, opacity: 0 }}
+                                                >
+                                                    <ul className="flex flex-col mt-[5px] gap-[3px]">
+                                                        <li onClick={() => setOpenBurgerMenu(false)} className="w-full">
+                                                            <Link
+                                                                to={routesConfig.DASHBOARD_ROOT.path}
+                                                                className="border-2 text-sm border-white rounded-md px-[4px] text-center block"
+                                                            >
+                                                                Home
+                                                            </Link>
+                                                        </li>
+                                                        <li onClick={() => setOpenBurgerMenu(false)}>
+                                                            <Link
+                                                                to={routesConfig.DASHBOARD_PROFILE.realPath(user?._id)}
+                                                                className="border-2 text-sm border-white rounded-md px-[4px] text-center block"
+                                                            >
+                                                                Profile
+                                                            </Link>
+                                                        </li>
+                                                        <li onClick={() => setOpenBurgerMenu(false)}>
+                                                            <Link
+                                                                to={routesConfig.DASHBOARD_POSTS.realPath(user?._id)}
+                                                                className="border-2 text-sm border-white rounded-md px-[4px] text-center block"
+                                                            >
+                                                                My posts
+                                                            </Link>
+                                                        </li>
+                                                        <li onClick={() => setOpenBurgerMenu(false)}>
+                                                            <Link
+                                                                to={routesConfig.DASHBOARD_REACTIONS.realPath(user?._id)}
+                                                                className="border-2 text-sm border-white rounded-md px-[4px] text-center block"
+                                                            >
+                                                                My reactions
+                                                            </Link>
+                                                        </li>
+                                                    </ul>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
                                     </li>
                                     <li className="border-2 uppercase font-medium border-white rounded-md text-center">
                                         <Button className="uppercase p-[4px] m-0 text-lg" onClick={logoutUser}>

@@ -35,7 +35,7 @@ function CreateMemory({ onPostCreated }) {
             if (res.status === 'success') setTags(res.tags);
         };
         fetchTags();
-    }, []);
+    }, [dispatch]);
 
     const handleChange = (e) => {
         const { value, name } = e.target;

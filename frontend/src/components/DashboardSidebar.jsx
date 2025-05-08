@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
 import { routesConfig } from '../config/routesConfig';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 function DashboardSidebar() {
     const { user } = useSelector((state) => state.userStore);
-    const [activePage, setActivePage] = useState('Home');
+    const location = useLocation();
 
     return (
         <ul className="flex flex-col gap-3">
@@ -13,9 +12,8 @@ function DashboardSidebar() {
                 <Link
                     to={routesConfig.DASHBOARD_ROOT.path}
                     className={`box cursor-pointer text-center w-full block ${
-                        activePage === 'Home' && 'bg-mainBlue text-white font-semibold'
+                        location.pathname === '/dashboard' && 'bg-mainBlue text-white font-semibold'
                     }`}
-                    onClick={() => setActivePage('Home')}
                 >
                     Home
                 </Link>
@@ -23,9 +21,8 @@ function DashboardSidebar() {
             <li className="w-full">
                 <Link
                     to={routesConfig.DASHBOARD_PROFILE.realPath(user?._id)}
-                    onClick={() => setActivePage('Profile')}
                     className={`box cursor-pointer text-center w-full block ${
-                        activePage === 'Profile' && 'bg-mainBlue text-white font-semibold'
+                        location.pathname.includes('/dashboard/profile') && 'bg-mainBlue text-white font-semibold'
                     }`}
                 >
                     Profile
@@ -34,9 +31,8 @@ function DashboardSidebar() {
             <li className="w-full">
                 <Link
                     to={routesConfig.DASHBOARD_POSTS.realPath(user?._id)}
-                    onClick={() => setActivePage('My posts')}
                     className={`box cursor-pointer text-center w-full block ${
-                        activePage === 'My posts' && 'bg-mainBlue text-white font-semibold'
+                        location.pathname.includes('/dashboard/posts') && 'bg-mainBlue text-white font-semibold'
                     }`}
                 >
                     My posts
@@ -45,9 +41,8 @@ function DashboardSidebar() {
             <li className="w-full">
                 <Link
                     to={routesConfig.DASHBOARD_REACTIONS.realPath(user?._id)}
-                    onClick={() => setActivePage('My reactions')}
                     className={`box cursor-pointer text-center w-full block ${
-                        activePage === 'My reactions' && 'bg-mainBlue text-white font-semibold'
+                        location.pathname.includes('/dashboard/reactions') && 'bg-mainBlue text-white font-semibold'
                     }`}
                 >
                     My reactions
