@@ -6,7 +6,11 @@ const userParser = require('../middleware/uploadUserImage');
 
 router.get('/profile', authenticationValidation.protect, dashboardController.getDasboardUserProfile);
 
-router.get('/home', authenticationValidation.protect, dashboardController.getDashboardHomePosts);
+router.get('/home/posts', authenticationValidation.protect, dashboardController.getDashboardHomePosts);
+
+router.get('/user/posts', authenticationValidation.protect, dashboardController.getDasboardUserPosts);
+
+router.get('/reactions', authenticationValidation.protect, dashboardController.getDashboardUserReactions);
 
 router.patch('/profile/image', authenticationValidation.protect, userParser.single('image'), dashboardController.updateProfileImage);
 

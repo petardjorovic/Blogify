@@ -2,25 +2,44 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { showLoader } from '../store/loaderSlice';
 import { getDashboardHomePosts } from '../services/dashboardService';
+import PostCard from '../components/PostCard';
+import PostsRow from '../components/PostsRow';
 
 function DashboardHome() {
     const [newPosts, setNewPosts] = useState([]);
-    const [popularPosts, setPopularPosts] = useState([]);
-    const [commentedPosts, setCommentedPosts] = useState([]);
+    const [mostLikedPosts, setMostLikedPosts] = useState([]);
+    const [mostCommentedPosts, setMostCommentedPosts] = useState([]);
     const dispatch = useDispatch();
 
+    const fetchPosts = async () => {
+        dispatch(showLoader(true));
+        const res = await getDashboardHomePosts();
+        dispatch(showLoader(false));
+        if (res.status === 'success') {
+            setNewPosts(res.newPosts);
+            setMostLikedPosts(res.mostLikedPosts);
+            setMostCommentedPosts(res.mostCommentedPosts);
+        }
+    };
+
     useEffect(() => {
-        const fetchPosts = async () => {
-            dispatch(showLoader(true));
-            const res = await getDashboardHomePosts();
-            dispatch(showLoader(false));
-            console.log(res, 'res sa fronta get dashboard home posts');
-        };
-
         fetchPosts();
-    }, [dispatch]);
+    }, []);
 
-    return <div>DashboardHome</div>;
+    return (
+        <div>
+            <div className="space-y-8 px-4">
+                {/* Red 1: Najnoviji */}
+                <PostsRow title={'🆕 Latest Posts'} posts={newPosts} />
+
+                {/* Red 2: Najviše lajkova */}
+                <PostsRow title={'🔥Top Liked Posts'} posts={mostLikedPosts} />
+
+                {/* Red 3: Najviše komentara */}
+                <PostsRow title={'💬Most Commented Posts'} posts={mostCommentedPosts} />
+            </div>
+        </div>
+    );
 }
 
 export default DashboardHome;

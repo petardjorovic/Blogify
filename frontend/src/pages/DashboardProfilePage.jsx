@@ -111,7 +111,7 @@ function DashboardProfilePage() {
     };
 
     return (
-        <div className="max-w-4xl mx-auto p-6 bg-white">
+        <div className="max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-md">
             <h2 className="text-2xl font-semibold mb-6">Profile</h2>
             <div className="grid grid-cols-1 md:grid-cols-[250px_1fr] gap-8">
                 {/* Avatar and buttons */}
@@ -136,6 +136,7 @@ function DashboardProfilePage() {
                     <button className="px-4 py-2 text-sm text-blue-600 underline" onClick={() => setIsChangePasswordModal(true)}>
                         Change Password
                     </button>
+                    <button className="px-4 py-2 text-sm text-red-600 underline">Delete Profile</button>
                 </div>
                 {/* Form */}
                 <form className="flex flex-col gap-4" onSubmit={handleSubmit}>

@@ -1,4 +1,10 @@
+const joinCommentsToPost = require('../joins/joinCommentsToPost');
+const joinLikesToPost = require('../joins/joinLikesToPost');
+const joinUserToPost = require('../joins/joinUserToPost');
+const PostModel = require('../models/PostModel');
 const UserModel = require('../models/UserModel');
+const LikeModel = require('../models/LikeModel');
+const CommentModel = require('../models/CommentModel');
 const asyncErrorHandler = require('../utils/asyncErrorHandler');
 const CustomError = require('../utils/CustomError');
 const cloudinary = require('cloudinary').v2;
@@ -11,7 +17,44 @@ const getDasboardUserProfile = asyncErrorHandler(async (req, res, next) => {
 });
 
 const getDashboardHomePosts = asyncErrorHandler(async (req, res, next) => {
-    res.send('ok');
+    const matchConditions =
+        req.user.role === 'admin'
+            ? { $match: {} }
+            : {
+                  $match: {
+                      $or: [{ isPublic: true }, { isPublic: false, userId: req.user._id }],
+                  },
+              };
+    const [newPosts, mostLikedPosts, mostCommentedPosts] = await Promise.all([
+        PostModel.aggregate([matchConditions, { $sort: { createdAt: -1 } }, { $limit: 7 }, ...joinUserToPost, ...joinLikesToPost]),
+        PostModel.aggregate([
+            matchConditions,
+            ...joinLikesToPost,
+            {
+                $addFields: {
+                    likesCount: { $size: '$likes' },
+                },
+            },
+            { $sort: { likesCount: -1, createdAt: -1 } },
+            { $limit: 7 },
+            ...joinUserToPost,
+        ]),
+        PostModel.aggregate([
+            matchConditions,
+            ...joinCommentsToPost,
+            { $addFields: { commentsCount: { $size: '$comments' } } },
+            { $sort: { commentsCount: -1, createdAt: -1 } },
+            { $limit: 7 },
+            ...joinUserToPost,
+            ...joinLikesToPost,
+        ]),
+    ]);
+    res.status(200).json({
+        status: 'success',
+        newPosts,
+        mostLikedPosts,
+        mostCommentedPosts,
+    });
 });
 
 const updateProfileImage = asyncErrorHandler(async (req, res, next) => {
@@ -42,4 +85,32 @@ const updateProfileInfo = asyncErrorHandler(async (req, res, next) => {
     });
 });
 
-module.exports = { getDashboardHomePosts, getDasboardUserProfile, updateProfileImage, updateProfileInfo };
+const getDasboardUserPosts = asyncErrorHandler(async (req, res, next) => {
+    const posts = await PostModel.aggregate([
+        { $match: { userId: req.user._id } },
+        { $sort: { createdAt: -1 } },
+        ...joinUserToPost,
+        ...joinLikesToPost,
+        ...joinCommentsToPost,
+    ]);
+    if (!posts) return next(new CustomError('You have not created any post yet.', 404));
+
+    res.status(200).json({
+        status: 'success',
+        posts,
+    });
+});
+
+const getDashboardUserReactions = asyncErrorHandler(async (req, res, next) => {
+    const [likedPosts, comments] = await Promise.all([LikeModel.aggregate([{ $match: { userId: req.user._id } }])]);
+    res.send('ok');
+});
+
+module.exports = {
+    getDashboardHomePosts,
+    getDasboardUserProfile,
+    updateProfileImage,
+    updateProfileInfo,
+    getDasboardUserPosts,
+    getDashboardUserReactions,
+};

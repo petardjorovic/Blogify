@@ -7,7 +7,7 @@ function PostsLayout() {
     const [refreshPosts, setRefreshPosts] = useState(false);
     return (
         <div className="container mx-auto">
-            <div className="flex flex-col lg:flex-row px-[16px] gap-[20px]">
+            <div className="flex flex-col lg:flex-row px-[16px] gap-[20px] mb-[30px]">
                 <div className="w-full lg:w-2/3">
                     <Outlet context={{ refreshPosts }} />
                 </div>

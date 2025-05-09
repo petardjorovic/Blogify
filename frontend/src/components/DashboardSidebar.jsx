@@ -7,12 +7,12 @@ function DashboardSidebar() {
     const location = useLocation();
 
     return (
-        <ul className="flex flex-col gap-3">
+        <ul className="flex flex-col gap-3 sticky top-[110px]">
             <li className="w-full">
                 <Link
                     to={routesConfig.DASHBOARD_ROOT.path}
-                    className={`box cursor-pointer text-center w-full block ${
-                        location.pathname === '/dashboard' && 'bg-mainBlue text-white font-semibold'
+                    className={`border border-mainBlue rounded-[10px] px-2 py-2 shadow-custom md:text-sm lg:text-base cursor-pointer text-center w-full block ${
+                        location.pathname === '/dashboard' && 'bg-mainBlue text-white'
                     }`}
                 >
                     Home
@@ -21,8 +21,8 @@ function DashboardSidebar() {
             <li className="w-full">
                 <Link
                     to={routesConfig.DASHBOARD_PROFILE.realPath(user?._id)}
-                    className={`box cursor-pointer text-center w-full block ${
-                        location.pathname.includes('/dashboard/profile') && 'bg-mainBlue text-white font-semibold'
+                    className={`border border-mainBlue rounded-[10px] px-2 py-2 shadow-custom md:text-sm lg:text-base cursor-pointer text-center w-full block ${
+                        location.pathname.includes('/dashboard/profile') && 'bg-mainBlue text-white'
                     }`}
                 >
                     Profile
@@ -31,8 +31,8 @@ function DashboardSidebar() {
             <li className="w-full">
                 <Link
                     to={routesConfig.DASHBOARD_POSTS.realPath(user?._id)}
-                    className={`box cursor-pointer text-center w-full block ${
-                        location.pathname.includes('/dashboard/posts') && 'bg-mainBlue text-white font-semibold'
+                    className={`border border-mainBlue rounded-[10px] px-2 py-2 shadow-custom md:text-sm lg:text-base cursor-pointer text-center w-full block ${
+                        location.pathname.includes('/dashboard/posts') && 'bg-mainBlue text-white'
                     }`}
                 >
                     My posts
@@ -41,8 +41,8 @@ function DashboardSidebar() {
             <li className="w-full">
                 <Link
                     to={routesConfig.DASHBOARD_REACTIONS.realPath(user?._id)}
-                    className={`box cursor-pointer text-center w-full block ${
-                        location.pathname.includes('/dashboard/reactions') && 'bg-mainBlue text-white font-semibold'
+                    className={`border border-mainBlue rounded-[10px] px-2 py-2 shadow-custom md:text-sm lg:text-base cursor-pointer text-center w-full block ${
+                        location.pathname.includes('/dashboard/reactions') && 'bg-mainBlue text-white'
                     }`}
                 >
                     My reactions

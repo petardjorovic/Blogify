@@ -42,7 +42,7 @@ function SinglePostPage() {
                 {Object.hasOwn(post, '_id') ? (
                     <div className="box flex flex-col md:flex-row items-stretch">
                         {/* LEFT */}
-                        <div className="w-full md:w-1/2 p-[10px]">
+                        <div className="w-full md:w-1/2 p-[10px] order-1">
                             <h2 className="font-semibold text-3xl mb-[10px]">{post.title}</h2>
                             <div className="mb-[10px]">
                                 {post.tags.length > 0 ? (
@@ -67,7 +67,7 @@ function SinglePostPage() {
                             {post.comments.length > 0 && <CommentsList post={post} rerenderView={fetchPost} />}
                         </div>
                         {/* RIGHT */}
-                        <div className="w-full md:w-1/2 p-[10px]">
+                        <div className="w-full md:w-1/2 p-[10px] order-0">
                             <img
                                 src={post.image.includes('uploads') ? 'http://localhost:4000/' + post.image : post.image}
                                 alt=""

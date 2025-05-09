@@ -24,6 +24,10 @@
         @apply bg-mainBlue text-white rounded-[5px] w-[35px] h-[35px] text-xl font-semibold;
     }
 
+    .swiper-button-custom {
+        @apply p-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full transition shadow;
+    }
+
     @keyframes spin {
         to {
             transform: rotate(1turn);

@@ -2,12 +2,21 @@ import axios from 'axios';
 
 export const getDashboardHomePosts = async () => {
     try {
-        const res = await axios.get('/api/dashboard/home');
-        console.log(res, 'res iz servisa get dashboard home posts');
-        return res;
+        const res = await axios.get('/api/dashboard/home/posts');
+        if (res.status === 200 && res.data.status === 'success') {
+            return {
+                status: res.data.status,
+                newPosts: res.data.newPosts,
+                mostLikedPosts: res.data.mostLikedPosts,
+                mostCommentedPosts: res.data.mostCommentedPosts,
+            };
+        }
     } catch (err) {
         console.error(err, 'err iz servisa get dashboard home posts');
-        return err;
+        return {
+            status: err.response.data.error.status,
+            message: err.response.data.message,
+        };
     }
 };
 
@@ -64,5 +73,34 @@ export const updateUserInfo = async (data) => {
             status: err.response.data.error.status,
             message: err.response.data.message,
         };
+    }
+};
+
+export const getDashboardUserPosts = async () => {
+    try {
+        const res = await axios.get('/api/dashboard/user/posts');
+        if (res.status === 200 && res.data.status === 'success') {
+            return {
+                status: res.data.status,
+                posts: res.data.posts,
+            };
+        }
+    } catch (err) {
+        console.error(err, 'err iz servisa get dashboard user posts');
+        return {
+            status: err.response.data.error.status,
+            message: err.response.data.message,
+        };
+    }
+};
+
+export const getDashboardUserReactions = async () => {
+    try {
+        const res = await axios.get('/api/dashboard/reactions');
+        console.log(res, 'res iz servisa get dashboard user reactions');
+        return res;
+    } catch (err) {
+        console.error(err, 'err iz servisa get dashboard user reactions');
+        return err;
     }
 };

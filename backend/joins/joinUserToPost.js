@@ -11,6 +11,7 @@ const joinUserToPost = [
                         _id: true,
                         firstName: true,
                         lastName: true,
+                        image: true,
                     },
                 },
             ],
