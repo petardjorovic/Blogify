@@ -1,6 +1,6 @@
 export const formatDatetime = (dateString) => {
     const options = {
-        weekday: 'long',
+        // weekday: 'long',
         year: 'numeric',
         month: 'long',
         day: 'numeric',

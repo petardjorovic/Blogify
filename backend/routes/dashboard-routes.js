@@ -10,7 +10,9 @@ router.get('/home/posts', authenticationValidation.protect, dashboardController.
 
 router.get('/user/posts', authenticationValidation.protect, dashboardController.getDasboardUserPosts);
 
-router.get('/reactions', authenticationValidation.protect, dashboardController.getDashboardUserReactions);
+router.get('/reactions/likes', authenticationValidation.protect, dashboardController.getDashboardUserReactionsLikes);
+
+router.get('/reactions/comments', authenticationValidation.protect, dashboardController.getDashboardUserReactionsComments);
 
 router.patch('/profile/image', authenticationValidation.protect, userParser.single('image'), dashboardController.updateProfileImage);
 

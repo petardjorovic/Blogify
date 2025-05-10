@@ -94,13 +94,40 @@ export const getDashboardUserPosts = async () => {
     }
 };
 
-export const getDashboardUserReactions = async () => {
+export const getDashboardUserReactionsLikes = async (page, limit) => {
     try {
-        const res = await axios.get('/api/dashboard/reactions');
-        console.log(res, 'res iz servisa get dashboard user reactions');
-        return res;
+        const res = await axios.get(`/api/dashboard/reactions/likes?page=${page}&limit=${limit}`);
+        if (res.status === 200 && res.data.status === 'success') {
+            return {
+                status: res.data.status,
+                likes: res.data.likes,
+                total: res.data.total,
+            };
+        }
     } catch (err) {
-        console.error(err, 'err iz servisa get dashboard user reactions');
-        return err;
+        console.error(err, 'err iz servisa get dashboard user reactions likes');
+        return {
+            status: err.response.data.error.status,
+            message: err.response.data.message,
+        };
+    }
+};
+
+export const getDashboardUserReactionsComments = async (page, limit) => {
+    try {
+        const res = await axios.get(`/api/dashboard/reactions/comments?page=${page}&limit=${limit}`);
+        if (res.status === 200 && res.data.status === 'success') {
+            return {
+                status: res.data.status,
+                comments: res.data.comments,
+                total: res.data.total,
+            };
+        }
+    } catch (err) {
+        console.error(err, 'err iz servisa get dashboard user reactions comments');
+        return {
+            status: err.response.data.error.status,
+            message: err.response.data.message,
+        };
     }
 };

@@ -10,7 +10,7 @@ const joinPostToComment = [
     {
         $unwind: {
             path: '$post',
-            preserveNullAndEmptyArrays: true,
+            preserveNullAndEmptyArrays: true, // prikazuje i komentare na postovima koji vise ne postoje
         },
     },
 ];

@@ -1,6 +1,8 @@
 const joinCommentsToPost = require('../joins/joinCommentsToPost');
 const joinLikesToPost = require('../joins/joinLikesToPost');
 const joinUserToPost = require('../joins/joinUserToPost');
+const joinPostToLike = require('../joins/joinPostToLike');
+const joinPostToComment = require('../joins/joinPostToComment');
 const PostModel = require('../models/PostModel');
 const UserModel = require('../models/UserModel');
 const LikeModel = require('../models/LikeModel');
@@ -101,9 +103,65 @@ const getDasboardUserPosts = asyncErrorHandler(async (req, res, next) => {
     });
 });
 
-const getDashboardUserReactions = asyncErrorHandler(async (req, res, next) => {
-    const [likedPosts, comments] = await Promise.all([LikeModel.aggregate([{ $match: { userId: req.user._id } }])]);
-    res.send('ok');
+const getDashboardUserReactionsLikes = asyncErrorHandler(async (req, res, next) => {
+    const page = parseInt(req.query.page);
+    const limit = parseInt(req.query.limit);
+    const [likes, totalLikes] = await Promise.all([
+        LikeModel.aggregate([
+            {
+                $match: { userId: req.user._id },
+            },
+            ...joinPostToLike,
+            { $sort: { createdAt: -1 } },
+            { $skip: (page - 1) * limit },
+            { $limit: limit },
+        ]),
+        LikeModel.aggregate([
+            {
+                $match: { userId: req.user._id },
+            },
+            { $count: 'total' },
+        ]),
+    ]);
+
+    const total = totalLikes[0]?.total || 0;
+
+    res.status(200).json({
+        status: 'success',
+        likes,
+        total,
+    });
+});
+
+const getDashboardUserReactionsComments = asyncErrorHandler(async (req, res, next) => {
+    const page = parseInt(req.query.page);
+    const limit = parseInt(req.query.limit);
+    const [comments, totalComments] = await Promise.all([
+        CommentModel.aggregate([
+            {
+                $match: { 'user.id': req.user._id },
+            },
+            ...joinPostToComment,
+            { $sort: { createdAt: -1 } },
+            { $skip: (page - 1) * limit },
+            { $limit: limit },
+        ]),
+        CommentModel.aggregate([
+            {
+                $match: { 'user.id': req.user._id },
+            },
+            ...joinPostToComment,
+            { $count: 'total' },
+        ]),
+    ]);
+
+    const total = totalComments[0]?.total || 0;
+
+    res.status(200).json({
+        status: 'success',
+        comments,
+        total,
+    });
 });
 
 module.exports = {
@@ -112,5 +170,6 @@ module.exports = {
     updateProfileImage,
     updateProfileInfo,
     getDasboardUserPosts,
-    getDashboardUserReactions,
+    getDashboardUserReactionsLikes,
+    getDashboardUserReactionsComments,
 };
