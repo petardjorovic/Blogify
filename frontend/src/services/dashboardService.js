@@ -83,6 +83,7 @@ export const getDashboardUserPosts = async () => {
             return {
                 status: res.data.status,
                 posts: res.data.posts,
+                postsCount: res.data.postsCount,
             };
         }
     } catch (err) {

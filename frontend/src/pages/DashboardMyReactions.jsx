@@ -1,4 +1,4 @@
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { showLoader } from '../store/loaderSlice';
 import { useEffect, useState } from 'react';
 import { formatDatetime } from '../utils/formatDatetime';
@@ -7,8 +7,13 @@ import { routesConfig } from '../config/routesConfig';
 import { getDashboardUserReactionsLikes } from '../services/dashboardService';
 import { getDashboardUserReactionsComments } from '../services/dashboardService';
 import { getPaginationPages } from '../utils/getPaginationPages';
+import DeleteCommentModal from '../components/DeleteCommentModal';
+import { toast } from 'react-toastify';
+import { deleteComment } from '../services/commentService';
+import { handlePostLike } from '../services/likeService';
 
 function DashboardMyReactions() {
+    const { user } = useSelector((state) => state.userStore);
     const [activeTab, setActiveTab] = useState('likes');
     const [likes, setLikes] = useState([]);
     const [comments, setComments] = useState([]);
@@ -17,30 +22,32 @@ function DashboardMyReactions() {
     const [limit, setLimit] = useState(10);
     const [total, setTotal] = useState(0);
     const totalPages = Math.ceil(total / limit);
+    const [currentComment, setCurrentComment] = useState({});
+    const [isDeleteCommentModal, setIsDeleteCommentModal] = useState(false);
 
-    useEffect(() => {
-        const fecthData = async () => {
-            let res;
-            dispatch(showLoader(true));
+    const fecthData = async () => {
+        let res;
+        dispatch(showLoader(true));
+        if (activeTab === 'likes') {
+            res = await getDashboardUserReactionsLikes(page, limit);
+        } else {
+            res = await getDashboardUserReactionsComments(page, limit);
+        }
+        dispatch(showLoader(false));
+
+        if (res.status === 'success') {
             if (activeTab === 'likes') {
-                res = await getDashboardUserReactionsLikes(page, limit);
+                setLikes(res.likes);
+                setTotal(res.total);
             } else {
-                res = await getDashboardUserReactionsComments(page, limit);
+                setComments(res.comments);
+                setTotal(res.total);
             }
-            dispatch(showLoader(false));
-
-            if (res.status === 'success') {
-                if (activeTab === 'likes') {
-                    setLikes(res.likes);
-                    setTotal(res.total);
-                } else {
-                    setComments(res.comments);
-                    setTotal(res.total);
-                }
-            }
-        };
+        }
+    };
+    useEffect(() => {
         fecthData();
-    }, [activeTab, page, dispatch, limit]);
+    }, [activeTab, page, limit]);
 
     const handleTabChange = (tab) => {
         setActiveTab(tab);
@@ -56,6 +63,44 @@ function DashboardMyReactions() {
     const previousPage = () => {
         if (page > 1) {
             setPage(page - 1);
+        }
+    };
+
+    const handleDeleteComment = (comment) => {
+        setCurrentComment(comment);
+        setIsDeleteCommentModal(true);
+    };
+
+    const handleDelete = async () => {
+        setIsDeleteCommentModal(false);
+        dispatch(showLoader(true));
+        const res = await deleteComment(currentComment._id);
+        dispatch(showLoader(false));
+        if (res.status === 'success') {
+            fecthData();
+            toast(res.message, {
+                type: 'success',
+                toastId: 1,
+            });
+        } else {
+            toast(res.message, {
+                type: 'error',
+                toastId: 1,
+            });
+        }
+    };
+
+    const handleLike = async (post, userLike) => {
+        dispatch(showLoader(true));
+        const res = await handlePostLike(post._id, userLike);
+        dispatch(showLoader(false));
+        if (res.status === 'success') {
+            fecthData();
+        } else {
+            toast(res.message, {
+                type: 'error',
+                toastId: 1,
+            });
         }
     };
 
@@ -97,7 +142,7 @@ function DashboardMyReactions() {
                                 <div key={like._id} className="border rounded-lg p-4 hover:shadow-md transition">
                                     <h3 className="text-lg font-semibold">{like.post?.title || 'Unknown'}</h3>
                                     <p className="text-sm text-gray-500">
-                                        By {like.post?.user.firstName || 'Unknown'} {like.post?.user.lastName || 'Unknown'}
+                                        By {like.post?.user?.firstName || 'Unknown'} {like.post?.user?.lastName || 'Unknown'}
                                     </p>
                                     <p className="text-xs text-gray-400 mb-2">{formatDatetime(like.post?.createdAt)}</p>
                                     <div className="flex items-center gap-4 mt-2">
@@ -107,7 +152,12 @@ function DashboardMyReactions() {
                                         >
                                             Go to post →
                                         </Link>
-                                        <button className="text-xs text-red-500 hover:text-red-600">Remove Like</button>
+                                        <button
+                                            className="text-xs text-red-500 hover:text-red-600"
+                                            onClick={() => handleLike(like.post, 'dislike')}
+                                        >
+                                            Remove Like
+                                        </button>
                                     </div>
                                     <p className="text-[11px] text-gray-400 mt-2 italic">
                                         You liked this post on {formatDatetime(like.createdAt)}
@@ -129,15 +179,17 @@ function DashboardMyReactions() {
                                     <p className="text-sm text-gray-500">
                                         On post:{' '}
                                         <Link
-                                            to={routesConfig.SINGLE_POST.realPath(comment.post._id)}
+                                            to={routesConfig.SINGLE_POST.realPath(comment.post?._id)}
                                             className="text-blue-600 hover:underline"
                                         >
-                                            {comment.post.title}
+                                            {comment.post?.title}
                                         </Link>
                                     </p>
                                     <div className="mt-2 flex justify-between text-xs text-gray-400">
                                         <span>{formatDatetime(comment.createdAt)}</span>
-                                        <button className="text-red-500 hover:text-red-600">Delete Comment</button>
+                                        <button className="text-red-500 hover:text-red-600" onClick={() => handleDeleteComment(comment)}>
+                                            Delete Comment
+                                        </button>
                                     </div>
                                 </div>
                             ))}
@@ -184,23 +236,35 @@ function DashboardMyReactions() {
                 )}
                 <button
                     onClick={nextPage}
-                    disabled={page === totalPages}
+                    disabled={page === totalPages || totalPages === 0 || totalPages === 1}
                     className={`px-3 py-1 rounded-md shadow-sm text-sm transition-colors duration-200 ${
-                        page === totalPages ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'
+                        page === totalPages || totalPages === 0 || totalPages === 1
+                            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                            : 'bg-blue-500 text-white hover:bg-blue-600'
                     }`}
                 >
                     Next
                 </button>
                 <button
                     onClick={() => setPage(totalPages)}
-                    disabled={page === totalPages}
+                    disabled={page === totalPages || totalPages === 0 || totalPages === 1}
                     className={`px-3 py-1 rounded-md shadow-sm text-sm ${
-                        page === totalPages ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'
+                        page === totalPages || totalPages === 0 || totalPages === 1
+                            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                            : 'bg-blue-500 text-white hover:bg-blue-600'
                     }`}
                 >
                     Last
                 </button>
             </div>
+            {isDeleteCommentModal && (
+                <DeleteCommentModal
+                    setIsDeleteCommentModal={setIsDeleteCommentModal}
+                    user={user}
+                    comment={currentComment}
+                    handleDelete={handleDelete}
+                />
+            )}
         </div>
     );
 }

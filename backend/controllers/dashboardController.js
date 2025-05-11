@@ -88,18 +88,23 @@ const updateProfileInfo = asyncErrorHandler(async (req, res, next) => {
 });
 
 const getDasboardUserPosts = asyncErrorHandler(async (req, res, next) => {
-    const posts = await PostModel.aggregate([
-        { $match: { userId: req.user._id } },
-        { $sort: { createdAt: -1 } },
-        ...joinUserToPost,
-        ...joinLikesToPost,
-        ...joinCommentsToPost,
+    const [posts, postsCount] = await Promise.all([
+        PostModel.aggregate([
+            { $match: { userId: req.user._id } },
+            { $sort: { createdAt: -1 } },
+            ...joinUserToPost,
+            ...joinLikesToPost,
+            ...joinCommentsToPost,
+        ]),
+        PostModel.countDocuments({ userId: req.user._id }),
     ]);
+
     if (!posts) return next(new CustomError('You have not created any post yet.', 404));
 
     res.status(200).json({
         status: 'success',
         posts,
+        postsCount,
     });
 });
 

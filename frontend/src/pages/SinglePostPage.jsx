@@ -39,10 +39,18 @@ function SinglePostPage() {
         <div className="container mx-auto">
             <div className="px-[16px]">
                 {/* {isSuccess ? ( */}
-                {Object.hasOwn(post, '_id') ? (
+                {Object.hasOwn(post, '_id') && (
                     <div className="box flex flex-col md:flex-row items-stretch">
                         {/* LEFT */}
-                        <div className="w-full md:w-1/2 p-[10px] order-1">
+                        <div className="w-full md:w-1/2 p-[10px]">
+                            <img
+                                src={post.image.includes('uploads') ? 'http://localhost:4000/' + post.image : post.image}
+                                alt=""
+                                className="w-full h-full lg:h-[460px] object-cover rounded-lg"
+                            />
+                        </div>
+                        {/* RIGHT */}
+                        <div className="w-full md:w-1/2 p-[10px]">
                             <h2 className="font-semibold text-3xl mb-[10px]">{post.title}</h2>
                             <div className="mb-[10px]">
                                 {post.tags.length > 0 ? (
@@ -66,17 +74,7 @@ function SinglePostPage() {
                             {/* Comments list */}
                             {post.comments.length > 0 && <CommentsList post={post} rerenderView={fetchPost} />}
                         </div>
-                        {/* RIGHT */}
-                        <div className="w-full md:w-1/2 p-[10px] order-0">
-                            <img
-                                src={post.image.includes('uploads') ? 'http://localhost:4000/' + post.image : post.image}
-                                alt=""
-                                className="w-full h-full lg:h-[460px] object-cover rounded-lg"
-                            />
-                        </div>
                     </div>
-                ) : (
-                    <h1>Loading...</h1>
                 )}
             </div>
         </div>
