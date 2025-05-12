@@ -54,7 +54,7 @@ function PostsRow({ posts, title }) {
                     }
 
                     .swiper-pagination {
-                        margin-bottom: 10px;
+                        margin-bottom: 20px;
                     }
 
                     .swiper-pagination-bullet {

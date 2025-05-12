@@ -7,9 +7,11 @@ const PostModel = require('../models/PostModel');
 const UserModel = require('../models/UserModel');
 const LikeModel = require('../models/LikeModel');
 const CommentModel = require('../models/CommentModel');
+const TagModel = require('../models/TagModel');
 const asyncErrorHandler = require('../utils/asyncErrorHandler');
 const CustomError = require('../utils/CustomError');
 const cloudinary = require('cloudinary').v2;
+const mongoose = require('mongoose');
 
 const getDasboardUserProfile = asyncErrorHandler(async (req, res, next) => {
     res.status(200).json({
@@ -88,10 +90,14 @@ const updateProfileInfo = asyncErrorHandler(async (req, res, next) => {
 });
 
 const getDasboardUserPosts = asyncErrorHandler(async (req, res, next) => {
+    const page = parseInt(req.query.page);
+    const limit = parseInt(req.query.limit);
     const [posts, postsCount] = await Promise.all([
         PostModel.aggregate([
             { $match: { userId: req.user._id } },
             { $sort: { createdAt: -1 } },
+            { $skip: (page - 1) * limit },
+            { $limit: limit },
             ...joinUserToPost,
             ...joinLikesToPost,
             ...joinCommentsToPost,
@@ -169,6 +175,30 @@ const getDashboardUserReactionsComments = asyncErrorHandler(async (req, res, nex
     });
 });
 
+const getDashboardSinglePostEdit = asyncErrorHandler(async (req, res, next) => {
+    const { postId } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(postId)) {
+        return next(new CustomError('Invalid postId format', 400));
+    }
+    const [post, tags] = await Promise.all([
+        PostModel.aggregate([
+            {
+                $match: { $expr: { $eq: ['$_id', { $toObjectId: postId }] } }, // { _id: new mongoose.Types.ObjectId(req.params.postId) }
+            },
+            ...joinUserToPost,
+            ...joinCommentsToPost,
+            ...joinLikesToPost,
+        ]),
+        TagModel.find().sort({ name: 1 }),
+    ]);
+
+    res.status(200).json({
+        status: 'success',
+        post: post[0],
+        tags,
+    });
+});
+
 module.exports = {
     getDashboardHomePosts,
     getDasboardUserProfile,
@@ -177,4 +207,5 @@ module.exports = {
     getDasboardUserPosts,
     getDashboardUserReactionsLikes,
     getDashboardUserReactionsComments,
+    getDashboardSinglePostEdit,
 };

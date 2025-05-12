@@ -76,9 +76,9 @@ export const updateUserInfo = async (data) => {
     }
 };
 
-export const getDashboardUserPosts = async () => {
+export const getDashboardUserPosts = async (page, limit) => {
     try {
-        const res = await axios.get('/api/dashboard/user/posts');
+        const res = await axios.get(`/api/dashboard/user/posts?page=${page}&limit=${limit}`);
         if (res.status === 200 && res.data.status === 'success') {
             return {
                 status: res.data.status,
@@ -126,6 +126,25 @@ export const getDashboardUserReactionsComments = async (page, limit) => {
         }
     } catch (err) {
         console.error(err, 'err iz servisa get dashboard user reactions comments');
+        return {
+            status: err.response.data.error.status,
+            message: err.response.data.message,
+        };
+    }
+};
+
+export const getDashboardSinglePostEdit = async (postId) => {
+    try {
+        const res = await axios.get(`/api/dashboard/singlePost/edit/${postId}`);
+        if (res.status === 200 && res.data.status === 'success') {
+            return {
+                status: res.data.status,
+                post: res.data.post,
+                tags: res.data.tags,
+            };
+        }
+    } catch (err) {
+        console.error(err, 'err iz servisa get dashboard single post edit');
         return {
             status: err.response.data.error.status,
             message: err.response.data.message,

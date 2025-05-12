@@ -4,7 +4,7 @@ import DashboardSidebar from '../components/DashboardSidebar';
 function DashboardLayout() {
     return (
         <div className="container mx-auto">
-            <div className="px-4 flex gap-[15px] mb-8">
+            <div className="px-4 flex gap-[15px]">
                 <div className="hidden md:w-[12%] md:block">
                     <DashboardSidebar />
                 </div>

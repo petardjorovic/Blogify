@@ -14,6 +14,8 @@ router.get('/reactions/likes', authenticationValidation.protect, dashboardContro
 
 router.get('/reactions/comments', authenticationValidation.protect, dashboardController.getDashboardUserReactionsComments);
 
+router.get('/singlePost/edit/:postId', authenticationValidation.protect, dashboardController.getDashboardSinglePostEdit);
+
 router.patch('/profile/image', authenticationValidation.protect, userParser.single('image'), dashboardController.updateProfileImage);
 
 router.patch('/profile/info', authenticationValidation.protect, dashboardController.updateProfileInfo);

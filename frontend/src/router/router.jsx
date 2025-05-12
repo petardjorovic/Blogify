@@ -19,6 +19,7 @@ import DashboardProfilePage from '../pages/DashboardProfilePage';
 import DashboardHome from '../pages/DashboardHome';
 import DashboardMyPosts from '../pages/DashboardMyPosts';
 import DashboardMyReactions from '../pages/DashboardMyReactions';
+import DashboardPostsEdit from '../pages/DashboardPostsEdit';
 
 const router = createBrowserRouter([
     {
@@ -92,6 +93,10 @@ const router = createBrowserRouter([
                             {
                                 path: routesConfig.DASHBOARD_REACTIONS.path,
                                 element: <DashboardMyReactions />,
+                            },
+                            {
+                                path: routesConfig.DASHBOARD_POSTS_EDIT.path,
+                                element: <DashboardPostsEdit />,
                             },
                         ],
                     },

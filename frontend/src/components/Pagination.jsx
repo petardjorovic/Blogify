@@ -40,10 +40,12 @@ function Pagination({ itemsCount, itemsLimit, currentPage, setCurrentPage }) {
     };
 
     const backToStart = () => {
-        searchParams.set('page', 1);
-        searchParams.set('limit', itemsLimit);
-        setSearchParams(searchParams);
-        setCurrentPage(1);
+        if (pagesCount > 1 && currentPage > 1) {
+            searchParams.set('page', 1);
+            searchParams.set('limit', itemsLimit);
+            setSearchParams(searchParams);
+            setCurrentPage(1);
+        }
     };
 
     const handleCurrentPage = (page) => {
@@ -54,10 +56,12 @@ function Pagination({ itemsCount, itemsLimit, currentPage, setCurrentPage }) {
     };
 
     const goToEnd = () => {
-        searchParams.set('page', pagesCount);
-        searchParams.set('limit', itemsLimit);
-        setSearchParams(searchParams);
-        setCurrentPage(pagesCount);
+        if (pagesCount > 1 && currentPage !== pagesCount) {
+            searchParams.set('page', pagesCount);
+            searchParams.set('limit', itemsLimit);
+            setSearchParams(searchParams);
+            setCurrentPage(pagesCount);
+        }
     };
 
     return (

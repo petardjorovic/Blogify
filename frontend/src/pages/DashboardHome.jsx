@@ -11,20 +11,19 @@ function DashboardHome() {
     const [mostCommentedPosts, setMostCommentedPosts] = useState([]);
     const dispatch = useDispatch();
 
-    const fetchPosts = async () => {
-        dispatch(showLoader(true));
-        const res = await getDashboardHomePosts();
-        dispatch(showLoader(false));
-        if (res.status === 'success') {
-            setNewPosts(res.newPosts);
-            setMostLikedPosts(res.mostLikedPosts);
-            setMostCommentedPosts(res.mostCommentedPosts);
-        }
-    };
-
     useEffect(() => {
+        const fetchPosts = async () => {
+            dispatch(showLoader(true));
+            const res = await getDashboardHomePosts();
+            dispatch(showLoader(false));
+            if (res.status === 'success') {
+                setNewPosts(res.newPosts);
+                setMostLikedPosts(res.mostLikedPosts);
+                setMostCommentedPosts(res.mostCommentedPosts);
+            }
+        };
         fetchPosts();
-    }, []);
+    }, [dispatch]);
 
     return (
         <div>

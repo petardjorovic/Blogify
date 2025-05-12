@@ -41,6 +41,10 @@ export const routesConfig = {
         path: '/dashboard/reactions/:userId',
         realPath: (userId) => `/dashboard/reactions/${userId}`,
     },
+    DASHBOARD_POSTS_EDIT: {
+        path: '/dashboard/posts/edit/:postId',
+        realPath: (postId) => `/dashboard/posts/edit/${postId}`,
+    },
     ACTIVATION: {
         path: '/activation/:activationToken',
     },

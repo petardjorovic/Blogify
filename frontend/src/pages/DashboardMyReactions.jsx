@@ -25,7 +25,7 @@ function DashboardMyReactions() {
     const [currentComment, setCurrentComment] = useState({});
     const [isDeleteCommentModal, setIsDeleteCommentModal] = useState(false);
 
-    const fecthData = async () => {
+    const fetchData = async () => {
         let res;
         dispatch(showLoader(true));
         if (activeTab === 'likes') {
@@ -46,7 +46,7 @@ function DashboardMyReactions() {
         }
     };
     useEffect(() => {
-        fecthData();
+        fetchData();
     }, [activeTab, page, limit]);
 
     const handleTabChange = (tab) => {
@@ -77,7 +77,7 @@ function DashboardMyReactions() {
         const res = await deleteComment(currentComment._id);
         dispatch(showLoader(false));
         if (res.status === 'success') {
-            fecthData();
+            fetchData();
             toast(res.message, {
                 type: 'success',
                 toastId: 1,
@@ -95,7 +95,7 @@ function DashboardMyReactions() {
         const res = await handlePostLike(post._id, userLike);
         dispatch(showLoader(false));
         if (res.status === 'success') {
-            fecthData();
+            fetchData();
         } else {
             toast(res.message, {
                 type: 'error',
@@ -105,7 +105,7 @@ function DashboardMyReactions() {
     };
 
     return (
-        <div className="p-4 md:p-6 max-w-5xl mx-auto">
+        <div className="p-4 md:p-6 max-w-5xl mx-auto bg-white rounded-xl shadow-md">
             <div className="bg-white sticky top-[70px] pt-[10px] pb-[30px]">
                 <h1 className="text-2xl font-bold mb-1">My Reactions</h1>
                 <p className="text-gray-500 mb-6">Posts you've liked and commented on</p>
