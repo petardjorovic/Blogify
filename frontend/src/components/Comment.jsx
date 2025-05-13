@@ -103,7 +103,12 @@ function Comment({ comment, rerenderView, postAuthorId, user, indexKey }) {
                 )}
             </AnimatePresence>
             {isDeleteCommentModal && (
-                <DeleteCommentModal setIsDeleteCommentModal={setIsDeleteCommentModal} handleDelete={handleDelete} comment={comment} />
+                <DeleteCommentModal
+                    setIsDeleteCommentModal={setIsDeleteCommentModal}
+                    handleDelete={handleDelete}
+                    comment={comment}
+                    user={user}
+                />
             )}
         </div>
     );

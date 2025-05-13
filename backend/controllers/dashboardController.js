@@ -199,6 +199,39 @@ const getDashboardSinglePostEdit = asyncErrorHandler(async (req, res, next) => {
     });
 });
 
+const updatePostImage = asyncErrorHandler(async (req, res, next) => {
+    const { postId, image } = req.query;
+    const parts = image.split('/');
+    const imageName = parts.pop().split('.')[0];
+    const folderName = parts[parts.length - 1];
+    await cloudinary.uploader.destroy(`${folderName}/${imageName}`);
+
+    const updatedPost = await PostModel.findByIdAndUpdate(postId, { image: req.file.path });
+    if (!updatedPost) return next(new CustomError('An error occurred, please try later', 500));
+
+    res.status(200).json({
+        status: 'success',
+        message: 'Image updated!',
+        image: req.file.path,
+    });
+});
+
+const updatePostInfo = asyncErrorHandler(async (req, res, next) => {
+    const { postId, ...postData } = req.body;
+    const newTags = postData.tags.map((tag) => {
+        return { name: tag };
+    });
+    postData.tags = newTags;
+    console.log(postData, 'postData');
+    const updatedPost = await PostModel.findByIdAndUpdate(postId, postData, { new: true });
+    if (!updatedPost) return next(new CustomError('Something went wrong, please try later', 500));
+    res.status(200).json({
+        status: 'success',
+        message: 'Post updated',
+        post: updatedPost,
+    });
+});
+
 module.exports = {
     getDashboardHomePosts,
     getDasboardUserProfile,
@@ -208,4 +241,6 @@ module.exports = {
     getDashboardUserReactionsLikes,
     getDashboardUserReactionsComments,
     getDashboardSinglePostEdit,
+    updatePostImage,
+    updatePostInfo,
 };

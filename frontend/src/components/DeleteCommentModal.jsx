@@ -2,7 +2,7 @@ import React from 'react';
 import { IoClose } from 'react-icons/io5';
 import { HiTrash } from 'react-icons/hi';
 
-function DeletePostModal({ setIsDeleteCommentModal, handleDelete, comment, user }) {
+function DeleteCommentModal({ setIsDeleteCommentModal, handleDelete, comment, user }) {
     return (
         <div className="w-screen h-screen flex justify-center items-center bg-black bg-opacity-70 z-50 fixed top-0 left-0 px-4 transition-all duration-300 ease-out">
             <div className="relative p-6 rounded-2xl text-center bg-white shadow-lg w-[320px] animate-fadeInScale">
@@ -43,4 +43,4 @@ function DeletePostModal({ setIsDeleteCommentModal, handleDelete, comment, user 
     );
 }
 
-export default DeletePostModal;
+export default DeleteCommentModal;

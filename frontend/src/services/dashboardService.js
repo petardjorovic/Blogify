@@ -151,3 +151,41 @@ export const getDashboardSinglePostEdit = async (postId) => {
         };
     }
 };
+
+export const updatePostImage = async (image, postId, oldImage) => {
+    try {
+        const res = await axios.patch(`/api/dashboard/posts/edit/image?postId=${postId}&image=${oldImage}`, image);
+        if (res.status === 200 && res.data.status === 'success') {
+            return {
+                status: res.data.status,
+                message: res.data.message,
+                image: res.data.image,
+            };
+        }
+    } catch (err) {
+        console.error(err, 'err iz servisa update post image');
+        return {
+            status: err.response.data.error.status,
+            message: err.response.data.message,
+        };
+    }
+};
+
+export const updatePostInfo = async (data, postId) => {
+    try {
+        const res = await axios.patch(`/api/dashboard/posts/edit/info`, { ...data, postId });
+        if (res.status === 200 && res.data.status === 'success') {
+            return {
+                status: res.data.status,
+                message: res.data.message,
+                post: res.data.post,
+            };
+        }
+    } catch (err) {
+        console.error(err, 'err iz servisa update post info');
+        return {
+            status: err.response.data.error.status,
+            message: err.response.data.message,
+        };
+    }
+};
