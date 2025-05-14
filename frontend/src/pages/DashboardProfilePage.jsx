@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import ChangePasswordModal from '../components/ChangePasswordModal';
 import ChangeEmailModal from '../components/ChangeEmailModal';
 import { formatDate } from '../utils/formatDate';
+import DeleteUserProfileModal from '../components/DeleteUserProfileModal';
 
 function DashboardProfilePage() {
     const [user, setUser] = useState({});
@@ -26,6 +27,7 @@ function DashboardProfilePage() {
     const [isLastName, setIsLastName] = useState(true);
     const [isChangePasswordModal, setIsChangePasswordModal] = useState(false);
     const [isChangeEmailModal, setIsChangeEmailModal] = useState(false);
+    const [isDeleteUserProfileModal, setIsDeleteUserProfileModal] = useState(false);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -136,24 +138,30 @@ function DashboardProfilePage() {
                     <button className="px-4 py-2 text-sm text-blue-600 underline" onClick={() => setIsChangePasswordModal(true)}>
                         Change Password
                     </button>
-                    <button className="px-4 py-2 text-sm text-red-600 underline">Delete Profile</button>
+                    <button className="px-4 py-2 text-sm text-red-600 underline" onClick={() => setIsDeleteUserProfileModal(true)}>
+                        Delete Profile
+                    </button>
                 </div>
                 {/* Form */}
-                <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+                <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
                     <div className="">
                         <Label>Email</Label>
-                        <p className="w-full mt-1 px-3 py-2 border rounded-md">{user.email}</p>
+                        <p className="w-full px-3 py-2 border rounded-md">{user.email}</p>
                     </div>
                     <div className="">
                         <Label>Member from</Label>
-                        <p className="w-full mt-1 px-3 py-2 border rounded-md">{user?.createdAt?.split('T')[0]}</p>
+                        <p className="w-full px-3 py-2 border rounded-md">{user?.createdAt?.split('T')[0]}</p>
+                    </div>
+                    <div className="">
+                        <Label>Role</Label>
+                        <p className="w-full px-3 py-2 border rounded-md">{user.role}</p>
                     </div>
                     <div className="">
                         <Label htmlFor={'firstName'} className={`${!isFirstName && 'text-red-600'}`}>
                             {isFirstName ? 'First name' : 'First name is required'}
                         </Label>
                         <Input
-                            className={'w-full mt-1 px-3 py-2 border rounded-md'}
+                            className={'w-full px-3 py-2 border rounded-md'}
                             type={'text'}
                             name={'firstName'}
                             id={'firstName'}
@@ -167,7 +175,7 @@ function DashboardProfilePage() {
                         </Label>
                         <Input
                             // className={'px-[8px] py-[4px] rounded-md border outline-none'}
-                            className="w-full mt-1 px-3 py-2 border rounded-md"
+                            className="w-full px-3 py-2 border rounded-md"
                             type={'text'}
                             id={'lasttName'}
                             name={'lastName'}
@@ -183,12 +191,12 @@ function DashboardProfilePage() {
                             id={'birthDate'}
                             value={inputsData.birthDate}
                             onChange={handleChange}
-                            className="w-full mt-1 px-3 py-2 border rounded-md"
+                            className="w-full px-3 py-2 border rounded-md"
                         />
                     </div>
                     <div>
                         <label>Gender</label>
-                        <div className="flex gap-4 mt-2">
+                        <div className="flex gap-4">
                             <label htmlFor="" className="flex items-center gap-2">
                                 <input
                                     type="radio"
@@ -218,6 +226,7 @@ function DashboardProfilePage() {
             </div>
             {isChangePasswordModal && <ChangePasswordModal setIsChangePasswordModal={setIsChangePasswordModal} />}
             {isChangeEmailModal && <ChangeEmailModal setIsChangeEmailModal={setIsChangeEmailModal} />}
+            {isDeleteUserProfileModal && <DeleteUserProfileModal setIsDeleteMemberModal={setIsDeleteUserProfileModal} />}
         </div>
     );
 }

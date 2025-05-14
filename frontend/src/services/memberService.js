@@ -37,7 +37,7 @@ export const getMemberInfo = async (userId) => {
     }
 };
 
-export const deleteMemmber = async (memberId) => {
+export const deleteMember = async (memberId) => {
     try {
         const res = await axios.delete(`/api/member/${memberId}`);
         if (res.status === 200 && res.data.status === 'success') {

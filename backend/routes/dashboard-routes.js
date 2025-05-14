@@ -25,4 +25,6 @@ router.patch('/posts/edit/image', authenticationValidation.protect, postParser.s
 
 router.patch('/posts/edit/info', authenticationValidation.protect, dashboardController.updatePostInfo);
 
+router.post('/profile/delete', authenticationValidation.protect, dashboardController.deleteUserProfile);
+
 module.exports = router;

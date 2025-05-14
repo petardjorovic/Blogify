@@ -26,7 +26,7 @@ function DashboardHome() {
     }, [dispatch]);
 
     return (
-        <div>
+        <div className="mb-5">
             <div className="space-y-8 px-4">
                 {/* Red 1: Najnoviji */}
                 <PostsRow title={'🆕 Latest Posts'} posts={newPosts} />

@@ -2,7 +2,7 @@ import { useDispatch } from 'react-redux';
 import { IoClose } from 'react-icons/io5';
 import { HiTrash } from 'react-icons/hi';
 import { showLoader } from '../store/loaderSlice';
-import { deleteMemmber } from '../services/memberService';
+import { deleteMember } from '../services/memberService';
 import { toast } from 'react-toastify';
 
 function DeleteMemberModal({ setIsDeleteMemberModal, member, rerenderView }) {
@@ -11,7 +11,7 @@ function DeleteMemberModal({ setIsDeleteMemberModal, member, rerenderView }) {
     const handleDeleteMember = async () => {
         setIsDeleteMemberModal(false);
         dispatch(showLoader(true));
-        const res = await deleteMemmber(member._id);
+        const res = await deleteMember(member._id);
         dispatch(showLoader(false));
         if (res.status === 'success') {
             rerenderView();

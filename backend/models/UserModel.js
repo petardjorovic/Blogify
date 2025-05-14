@@ -25,12 +25,10 @@ const userSchema = new Schema(
             select: false,
             // validate: {
             //     validator: (field) => {
-            //         //* Password must contain one lowercase letter, one uppercase letter,
-            //         //* one digit from 0 to 9, one special character, no space, and it must be 8-16 characters long.
             //         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W)(?!.* ).{8,16}$/;
             //         return passwordRegex.test(field);
             //     },
-            //     message: 'Password is not valid',
+            //     message: 'Password must contain one lowercase letter, one uppercase letter,one digit from 0 to 9, one special character, no space, and it must be 8-16 characters long.
             // },
         },
         confirmPassword: {
@@ -68,6 +66,9 @@ const userSchema = new Schema(
             type: Boolean,
             default: false,
         },
+        passwordChangedAt: { type: Date },
+        passwordResetToken: { type: String },
+        passwordResetTokenExpires: { type: Date },
     },
     {
         timestamps: true,

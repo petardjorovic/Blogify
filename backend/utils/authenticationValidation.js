@@ -20,7 +20,7 @@ const protect = asyncErrorHandler(async (req, res, next) => {
     }
 
     //* 3. Da li postoji user sa tim tokenom
-    const user = await UserModel.findById(decoded.id);
+    const user = await UserModel.findById(decoded.id).select('+password');
     if (!user) return next(new CustomError('There is no user with this ID.', 401));
 
     //*4. Da li je mozda korisnik promenio password

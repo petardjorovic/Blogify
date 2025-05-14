@@ -27,7 +27,7 @@ const joinPostToLike = [
                 {
                     $unwind: {
                         path: '$user',
-                        preserveNullAndEmptyArrays: true,
+                        preserveNullAndEmptyArrays: true, // prikazi post i ako ne postoji user
                     },
                 },
             ],
@@ -36,7 +36,7 @@ const joinPostToLike = [
     {
         $unwind: {
             path: '$post',
-            preserveNullAndEmptyArrays: true, // prikazi commentar cak i ako ne postoji vise taj post
+            // preserveNullAndEmptyArrays: true, // ne prikazi like ako ne postoji vise taj post
         },
     },
 ];

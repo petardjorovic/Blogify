@@ -145,7 +145,7 @@ const getPostsBySearch = asyncErrorHandler(async (req, res, next) => {
                 { body: { $regex: req.query.keyword, $options: 'i' } }
             );
         } else {
-            for (let i = 0; i < req.query.keyword.length; i++) {
+            for (let i = 0; i < req.query.keyword?.length; i++) {
                 searchTerm.push(
                     { title: { $regex: req.query.keyword[i], $options: 'i' } },
                     { body: { $regex: req.query.keyword[i], $options: 'i' } }

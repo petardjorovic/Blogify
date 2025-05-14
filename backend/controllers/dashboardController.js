@@ -12,6 +12,7 @@ const asyncErrorHandler = require('../utils/asyncErrorHandler');
 const CustomError = require('../utils/CustomError');
 const cloudinary = require('cloudinary').v2;
 const mongoose = require('mongoose');
+const deleteUserCascade = require('../transactions/deleteUserCascade');
 
 const getDasboardUserProfile = asyncErrorHandler(async (req, res, next) => {
     res.status(200).json({
@@ -131,6 +132,7 @@ const getDashboardUserReactionsLikes = asyncErrorHandler(async (req, res, next) 
             {
                 $match: { userId: req.user._id },
             },
+            ...joinPostToLike,
             { $count: 'total' },
         ]),
     ]);
@@ -222,13 +224,23 @@ const updatePostInfo = asyncErrorHandler(async (req, res, next) => {
         return { name: tag };
     });
     postData.tags = newTags;
-    console.log(postData, 'postData');
     const updatedPost = await PostModel.findByIdAndUpdate(postId, postData, { new: true });
     if (!updatedPost) return next(new CustomError('Something went wrong, please try later', 500));
     res.status(200).json({
         status: 'success',
         message: 'Post updated',
         post: updatedPost,
+    });
+});
+
+const deleteUserProfile = asyncErrorHandler(async (req, res, next) => {
+    const { password } = req.body;
+    const isPasswordValid = await req.user.isPasswordCorrect(password, req.user.password);
+    if (!isPasswordValid) return next(new CustomError('Wrong password.', 403));
+    const deletedUser = await deleteUserCascade(req.user._id);
+    res.status(200).json({
+        status: 'success',
+        message: "Your profile has been successfully deleted. We're sorry to see you go.",
     });
 });
 
@@ -243,4 +255,5 @@ module.exports = {
     getDashboardSinglePostEdit,
     updatePostImage,
     updatePostInfo,
+    deleteUserProfile,
 };

@@ -5,6 +5,7 @@ import PostCard from '../components/PostCard';
 import { useDispatch } from 'react-redux';
 import { showLoader } from '../store/loaderSlice';
 import Pagination from '../components/Pagination';
+import { useCallback } from 'react';
 
 function PostBySearchPage() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -14,21 +15,24 @@ function PostBySearchPage() {
     const [itemsLimit, setItemsLimit] = useState(12);
     const [itemsCount, setItemsCount] = useState(0);
 
-    const fetchPosts = async () => {
-        console.log(searchParams.toString());
+    const fetchPosts = useCallback(async () => {
         const page = searchParams.get('page') || 1;
         const limit = searchParams.get('limit') || 12;
         dispatch(showLoader(true));
         const res = await getPostsBySearch(searchParams.toString(), page, limit);
         dispatch(showLoader(false));
+        console.log(res);
+
         if (res.status === 'success') {
             setPosts(res.posts);
             setItemsCount(res.postsCount);
         }
-    };
+    }, [searchParams, dispatch]);
+
     useEffect(() => {
         fetchPosts();
-    }, [searchParams]);
+    }, [fetchPosts]);
+
     return (
         <>
             {posts.length > 0 && (

@@ -189,3 +189,21 @@ export const updatePostInfo = async (data, postId) => {
         };
     }
 };
+
+export const deleteUserProfile = async (data) => {
+    try {
+        const res = await axios.post(`/api/dashboard/profile/delete`, data);
+        if (res.status === 200 && res.data.status === 'success') {
+            return {
+                status: res.data.status,
+                message: res.data.message,
+            };
+        }
+    } catch (err) {
+        console.error(err, 'err iz servisa delete user profile');
+        return {
+            status: err.response.data.error.status,
+            message: err.response.data.message,
+        };
+    }
+};

@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { showLoader } from '../store/loaderSlice';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { formatDatetime } from '../utils/formatDatetime';
 import { Link } from 'react-router-dom';
 import { routesConfig } from '../config/routesConfig';
@@ -25,7 +25,7 @@ function DashboardMyReactions() {
     const [currentComment, setCurrentComment] = useState({});
     const [isDeleteCommentModal, setIsDeleteCommentModal] = useState(false);
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         let res;
         dispatch(showLoader(true));
         if (activeTab === 'likes') {
@@ -44,10 +44,11 @@ function DashboardMyReactions() {
                 setTotal(res.total);
             }
         }
-    };
+    }, [activeTab, page, limit, dispatch]);
+
     useEffect(() => {
         fetchData();
-    }, [activeTab, page, limit]);
+    }, [fetchData]);
 
     const handleTabChange = (tab) => {
         setActiveTab(tab);
@@ -106,7 +107,7 @@ function DashboardMyReactions() {
 
     return (
         <div className="p-4 md:p-6 max-w-5xl mx-auto bg-white rounded-xl shadow-md">
-            <div className="bg-white sticky top-[70px] pt-[10px] pb-[30px]">
+            <div className="bg-white sticky top-[70px] pt-[10px] pb-[10px] border-b border-mainBlue">
                 <h1 className="text-2xl font-bold mb-1">My Reactions</h1>
                 <p className="text-gray-500 mb-6">Posts you've liked and commented on</p>
 
@@ -133,7 +134,7 @@ function DashboardMyReactions() {
 
             {/* === Content === */}
             {activeTab === 'likes' ? (
-                <div className="">
+                <div className="pt-4">
                     {likes.length === 0 ? (
                         <p className="text-gray-400 italic">You haven't liked any posts yet.</p>
                     ) : (
@@ -168,7 +169,7 @@ function DashboardMyReactions() {
                     )}
                 </div>
             ) : (
-                <div className="">
+                <div className="pt-4">
                     {comments.length === 0 ? (
                         <p className="text-gray-400 italic">You haven't commented on any posts yet.</p>
                     ) : (
