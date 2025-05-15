@@ -10,6 +10,7 @@ import ChangePasswordModal from '../components/ChangePasswordModal';
 import ChangeEmailModal from '../components/ChangeEmailModal';
 import { formatDate } from '../utils/formatDate';
 import DeleteUserProfileModal from '../components/DeleteUserProfileModal';
+import useLockScroll from '../utils/useLockScroll';
 
 function DashboardProfilePage() {
     const [user, setUser] = useState({});
@@ -28,6 +29,9 @@ function DashboardProfilePage() {
     const [isChangePasswordModal, setIsChangePasswordModal] = useState(false);
     const [isChangeEmailModal, setIsChangeEmailModal] = useState(false);
     const [isDeleteUserProfileModal, setIsDeleteUserProfileModal] = useState(false);
+    useLockScroll(isDeleteUserProfileModal);
+    useLockScroll(isChangeEmailModal);
+    useLockScroll(isChangePasswordModal);
 
     useEffect(() => {
         const fetchUser = async () => {

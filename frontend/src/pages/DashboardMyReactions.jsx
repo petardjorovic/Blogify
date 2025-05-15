@@ -11,6 +11,7 @@ import DeleteCommentModal from '../components/DeleteCommentModal';
 import { toast } from 'react-toastify';
 import { deleteComment } from '../services/commentService';
 import { handlePostLike } from '../services/likeService';
+import useLockScroll from '../utils/useLockScroll';
 
 function DashboardMyReactions() {
     const { user } = useSelector((state) => state.userStore);
@@ -24,6 +25,7 @@ function DashboardMyReactions() {
     const totalPages = Math.ceil(total / limit);
     const [currentComment, setCurrentComment] = useState({});
     const [isDeleteCommentModal, setIsDeleteCommentModal] = useState(false);
+    useLockScroll(isDeleteCommentModal);
 
     const fetchData = useCallback(async () => {
         let res;

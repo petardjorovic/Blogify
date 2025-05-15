@@ -51,6 +51,7 @@ function DeleteUserProfileModal({ setIsDeleteMemberModal }) {
                 </button>
                 <form className="space-y-2" onSubmit={formik.handleSubmit}>
                     <div className="mb-4">
+                        <h1 className="text-red-600 text-lg font-semibold">Delete Profile</h1>
                         <p className="text-sm text-muted-foreground mt-4 mb-4">
                             Are you sure you want to delete your profile? This action is{' '}
                             <span className="font-semibold text-destructive">permanent</span> and will remove all your data, including

@@ -39,7 +39,9 @@ function ChangePasswordModal({ setIsChangePasswordModal }) {
                             value={data.currentPassword}
                             placeholder={'Current password'}
                             type={'password'}
-                            className={'border px-3 py-2 rounded-md w-full outline-none border-gray-300 focus:ring-2 focus:ring-blue-500'}
+                            className={
+                                'border px-3 py-1 rounded-[4px] w-full outline-none border-gray-300 focus:ring-2 focus:ring-blue-500'
+                            }
                         />
                     </div>
                     <div className="flex flex-col items-start w-full">
@@ -53,7 +55,9 @@ function ChangePasswordModal({ setIsChangePasswordModal }) {
                             value={data.newPassword}
                             placeholder={'New password'}
                             type={'password'}
-                            className={'border px-3 py-2 rounded-md w-full outline-none border-gray-300 focus:ring-2 focus:ring-blue-500'}
+                            className={
+                                'border px-3 py-1 rounded-[4px] w-full outline-none border-gray-300 focus:ring-2 focus:ring-blue-500'
+                            }
                         />
                     </div>
                     <div className="flex flex-col items-start w-full">
@@ -67,7 +71,9 @@ function ChangePasswordModal({ setIsChangePasswordModal }) {
                             value={data.confirmNewPassword}
                             placeholder={'Confirm new password'}
                             type={'password'}
-                            className={'border px-3 py-2 rounded-md w-full outline-none border-gray-300 focus:ring-2 focus:ring-blue-500'}
+                            className={
+                                'border px-3 py-1 rounded-[4px] w-full outline-none border-gray-300 focus:ring-2 focus:ring-blue-500'
+                            }
                         />
                     </div>
                     <div className="flex justify-end gap-x-2 mt-4">

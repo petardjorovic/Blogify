@@ -5,9 +5,8 @@ import Input from './Input';
 
 function ChangeEmailModal({ setIsChangeEmailModal }) {
     const [data, setData] = useState({
-        currentPassword: '',
+        password: '',
         newEmail: '',
-        confirmNewEmail: '',
     });
 
     const handleChange = (e) => {
@@ -32,15 +31,15 @@ function ChangeEmailModal({ setIsChangeEmailModal }) {
                 <h1 className="text-xl font-bold text-gray-800 mb-2">Change Email</h1>
                 <form onSubmit={handleSubmit} className="flex flex-col items-center gap-[8px] justify-center mt-[10px]">
                     <div className="flex flex-col items-start w-full">
-                        <Label htmlFor={'currentPassword'} className={'px-[12px]'}>
+                        <Label htmlFor={'password'} className={'px-[12px]'}>
                             Current password
                         </Label>
                         <Input
-                            id={'currentPassword'}
-                            name={'currentPassword'}
+                            id={'password'}
+                            name={'password'}
                             onChange={handleChange}
                             value={data.currentPassword}
-                            placeholder={'Current password'}
+                            placeholder={'Enter password'}
                             type={'password'}
                             className={'border px-3 py-2 rounded-md w-full outline-none border-gray-300 focus:ring-2 focus:ring-blue-500'}
                         />
@@ -55,20 +54,6 @@ function ChangeEmailModal({ setIsChangeEmailModal }) {
                             onChange={handleChange}
                             value={data.newEmail}
                             placeholder={'New email'}
-                            type={'text'}
-                            className={'border px-3 py-2 rounded-md w-full outline-none border-gray-300 focus:ring-2 focus:ring-blue-500'}
-                        />
-                    </div>
-                    <div className="flex flex-col items-start w-full">
-                        <Label htmlFor={'confirmNewEmail'} className={'px-[12px]'}>
-                            Confirm new email
-                        </Label>
-                        <Input
-                            id={'confirmNewEmail'}
-                            name={'confirmNewEmail'}
-                            onChange={handleChange}
-                            value={data.confirmNewEmail}
-                            placeholder={'Confirm new email'}
                             type={'text'}
                             className={'border px-3 py-2 rounded-md w-full outline-none border-gray-300 focus:ring-2 focus:ring-blue-500'}
                         />
