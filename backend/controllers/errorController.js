@@ -34,7 +34,7 @@ const castErrorHandler = (error) => {
 const duplicateKeyErrorHandler = (error) => {
     const [key] = Object.keys(error.keyValue);
     const [value] = Object.values(error.keyValue);
-    const message = `There is already ${key} with value ${value}. Please use another value`;
+    const message = `There is already ${key} with value ${value}. Please use another value.`;
     return new CustomError(message, 400);
 };
 
@@ -42,6 +42,14 @@ const validationErrorHandler = (error) => {
     const messages = Object.values(error.errors).map((el) => el.message);
     const message = messages.join('. ');
     return new CustomError(message, 400);
+};
+
+const handleJWTError = (error) => {
+    return new CustomError('Invaid token. Please login again.', 401);
+};
+
+const handleExpiredJWT = (error) => {
+    return new CustomError('JWT has expired. Please login again!', 401);
 };
 
 module.exports = (error, req, res, next) => {
@@ -54,6 +62,8 @@ module.exports = (error, req, res, next) => {
         if (error.name === 'CastError') error = castErrorHandler(error);
         if (error.code === 11000) error = duplicateKeyErrorHandler(error);
         if (error.name === 'ValidationError') error = validationErrorHandler(error);
+        if (error.name === 'JsonWebTokenError') error = handleJWTError(error);
+        if (error.name === 'TokenExpiredError') error = handleExpiredJWT(error);
         prodError(error, res);
     }
 };

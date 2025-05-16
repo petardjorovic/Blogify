@@ -4,10 +4,11 @@ const postController = require('../controllers/postController');
 const commentController = require('../controllers/commentController');
 const likeController = require('../controllers/likeController');
 const tagController = require('../controllers/tagController');
-const authenticationValidation = require('../utils/authenticationValidation');
+const authenticationValidation = require('../middleware/authenticationValidation');
 const postParser = require('../middleware/uploadPostImage');
+const { restrict } = require('../middleware/restrict');
 
-router.get('/', authenticationValidation.protect, postController.getAllPosts);
+router.get('/', authenticationValidation.protect, restrict('admin', 'user'), postController.getAllPosts);
 
 router.get('/tag', authenticationValidation.protect, tagController.getAllTags);
 

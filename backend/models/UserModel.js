@@ -39,7 +39,7 @@ const userSchema = new Schema(
                 validator: function (field) {
                     return field == this.password;
                 },
-                message: 'Password and Confirm password does not match',
+                message: 'Password & Confirm Password does not match',
             },
         },
         gender: {
@@ -60,6 +60,7 @@ const userSchema = new Schema(
         },
         role: {
             type: String,
+            enum: ['admin', 'user'],
             default: 'user',
         },
         activate: {
@@ -80,21 +81,21 @@ userSchema.pre('save', async function (next) {
     this.password = await bcrypt.hash(this.password, 12);
 
     this.confirmPassword = undefined;
+    next();
 });
 
 userSchema.methods.isPasswordCorrect = async (candidatePassword, currentPassword) => {
     return await bcrypt.compare(candidatePassword, currentPassword);
 };
 
-// userSchema.methods.passwordChangedAfter = function (JWTTimestamp) {
-//     if (this.passwordChangedAt) {
-//         const changedTimestamp = this.passwordChangedAt.getTime() / 1000;
-//         return JWTTimestamp < changedTimestamp;
-//     }
-
-//     // false znači da nije promenio lozinku posle izdavanja tokena
-//     return false;
-// };
+userSchema.methods.isPasswordChanged = function (JWTTimestamp) {
+    if (this.passwordChangedAt) {
+        const changedTimestamp = parseInt(this.passwordChangedAt.getTime() / 1000, 10);
+        return JWTTimestamp < changedTimestamp;
+    }
+    // return false, jer passwordChanged ne postoji i samim tim nije promenjena lozinka posle izdavanja tokena
+    return false;
+};
 
 const UserModel = mongoose.model('User', userSchema);
 module.exports = UserModel;

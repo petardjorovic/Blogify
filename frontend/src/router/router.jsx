@@ -20,6 +20,7 @@ import DashboardHome from '../pages/DashboardHome';
 import DashboardMyPosts from '../pages/DashboardMyPosts';
 import DashboardMyReactions from '../pages/DashboardMyReactions';
 import DashboardPostsEdit from '../pages/DashboardPostsEdit';
+import GuestProtect from '../components/GuestProtect';
 
 const router = createBrowserRouter([
     {
@@ -104,11 +105,19 @@ const router = createBrowserRouter([
             },
             {
                 path: routesConfig.LOGIN.path,
-                element: <LoginPage />,
+                element: (
+                    <GuestProtect>
+                        <LoginPage />
+                    </GuestProtect>
+                ),
             },
             {
                 path: routesConfig.REGISTER.path,
-                element: <RegisterPage />,
+                element: (
+                    <GuestProtect>
+                        <RegisterPage />
+                    </GuestProtect>
+                ),
             },
         ],
     },

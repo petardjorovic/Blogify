@@ -10,14 +10,16 @@ const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
 
 const login = asyncErrorHandler(async (req, res, next) => {
+    if (!req.body.email || !req.body.password) {
+        return next(new CustomError('Please provide email and password for login in!', 400));
+    }
     const foundUser = await UserModel.findOne({ email: req.body.email, activate: true }).select('+password');
-    if (!foundUser) {
+
+    if (!foundUser || !(await foundUser.isPasswordCorrect(req.body.password, foundUser.password))) {
         return next(new CustomError('Invalid login credentials or inactive account.', 400));
     }
-    const isPasswordValid = await foundUser.isPasswordCorrect(req.body.password, foundUser.password);
-    if (!isPasswordValid) return next(new CustomError('Invalid login credentials', 400));
 
-    const payload = { id: foundUser._id, role: foundUser.role };
+    const payload = { id: foundUser._id };
     const token = signToken(payload);
     const { password, __v, ...restData } = foundUser.toObject();
 
@@ -30,8 +32,9 @@ const login = asyncErrorHandler(async (req, res, next) => {
 });
 
 const register = asyncErrorHandler(async (req, res, next) => {
+    req.body.role = undefined;
     const checkUser = await UserModel.findOne({ email: req.body.email });
-    if (checkUser) return next(new CustomError('There is already user with this email', 400));
+    if (checkUser) return next(new CustomError('There is already user with this email', 400)); // ovo ce i sama mongoose validacija da resi preko duplikateKey
     const user = new UserModel({ ...req.body });
     const savedUser = await user.save();
     if (!Object.hasOwn(savedUser?.toObject(), '_id')) {

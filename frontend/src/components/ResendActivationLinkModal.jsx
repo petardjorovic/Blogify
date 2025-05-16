@@ -1,21 +1,39 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Label from './Label';
 import Input from './Input';
 import { IoClose } from 'react-icons/io5';
 
 function ResendActivationLinkModal({ setIsModal }) {
     const [email, setEmail] = useState('');
+
+    useEffect(() => {
+        const handleEsc = (e) => {
+            if (e.key === 'Escape') {
+                setIsModal(false);
+            }
+        };
+        document.addEventListener('keydown', handleEsc);
+        return () => document.removeEventListener('keydown', handleEsc);
+    }, [setIsModal]);
+
     const handleChange = (e) => {
         setEmail(e.target.value);
     };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(email, 'email');
     };
 
     return (
-        <div className="w-screen h-screen flex justify-center items-center bg-black bg-opacity-70 z-50 fixed top-0 left-0 px-4 transition-all duration-300 ease-out">
-            <div className="relative p-6 rounded-2xl text-center bg-white shadow-lg w-[320px] animate-fadeInScale">
+        <div
+            className="w-screen h-screen flex justify-center items-center bg-black bg-opacity-70 z-50 fixed top-0 left-0 px-4 transition-all duration-300 ease-out"
+            onClick={() => setIsModal(false)}
+        >
+            <div
+                className="relative p-6 rounded-2xl text-center bg-white shadow-lg w-[320px] animate-fadeInScale"
+                onClick={(e) => e.stopPropagation()}
+            >
                 <button
                     className="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-[22px] p-1.5 ml-auto inline-flex items-center"
                     onClick={() => setIsModal(false)}

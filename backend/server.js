@@ -5,9 +5,10 @@ const fileUpload = require('express-fileupload');
 const path = require('path');
 const errorController = require('./controllers/errorController');
 const CustomError = require('./utils/CustomError');
-if (process.env.NODE_ENV !== 'production') {
-    require('dotenv').config();
-}
+// if (process.env.NODE_ENV !== 'production') {
+//     require('dotenv').config();
+// }
+require('dotenv').config(); // ovo zbog testiranja production-a
 
 mongoose
     .connect(process.env.MONGODB_URI)

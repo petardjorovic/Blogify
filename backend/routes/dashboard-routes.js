@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const authenticationValidation = require('../utils/authenticationValidation');
+const authenticationValidation = require('../middleware/authenticationValidation');
 const dashboardController = require('../controllers/dashboardController');
 const userParser = require('../middleware/uploadUserImage');
 const postParser = require('../middleware/uploadPostImage');

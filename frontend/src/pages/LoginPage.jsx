@@ -4,9 +4,11 @@ import loginImg from '../assets/login.jpg';
 import { Link } from 'react-router-dom';
 import { routesConfig } from '../config/routesConfig';
 import ForgotPasswordModal from '../components/ForgotPasswordModal';
+import useLockScroll from '../utils/useLockScroll';
 
 function LoginPage() {
     const [isForgotPasswordModal, setIsForgotPasswordModal] = useState(false);
+    useLockScroll(isForgotPasswordModal);
     return (
         <div className="container mx-auto">
             <div className="flex flex-col gap-[20px] lg:flex-row px-[16px] items-stretch">
