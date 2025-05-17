@@ -33,12 +33,12 @@ function LoginPage() {
                     <div className="box">
                         <p className="text-center">
                             Forgot your password?{' '}
-                            <span
+                            <Link
                                 onClick={() => setIsForgotPasswordModal(true)}
                                 className="text-mainBlue font-bold cursor-pointer hover:text-violet-700 transition duration-300 easy-in-out select-none"
                             >
                                 Click here to reset it.
-                            </span>
+                            </Link>
                         </p>
                     </div>
                     <div className="box text-center">

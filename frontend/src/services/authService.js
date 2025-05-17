@@ -75,3 +75,43 @@ export const checkUserActivation = async (token) => {
         };
     }
 };
+
+export const changePassword = async (data) => {
+    try {
+        const res = await axios.patch('/api/auth/changePassword', data);
+        if (res.status === 200 && res.data.status === 'success') {
+            return {
+                status: res.data.status,
+                message: res.data.message,
+            };
+        }
+    } catch (err) {
+        console.error(err, 'err iz servisa change password');
+        return {
+            status: err.response.data.error.status,
+            message: err.response.data.message,
+        };
+    }
+};
+
+export const forgotPassword = async (data) => {
+    try {
+        const res = await axios.post('/api/auth/forgotPassword', data);
+        console.log(res, 'res iz servisa forgot password');
+        return res;
+    } catch (err) {
+        console.error(err, 'err iz servisa forgot password');
+        return err;
+    }
+};
+
+export const resetPassword = async (token) => {
+    try {
+        const res = await axios.patch(`/api/auth/resetPassword/${token}`);
+        console.log(res, 'res iz servisa reset password');
+        return res;
+    } catch (err) {
+        console.error(err, 'err iz servisa reset password');
+        return err;
+    }
+};

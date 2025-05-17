@@ -48,4 +48,7 @@ export const routesConfig = {
     ACTIVATION: {
         path: '/activation/:activationToken',
     },
+    RESET_PASSWORD: {
+        path: '/resetPassword/:resetToken',
+    },
 };

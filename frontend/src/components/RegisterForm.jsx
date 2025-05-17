@@ -31,7 +31,7 @@ function RegisterForm() {
             password: Yup.string().required('Password is required').min(4),
             confirmPassword: Yup.string()
                 .oneOf([Yup.ref('password'), null], 'Passwords must match')
-                .required('Confirm is required'),
+                .required('Confirm password is required'),
         }),
         onSubmit: async (values) => {
             dispatch(showLoader(true));

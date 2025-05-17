@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 
 const userSchema = new Schema(
     {
@@ -95,6 +96,14 @@ userSchema.methods.isPasswordChanged = function (JWTTimestamp) {
     }
     // return false, jer passwordChanged ne postoji i samim tim nije promenjena lozinka posle izdavanja tokena
     return false;
+};
+
+userSchema.methods.createResetPasswordToken = function () {
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+    this.passwordResetTokenExpires = Date.now() + 10 * 60 * 1000;
+
+    return resetToken;
 };
 
 const UserModel = mongoose.model('User', userSchema);

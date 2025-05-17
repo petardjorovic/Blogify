@@ -47,6 +47,10 @@ class Email {
         await this.send('Welcome to Our Social Network', 'welcome');
     }
 
+    async sendResetPassword() {
+        await this.send('Reset Your Password', 'resetPassword');
+    }
+
     async send(subject, template) {
         const html = pug.renderFile(`${__dirname}/../views/${template}.pug`, {
             subject: subject,

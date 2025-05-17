@@ -11,4 +11,10 @@ router.get('/me', authenticationValidation.protect, authController.restoreUser);
 
 router.post('/activation/:token', authController.checkUserActivation);
 
+router.patch('/changePassword', authenticationValidation.protect, authController.changePassword);
+
+router.post('/forgotPassword', authController.forgotPassword);
+
+router.patch('/resetPassword/:token', authController.resetPassword);
+
 module.exports = router;

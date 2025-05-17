@@ -21,6 +21,7 @@ import DashboardMyPosts from '../pages/DashboardMyPosts';
 import DashboardMyReactions from '../pages/DashboardMyReactions';
 import DashboardPostsEdit from '../pages/DashboardPostsEdit';
 import GuestProtect from '../components/GuestProtect';
+import ResetPasswordPage from '../pages/ResetPasswordPage';
 
 const router = createBrowserRouter([
     {
@@ -124,6 +125,10 @@ const router = createBrowserRouter([
     {
         path: routesConfig.ACTIVATION.path,
         element: <ActivationUserPage />,
+    },
+    {
+        path: routesConfig.RESET_PASSWORD.path,
+        element: <ResetPasswordPage />,
     },
 ]);
 

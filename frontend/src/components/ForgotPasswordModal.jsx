@@ -3,9 +3,33 @@ import Label from './Label';
 import Input from './Input';
 import { IoClose } from 'react-icons/io5';
 import { FocusTrap } from 'focus-trap-react';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import { useDispatch } from 'react-redux';
+import { showLoader } from '../store/loaderSlice';
+import { forgotPassword } from '../services/authService';
 
 function ForgotPasswordModal({ setIsForgotPasswordModal }) {
-    const [email, setEmail] = useState('');
+    const dispatch = useDispatch();
+    const formik = useFormik({
+        initialValues: {
+            email: '',
+        },
+        validationSchema: Yup.object({
+            email: Yup.string()
+                .matches(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/, 'Email is not valid')
+                .required('Email is required'),
+        }),
+        onSubmit: async (values) => {
+            console.log(values);
+            dispatch(showLoader(true));
+            const res = await forgotPassword(values);
+            dispatch(showLoader(false));
+            console.log(res, 'res sa fronta forgot password');
+        },
+    });
+
+    const showErrors = (inputValue) => formik.errors[inputValue] && formik.touched[inputValue] && formik.errors[inputValue];
 
     useEffect(() => {
         const handleEsc = (e) => {
@@ -17,14 +41,6 @@ function ForgotPasswordModal({ setIsForgotPasswordModal }) {
         return () => document.removeEventListener('keydown', handleEsc);
     }, [setIsForgotPasswordModal]);
 
-    const handleChange = (e) => {
-        setEmail(e.target.value);
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log(email, 'email');
-    };
     return (
         <FocusTrap>
             <div
@@ -42,20 +58,22 @@ function ForgotPasswordModal({ setIsForgotPasswordModal }) {
                         <IoClose />
                     </button>
                     <h1 className="text-xl font-bold text-gray-800 mb-2">Forgot your password?</h1>
-                    <p className="text-sm text-gray-600 mb-4">We'll email you a link to reset your password.</p>
-                    <form onSubmit={handleSubmit} className="flex flex-col items-center gap-[20px] justify-center mt-[10px]">
+                    <p className="text-sm text-gray-600 mb-4">
+                        We'll email you a link to reset your password. Link will be valid only for 10 minutes.
+                    </p>
+                    <form onSubmit={formik.handleSubmit} className="flex flex-col items-center gap-[20px] justify-center mt-[10px]">
                         <div className="flex flex-col items-start w-full">
-                            <Label htmlFor={'email'} className={'px-[12px]'}>
-                                Email
+                            <Label htmlFor={'email'} className={`px-[12px] ${showErrors('email') && 'text-red-600'}`}>
+                                {showErrors('email') ? showErrors('email') : 'Email'}
                             </Label>
                             <Input
                                 id={'email'}
-                                value={email}
-                                onChange={handleChange}
+                                value={formik.values.email}
+                                onChange={formik.handleChange}
                                 placeholder={'example@email.com'}
-                                className={
-                                    'border px-3 py-2 rounded-md w-full outline-none border-gray-300 focus:ring-2 focus:ring-blue-500'
-                                }
+                                className={`border px-3 py-2 rounded-md w-full outline-none border-gray-300 focus:ring-2 focus:ring-blue-500 ${
+                                    showErrors('email') && 'border-red-600'
+                                }`}
                             />
                         </div>
                         <div className="flex justify-end gap-x-2 mt-4">
