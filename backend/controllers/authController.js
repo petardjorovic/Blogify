@@ -8,6 +8,7 @@ const Email = require('../utils/Email');
 const activationToken = require('../utils/activationToken');
 const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
+const crypto = require('crypto');
 
 const login = asyncErrorHandler(async (req, res, next) => {
     if (!req.body.email || !req.body.password) {
@@ -131,8 +132,25 @@ const forgotPassword = asyncErrorHandler(async (req, res, next) => {
 });
 
 const resetPassword = asyncErrorHandler(async (req, res, next) => {
-    console.log(req.params, 'req.params');
-    res.send('ok');
+    // 1. IF THE USER EXISTS WITH THE GIVEN TOKEN OR TOKEN HAS NOT EXPIRED
+    const hashedToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
+    const user = await UserModel.findOne({ passwordResetToken: hashedToken, passwordResetTokenExpires: { $gt: Date.now() } });
+
+    if (!user) return next(new CustomError('Your reset password link is invalid or has expired', 400));
+
+    // 2. RESETING THE USER PASSWORD
+    user.password = req.body.newPassword;
+    user.confirmPassword = req.body.confirmNewPassword;
+    user.passwordResetToken = undefined;
+    user.passwordResetTokenExpires = undefined;
+    user.passwordChangedAt = Date.now();
+
+    const savedUser = await user.save();
+    if (!savedUser) return next(new CustomError('An error occurred on server side, please try again later', 500));
+    res.status(200).json({
+        status: 'success',
+        message: 'You have successufully reset your password, now you have to login with new password',
+    });
 });
 
 module.exports = { login, register, restoreUser, checkUserActivation, changePassword, forgotPassword, resetPassword };

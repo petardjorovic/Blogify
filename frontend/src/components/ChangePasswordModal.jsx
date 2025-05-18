@@ -77,7 +77,7 @@ function ChangePasswordModal({ setIsChangePasswordModal }) {
                     <h1 className="text-xl font-bold text-gray-800 mb-2">Change password</h1>
                     <form onSubmit={formik.handleSubmit} className="flex flex-col items-center gap-[8px] justify-center mt-[10px]">
                         <div className="flex flex-col items-start w-full">
-                            <Label htmlFor={'currentPassword'} className={`px-[12px] ${showErrors('currentPassword') && 'text-red-600'}`}>
+                            <Label htmlFor={'currentPassword'} className={`px-3 ${showErrors('currentPassword') && 'text-red-600'}`}>
                                 {showErrors('currentPassword') ? showErrors('currentPassword') : 'Current Password'}
                             </Label>
                             <Input

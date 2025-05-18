@@ -8,7 +8,7 @@
     }
 
     .loader {
-        @apply w-[100px] h-[100px] border-white border-[10px] rounded-full border-t-orange-600;
+        @apply w-[50px] h-[50px] border-white border-[7px] rounded-full border-t-orange-600;
         animation: spin 2s infinite linear;
     }
 

@@ -8,6 +8,7 @@ import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
 import { showLoader } from '../store/loaderSlice';
 import { forgotPassword } from '../services/authService';
+import { toast } from 'react-toastify';
 
 function ForgotPasswordModal({ setIsForgotPasswordModal }) {
     const dispatch = useDispatch();
@@ -21,11 +22,15 @@ function ForgotPasswordModal({ setIsForgotPasswordModal }) {
                 .required('Email is required'),
         }),
         onSubmit: async (values) => {
-            console.log(values);
+            setIsForgotPasswordModal(false);
             dispatch(showLoader(true));
             const res = await forgotPassword(values);
             dispatch(showLoader(false));
-            console.log(res, 'res sa fronta forgot password');
+            if (res.status === 'success') {
+                toast.success(res.message);
+            } else {
+                toast.error(res.message);
+            }
         },
     });
 
@@ -44,7 +49,7 @@ function ForgotPasswordModal({ setIsForgotPasswordModal }) {
     return (
         <FocusTrap>
             <div
-                className="w-screen h-screen flex justify-center items-center bg-black bg-opacity-70 z-50 fixed top-0 left-0 px-[16px] transition-all duration-300 ease-out"
+                className="w-screen h-screen flex justify-center items-center bg-black bg-opacity-70 z-40 fixed top-0 left-0 px-[16px] transition-all duration-300 ease-out"
                 onClick={() => setIsForgotPasswordModal(false)}
             >
                 <div
