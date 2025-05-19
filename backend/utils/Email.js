@@ -51,6 +51,10 @@ class Email {
         await this.send('Reset Your Password', 'resetPassword');
     }
 
+    async changeEmail() {
+        await this.send('Confirm Your New Email Address', 'changeEmail');
+    }
+
     async send(subject, template) {
         const html = pug.renderFile(`${__dirname}/../views/${template}.pug`, {
             subject: subject,

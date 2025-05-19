@@ -21,6 +21,8 @@ router.patch('/profile/image', authenticationValidation.protect, userParser.sing
 
 router.patch('/profile/info', authenticationValidation.protect, dashboardController.updateProfileInfo);
 
+router.patch('/profile/edit/email', authenticationValidation.protect, dashboardController.changeEmail);
+
 router.patch('/posts/edit/image', authenticationValidation.protect, postParser.single('image'), dashboardController.updatePostImage);
 
 router.patch('/posts/edit/info', authenticationValidation.protect, dashboardController.updatePostInfo);

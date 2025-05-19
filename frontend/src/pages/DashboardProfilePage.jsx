@@ -229,7 +229,7 @@ function DashboardProfilePage() {
                 </form>
             </div>
             {isChangePasswordModal && <ChangePasswordModal setIsChangePasswordModal={setIsChangePasswordModal} />}
-            {isChangeEmailModal && <ChangeEmailModal setIsChangeEmailModal={setIsChangeEmailModal} />}
+            {isChangeEmailModal && <ChangeEmailModal setIsChangeEmailModal={setIsChangeEmailModal} userEmail={user?.email} />}
             {isDeleteUserProfileModal && <DeleteUserProfileModal setIsDeleteMemberModal={setIsDeleteUserProfileModal} />}
         </div>
     );

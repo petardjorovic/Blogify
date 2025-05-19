@@ -207,3 +207,14 @@ export const deleteUserProfile = async (data) => {
         };
     }
 };
+
+export const changeEmail = async (data) => {
+    try {
+        const res = await axios.patch('/api/dashboard/profile/edit/email', data);
+        console.log(res, 'res iz servisa change email');
+        return res;
+    } catch (err) {
+        console.error(err, 'err iz servisa change email');
+        return err;
+    }
+};

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { IoClose } from 'react-icons/io5';
 import Label from './Label';
 import Input from './Input';
@@ -12,6 +12,8 @@ import { toast } from 'react-toastify';
 import { logout } from '../store/userSlice';
 import { useNavigate } from 'react-router-dom';
 import { routesConfig } from '../config/routesConfig';
+import ErrorMessageInput from './ErrorMessageInput';
+import InputField from './InputField';
 
 function ChangePasswordModal({ setIsChangePasswordModal }) {
     const dispatch = useDispatch();
@@ -21,13 +23,17 @@ function ChangePasswordModal({ setIsChangePasswordModal }) {
             currentPassword: '',
             newPassword: '',
             confirmNewPassword: '',
+            email: '',
         },
         validationSchema: Yup.object({
-            currentPassword: Yup.string().required('Current password is required').min(4, 'Minimum length is 4 characters'),
-            newPassword: Yup.string().required('New password is required').min(4, 'Minimum length is 4 characters'),
+            currentPassword: Yup.string().required('Required').min(4, 'Minimum length is 4 characters'),
+            newPassword: Yup.string()
+                .required('Required')
+                .min(4, 'Minimum length is 4 characters')
+                .notOneOf([Yup.ref('currentPassword')], 'Cannot be same as current'),
             confirmNewPassword: Yup.string()
                 .oneOf([Yup.ref('newPassword'), null], 'New Passwords must match')
-                .required('Confirm new password is required')
+                .required('Required')
                 .min(4, 'Minimum length is 4 characters'),
         }),
         onSubmit: async (values) => {
@@ -45,8 +51,6 @@ function ChangePasswordModal({ setIsChangePasswordModal }) {
             }
         },
     });
-
-    const showErrors = (inputName) => formik.errors[inputName] && formik.touched[inputName] && formik.errors[inputName];
 
     useEffect(() => {
         const handleEsc = (e) => {
@@ -75,58 +79,10 @@ function ChangePasswordModal({ setIsChangePasswordModal }) {
                         <IoClose />
                     </button>
                     <h1 className="text-xl font-bold text-gray-800 mb-2">Change password</h1>
-                    <form onSubmit={formik.handleSubmit} className="flex flex-col items-center gap-[8px] justify-center mt-[10px]">
-                        <div className="flex flex-col items-start w-full">
-                            <Label htmlFor={'currentPassword'} className={`px-3 ${showErrors('currentPassword') && 'text-red-600'}`}>
-                                {showErrors('currentPassword') ? showErrors('currentPassword') : 'Current Password'}
-                            </Label>
-                            <Input
-                                id={'currentPassword'}
-                                name={'currentPassword'}
-                                onChange={formik.handleChange}
-                                value={formik.values.currentPassword}
-                                placeholder={'Current password'}
-                                type={'password'}
-                                className={`border px-3 py-1 rounded-[4px] w-full outline-none border-gray-300 focus:ring-2 focus:ring-blue-500 ${
-                                    showErrors('currentPassword') && 'border-red-600'
-                                }`}
-                            />
-                        </div>
-                        <div className="flex flex-col items-start w-full">
-                            <Label htmlFor={'newPassword'} className={`px-[12px] ${showErrors('newPassword') && 'text-red-600'}`}>
-                                {showErrors('newPassword') ? showErrors('newPassword') : 'New Password'}
-                            </Label>
-                            <Input
-                                id={'newPassword'}
-                                name={'newPassword'}
-                                onChange={formik.handleChange}
-                                value={formik.values.newPassword}
-                                placeholder={'New password'}
-                                type={'password'}
-                                className={`border px-3 py-1 rounded-[4px] w-full outline-none border-gray-300 focus:ring-2 focus:ring-blue-500 ${
-                                    showErrors('newPassword') && 'border-red-600'
-                                }`}
-                            />
-                        </div>
-                        <div className="flex flex-col items-start w-full">
-                            <Label
-                                htmlFor={'confirmNewPassword'}
-                                className={`px-[12px] ${showErrors('confirmNewPassword') && 'text-red-600'}`}
-                            >
-                                {showErrors('confirmNewPassword') ? showErrors('confirmNewPassword') : 'Confirm New Password'}
-                            </Label>
-                            <Input
-                                id={'confirmNewPassword'}
-                                name={'confirmNewPassword'}
-                                onChange={formik.handleChange}
-                                value={formik.values.confirmNewPassword}
-                                placeholder={'Confirm new password'}
-                                type={'password'}
-                                className={`border px-3 py-1 rounded-[4px] w-full outline-none border-gray-300 focus:ring-2 focus:ring-blue-500 ${
-                                    showErrors('confirmNewPassword') && 'border-red-600'
-                                }`}
-                            />
-                        </div>
+                    <form onSubmit={formik.handleSubmit} className="flex flex-col items-center gap-2 justify-center mt-[10px]">
+                        <InputField formik={formik} inputName={'currentPassword'} type={'password'} labelName={'Current Password'} />
+                        <InputField formik={formik} inputName={'newPassword'} type={'password'} labelName={'New Password'} />
+                        <InputField formik={formik} inputName={'confirmNewPassword'} type={'password'} labelName={'Confirm New Password'} />
                         <div className="flex justify-end gap-x-2 mt-4">
                             <button
                                 onClick={() => setIsChangePasswordModal(false)}

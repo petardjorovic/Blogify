@@ -1,39 +1,40 @@
-import { useEffect, useState } from 'react';
 import { IoClose } from 'react-icons/io5';
-import Label from './Label';
-import Input from './Input';
 import { FocusTrap } from 'focus-trap-react';
+import InputField from './InputField';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import { useDispatch } from 'react-redux';
+import { showLoader } from '../store/loaderSlice';
+import { changeEmail } from '../services/dashboardService';
 
-function ChangeEmailModal({ setIsChangeEmailModal }) {
-    const [data, setData] = useState({
-        password: '',
-        newEmail: '',
+function ChangeEmailModal({ setIsChangeEmailModal, userEmail }) {
+    const dispatch = useDispatch();
+    const formik = useFormik({
+        initialValues: {
+            password: '',
+            newEmail: '',
+        },
+        validationSchema: Yup.object({
+            password: Yup.string().min(4, 'Minimum length is 4 characters.').required('Required.'),
+            newEmail: Yup.string()
+                .required('Required')
+                .matches(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/, 'Email is not valid')
+                .trim()
+                .test('is-different', 'New email must be different from current.', (value) => value !== userEmail),
+        }),
+        onSubmit: async (values) => {
+            console.log(values);
+            dispatch(showLoader(true));
+            const res = await changeEmail(values);
+            dispatch(showLoader(false));
+            console.log(res, 'res sa fronta change email');
+        },
     });
-
-    useEffect(() => {
-        const handleEsc = (e) => {
-            if (e.key === 'Escape') {
-                setIsChangeEmailModal(false);
-            }
-        };
-        document.addEventListener('keydown', handleEsc);
-        return () => document.removeEventListener('keydown', handleEsc);
-    }, [setIsChangeEmailModal]);
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setData((prev) => ({ ...prev, [name]: value }));
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        console.log(data, 'data');
-    };
 
     return (
         <FocusTrap>
             <div
-                className="w-screen h-screen flex justify-center items-center bg-black bg-opacity-70 z-50 fixed top-0 left-0 px-[16px] transition-all duration-300 ease-out"
+                className="w-screen h-screen flex justify-center items-center bg-black bg-opacity-70 z-40 fixed top-0 left-0 px-[16px] transition-all duration-300 ease-out"
                 onClick={() => setIsChangeEmailModal(false)}
             >
                 <div
@@ -46,40 +47,13 @@ function ChangeEmailModal({ setIsChangeEmailModal }) {
                     >
                         <IoClose />
                     </button>
-                    <h1 className="text-xl font-bold text-gray-800 mb-2">Change Email</h1>
-                    <form onSubmit={handleSubmit} className="flex flex-col items-center gap-[8px] justify-center mt-[10px]">
-                        <div className="flex flex-col items-start w-full">
-                            <Label htmlFor={'password'} className={'px-[12px]'}>
-                                Current password
-                            </Label>
-                            <Input
-                                id={'password'}
-                                name={'password'}
-                                onChange={handleChange}
-                                value={data.currentPassword}
-                                placeholder={'Enter password'}
-                                type={'password'}
-                                className={
-                                    'border px-3 py-2 rounded-md w-full outline-none border-gray-300 focus:ring-2 focus:ring-blue-500'
-                                }
-                            />
-                        </div>
-                        <div className="flex flex-col items-start w-full">
-                            <Label htmlFor={'newEmail'} className={'px-[12px]'}>
-                                New email
-                            </Label>
-                            <Input
-                                id={'newEmail'}
-                                name={'newEmail'}
-                                onChange={handleChange}
-                                value={data.newEmail}
-                                placeholder={'New email'}
-                                type={'text'}
-                                className={
-                                    'border px-3 py-2 rounded-md w-full outline-none border-gray-300 focus:ring-2 focus:ring-blue-500'
-                                }
-                            />
-                        </div>
+                    <h2 className="text-xl font-bold text-gray-800 mb-2">Change Email</h2>
+                    <p className="text-sm text-gray-600 mb-4">
+                        For security reasons, please enter your current password to confirm the email change.
+                    </p>
+                    <form onSubmit={formik.handleSubmit} className="flex flex-col items-center gap-2 justify-center mt-[10px]">
+                        <InputField formik={formik} inputName={'password'} type={'password'} labelName={'Password'} />
+                        <InputField formik={formik} inputName={'newEmail'} type={'newEmail'} labelName={'New Email'} />
                         <div className="flex justify-end gap-x-2 mt-4">
                             <button
                                 onClick={() => setIsChangeEmailModal(false)}

@@ -24,6 +24,7 @@ const userSchema = new Schema(
             type: String,
             required: [true, 'Password iz required'],
             select: false,
+            min: 4,
             // validate: {
             //     validator: (field) => {
             //         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W)(?!.* ).{8,16}$/;
@@ -71,6 +72,10 @@ const userSchema = new Schema(
         passwordChangedAt: { type: Date },
         passwordResetToken: { type: String },
         passwordResetTokenExpires: { type: Date },
+        pendingEmail: { type: String },
+        pendingEmailToken: { type: String },
+        pendingEmailTokenExpires: { type: Date },
+        emailChangedAt: { type: Date },
     },
     {
         timestamps: true,
@@ -98,10 +103,27 @@ userSchema.methods.isPasswordChanged = function (JWTTimestamp) {
     return false;
 };
 
+userSchema.methods.isEmailChanged = function (JWTTimestamp) {
+    if (this.emailChangedAt) {
+        const changedTimestamp = parseInt(this.emailChangedAt.getTime() / 1000, 10);
+        return JWTTimestamp < changedTimestamp;
+    }
+
+    return false;
+};
+
 userSchema.methods.createResetPasswordToken = function () {
     const resetToken = crypto.randomBytes(32).toString('hex');
     this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
     this.passwordResetTokenExpires = Date.now() + 10 * 60 * 1000;
+
+    return resetToken;
+};
+
+userSchema.methods.createPendingEmailToken = function () {
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    this.pendingEmailToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+    this.pendingEmailTokenExpires = Date.now() + 60 * 60 * 1000;
 
     return resetToken;
 };

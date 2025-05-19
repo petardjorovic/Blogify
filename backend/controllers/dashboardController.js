@@ -13,6 +13,7 @@ const CustomError = require('../utils/CustomError');
 const cloudinary = require('cloudinary').v2;
 const mongoose = require('mongoose');
 const deleteUserCascade = require('../transactions/deleteUserCascade');
+const Email = require('../utils/Email');
 
 const getDasboardUserProfile = asyncErrorHandler(async (req, res, next) => {
     res.status(200).json({
@@ -244,6 +245,43 @@ const deleteUserProfile = asyncErrorHandler(async (req, res, next) => {
     });
 });
 
+const changeEmail = asyncErrorHandler(async (req, res, next) => {
+    const { newEmail, password } = req.body;
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    if (!emailRegex.test(newEmail)) return next(new CustomError('Please enter a valid email', 400));
+    const user = await UserModel.findById(req.user._id).select('+password');
+    if (newEmail.trim() === user.email) return next(new CustomError('New email must be different from current email.', 400));
+
+    const isPasswordValid = await user.isPasswordCorrect(password, user.password);
+    if (!isPasswordValid) return next(new CustomError('Wrong password', 400));
+
+    // 2. GENERATE A RANDOM RESET TOKEN
+    const resetToken = user.createPendingEmailToken();
+    user.pendingEmail = newEmail;
+
+    const savedUser = await user.save({ validateBeforeSave: false });
+    console.log(savedUser, 'savedUser');
+    const expiresAt = savedUser.pendingEmailTokenExpires.getTime();
+
+    // 3. SEND THE TOKEN BACK TO THE USER EMAIL
+    try {
+        await new Email(
+            { email: newEmail, firstName: user.firstName },
+            `http://localhost:5173/changeEmail/?token=${resetToken}&expires=${expiresAt}`
+        ).changeEmail();
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Activation link has been sent to your new entered email address.',
+        });
+    } catch (err) {
+        console.log(err, 'change email send email');
+        user.pendingEmail = undefined;
+        user.pendingEmailToken = undefined;
+        user.pendingEmailTokenExpires = undefined;
+    }
+});
+
 module.exports = {
     getDashboardHomePosts,
     getDasboardUserProfile,
@@ -256,4 +294,5 @@ module.exports = {
     updatePostImage,
     updatePostInfo,
     deleteUserProfile,
+    changeEmail,
 };

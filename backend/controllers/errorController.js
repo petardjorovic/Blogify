@@ -1,4 +1,5 @@
 const CustomError = require('../utils/CustomError');
+const { z } = require('zod');
 
 const devError = (error, res) => {
     console.log(error, 'error iz devError petre');
@@ -55,6 +56,7 @@ const handleExpiredJWT = (error) => {
 module.exports = (error, req, res, next) => {
     error.statusCode = error.statusCode || 500;
     error.status = error.status || 'error';
+    // console.log(`PATH: ${req.path}`, error);
 
     if (process.env.NODE_ENV === 'development') {
         devError(error, res);
