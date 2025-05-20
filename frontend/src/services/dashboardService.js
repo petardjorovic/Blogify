@@ -211,10 +211,35 @@ export const deleteUserProfile = async (data) => {
 export const changeEmail = async (data) => {
     try {
         const res = await axios.patch('/api/dashboard/profile/edit/email', data);
-        console.log(res, 'res iz servisa change email');
-        return res;
+        if (res.status === 200 && res.data.status === 'success') {
+            return {
+                status: res.data.status,
+                message: res.data.message,
+            };
+        }
     } catch (err) {
         console.error(err, 'err iz servisa change email');
-        return err;
+        return {
+            status: err.response.data.error.status,
+            message: err.response.data.message,
+        };
+    }
+};
+
+export const checkEmailChangeToken = async (token) => {
+    try {
+        const res = await axios.get(`/api/dashboard/changeEmail/${token}`);
+        if (res.status === 200 && res.data.status === 'success') {
+            return {
+                status: res.data.status,
+                message: res.data.message,
+            };
+        }
+    } catch (err) {
+        console.error(err, 'err iz servisa checkEmailChangeToken');
+        return {
+            status: err.response.data.error.status,
+            message: err.response.data.message,
+        };
     }
 };

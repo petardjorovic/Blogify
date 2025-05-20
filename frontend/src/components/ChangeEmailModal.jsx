@@ -6,9 +6,14 @@ import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
 import { showLoader } from '../store/loaderSlice';
 import { changeEmail } from '../services/dashboardService';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { routesConfig } from '../config/routesConfig';
+import { logout } from '../store/userSlice';
 
 function ChangeEmailModal({ setIsChangeEmailModal, userEmail }) {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const formik = useFormik({
         initialValues: {
             password: '',
@@ -23,11 +28,17 @@ function ChangeEmailModal({ setIsChangeEmailModal, userEmail }) {
                 .test('is-different', 'New email must be different from current.', (value) => value !== userEmail),
         }),
         onSubmit: async (values) => {
-            console.log(values);
+            setIsChangeEmailModal(false);
             dispatch(showLoader(true));
             const res = await changeEmail(values);
             dispatch(showLoader(false));
-            console.log(res, 'res sa fronta change email');
+            if (res.status === 'success') {
+                toast.success(res.message);
+                dispatch(logout());
+                navigate(routesConfig.LOGIN.path, { replace: true });
+            } else {
+                toast.error(res.message);
+            }
         },
     });
 

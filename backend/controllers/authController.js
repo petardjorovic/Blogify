@@ -9,6 +9,7 @@ const activationToken = require('../utils/activationToken');
 const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
 const crypto = require('crypto');
+const { z } = require('zod');
 
 const login = asyncErrorHandler(async (req, res, next) => {
     if (!req.body.email || !req.body.password) {
@@ -43,11 +44,21 @@ const register = asyncErrorHandler(async (req, res, next) => {
     }
     const newUser = savedUser.toObject();
     const actToken = activationToken({ id: newUser._id });
-    await new Email({ email: newUser.email, firstName: newUser.firstName }, `http://localhost:5173/activation/${actToken}`).sendWelcome();
-    res.status(200).json({
-        status: 'success',
-        message: 'Registration successful! Please check your email for the activation link (valid for 24 hours).',
-    });
+    try {
+        await new Email(
+            { email: newUser.email, firstName: newUser.firstName },
+            `http://localhost:5173/activation/${actToken}`
+        ).sendWelcome();
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Registration successful! Please check your email for the activation link (valid for 24 hours).',
+        });
+    } catch (error) {
+        console.log(error, 'register activation send email error');
+        await UserModel.findByIdAndDelete(savedUser._id);
+        return next(new CustomError('An error occurred, please try again later.', 500));
+    }
 });
 
 const restoreUser = asyncErrorHandler(async (req, res, next) => {
@@ -59,13 +70,7 @@ const restoreUser = asyncErrorHandler(async (req, res, next) => {
 
 const checkUserActivation = asyncErrorHandler(async (req, res, next) => {
     const { token } = req.params;
-    let decoded;
-    try {
-        decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET_KEY);
-    } catch (error) {
-        console.error(error);
-        return next(new CustomError('Your token has been expired or not valid.', 403));
-    }
+    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET_KEY);
     const user = await UserModel.findById(decoded.id);
     if (!user) return next('User not found', 404);
     if (user.activate) {
@@ -153,4 +158,38 @@ const resetPassword = asyncErrorHandler(async (req, res, next) => {
     });
 });
 
-module.exports = { login, register, restoreUser, checkUserActivation, changePassword, forgotPassword, resetPassword };
+const checkResendActivationLink = asyncErrorHandler(async (req, res, next) => {
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    if (!emailRegex.test(req.body.email)) return next(new CustomError('Please enter a valid email', 400));
+    const user = await UserModel.findOne({ email: req.body.email });
+    if (!user) return next(new CustomError('User not found', 404));
+    if (user.activate) return next(new CustomError('The user account is already activated', 409));
+
+    const actToken = activationToken({ id: user._id });
+
+    try {
+        await new Email(
+            { email: user.email, firstName: user.firstName },
+            `http://localhost:5173/activation/${actToken}`
+        ).resendActivation();
+
+        res.status(200).json({
+            status: 'success',
+            message: 'The activation link has just been sent. Please check your email for the activation link (valid for 24 hours).',
+        });
+    } catch (error) {
+        console.log(error, 'resend activation send email error');
+        return next(new CustomError('An error occurred, please try again later.', 500));
+    }
+});
+
+module.exports = {
+    login,
+    register,
+    restoreUser,
+    checkUserActivation,
+    changePassword,
+    forgotPassword,
+    resetPassword,
+    checkResendActivationLink,
+};

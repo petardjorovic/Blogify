@@ -17,4 +17,6 @@ router.post('/forgotPassword', authController.forgotPassword);
 
 router.patch('/resetPassword/:token', authController.resetPassword);
 
+router.post('/resendActivation', authController.checkResendActivationLink);
+
 module.exports = router;

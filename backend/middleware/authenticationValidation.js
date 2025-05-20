@@ -29,7 +29,13 @@ const protect = asyncErrorHandler(async (req, res, next) => {
         return next(new CustomError('The password has been changed recently.', 401));
     }
 
-    //* 5. Na kraju cemo da setujemo korisnika i da nastavimo u sledeci middleware
+    //*5. Da li je mozda korisnik promenio email nakon emitovanja tokena
+    const isEmailChanged = user.isEmailChanged(decoded.iat);
+    if (isEmailChanged) {
+        return next(new CustomError('The email has been changed recently.', 401));
+    }
+
+    //* 6. Na kraju cemo da setujemo korisnika i da nastavimo u sledeci middleware
     req.user = user;
     next();
 });

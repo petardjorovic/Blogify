@@ -14,6 +14,7 @@ const cloudinary = require('cloudinary').v2;
 const mongoose = require('mongoose');
 const deleteUserCascade = require('../transactions/deleteUserCascade');
 const Email = require('../utils/Email');
+const crypto = require('crypto');
 
 const getDasboardUserProfile = asyncErrorHandler(async (req, res, next) => {
     res.status(200).json({
@@ -245,7 +246,7 @@ const deleteUserProfile = asyncErrorHandler(async (req, res, next) => {
     });
 });
 
-const changeEmail = asyncErrorHandler(async (req, res, next) => {
+const sendChangeEmailLink = asyncErrorHandler(async (req, res, next) => {
     const { newEmail, password } = req.body;
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     if (!emailRegex.test(newEmail)) return next(new CustomError('Please enter a valid email', 400));
@@ -260,7 +261,6 @@ const changeEmail = asyncErrorHandler(async (req, res, next) => {
     user.pendingEmail = newEmail;
 
     const savedUser = await user.save({ validateBeforeSave: false });
-    console.log(savedUser, 'savedUser');
     const expiresAt = savedUser.pendingEmailTokenExpires.getTime();
 
     // 3. SEND THE TOKEN BACK TO THE USER EMAIL
@@ -279,7 +279,33 @@ const changeEmail = asyncErrorHandler(async (req, res, next) => {
         user.pendingEmail = undefined;
         user.pendingEmailToken = undefined;
         user.pendingEmailTokenExpires = undefined;
+
+        return next(new CustomError('There was an error sending new Email activation link. Please try again later', 500));
     }
+});
+
+const changeEmail = asyncErrorHandler(async (req, res, next) => {
+    // 1. IF THE USER EXISTS WITH THE GIVEN TOKEN OR TOKEN HAS NOT EXPIRED
+    const { token } = req.params;
+    if (!token) return next(new CustomError('There is no token', 400));
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+    const user = await UserModel.findOne({ pendingEmailToken: hashedToken, pendingEmailTokenExpires: { $gt: Date.now() } });
+    if (!user) return next(new CustomError('Your activation link is invalid or has expired', 403));
+
+    // 2. CHANGING THE USER EMAIL
+    user.email = user.pendingEmail;
+    user.pendingEmail = undefined;
+    user.pendingEmailToken = undefined;
+    user.pendingEmailTokenExpires = undefined;
+    user.emailChangedAt = Date.now();
+
+    const savedUser = await user.save({ validateBeforeSave: false });
+    if (!savedUser) return next(new CustomError('An error occurred on server side, please try again later', 500));
+
+    res.status(200).json({
+        status: 'success',
+        message: 'You have successfully activated your new email.',
+    });
 });
 
 module.exports = {
@@ -294,5 +320,6 @@ module.exports = {
     updatePostImage,
     updatePostInfo,
     deleteUserProfile,
+    sendChangeEmailLink,
     changeEmail,
 };

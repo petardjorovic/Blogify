@@ -129,3 +129,21 @@ export const resetPassword = async (data, token) => {
         };
     }
 };
+
+export const resendActivationLink = async (email) => {
+    try {
+        const res = await axios.post('/api/auth/resendActivation', email);
+        if (res.status === 200 && res.data.status === 'success') {
+            return {
+                status: res.data.status,
+                message: res.data.message,
+            };
+        }
+    } catch (err) {
+        console.error(err, 'err iz servisa resend activation link');
+        return {
+            status: err.response.data.error.status,
+            message: err.response.data.message,
+        };
+    }
+};

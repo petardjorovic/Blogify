@@ -17,11 +17,13 @@ router.get('/reactions/comments', authenticationValidation.protect, dashboardCon
 
 router.get('/singlePost/edit/:postId', authenticationValidation.protect, dashboardController.getDashboardSinglePostEdit);
 
+router.get('/changeEmail/:token', dashboardController.changeEmail);
+
 router.patch('/profile/image', authenticationValidation.protect, userParser.single('image'), dashboardController.updateProfileImage);
 
 router.patch('/profile/info', authenticationValidation.protect, dashboardController.updateProfileInfo);
 
-router.patch('/profile/edit/email', authenticationValidation.protect, dashboardController.changeEmail);
+router.patch('/profile/edit/email', authenticationValidation.protect, dashboardController.sendChangeEmailLink);
 
 router.patch('/posts/edit/image', authenticationValidation.protect, postParser.single('image'), dashboardController.updatePostImage);
 

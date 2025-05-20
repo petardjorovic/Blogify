@@ -1,0 +1,52 @@
+html
+  head
+    title #{subject}
+    style.
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      }
+      h1 {
+        color: #333333;
+      }
+      p {
+        color: #555555;
+        line-height: 1.6;
+      }
+      .button {
+        background-color: #28a745;
+        color: #ffffff;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 5px;
+        display: inline-block;
+        margin-bottom: 10px;
+      }
+      .footer {
+        font-size: 12px;
+        color: #888888;
+        margin-top: 20px;
+      }
+
+  body
+    .container
+      h1 Welcome, #{firstName}
+      p
+        | You requested a new activation link for your Social Network account.
+      p
+        | Click the button below to activate your account:
+      a.button(href=url target='_blank') Activate Account
+      p
+        | Please note: The activation link will expire in 24 hours. If you already activated your account, you can ignore this email.
+      p.footer
+        | This email was sent automatically. Please do not reply.

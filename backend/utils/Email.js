@@ -55,6 +55,10 @@ class Email {
         await this.send('Confirm Your New Email Address', 'changeEmail');
     }
 
+    async resendActivation() {
+        await this.send('Activate Your Social Network Account', 'resendActivation');
+    }
+
     async send(subject, template) {
         const html = pug.renderFile(`${__dirname}/../views/${template}.pug`, {
             subject: subject,

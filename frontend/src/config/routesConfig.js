@@ -51,4 +51,7 @@ export const routesConfig = {
     RESET_PASSWORD: {
         path: '/resetPassword/:resetToken',
     },
+    CHANGE_EMAIL: {
+        path: '/changeEmail',
+    },
 };
