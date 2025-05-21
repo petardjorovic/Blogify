@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { getPostsBySearch } from '../services/postService';
 import PostCard from '../components/PostCard';
 import { useDispatch } from 'react-redux';
@@ -14,8 +14,10 @@ function PostBySearchPage() {
     const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get('page')) || 1);
     const [itemsLimit, setItemsLimit] = useState(12);
     const [itemsCount, setItemsCount] = useState(0);
+    const location = useLocation();
 
     const fetchPosts = useCallback(async () => {
+        // if (!location.pathname.includes('post/search')) return;
         const page = searchParams.get('page') || 1;
         const limit = searchParams.get('limit') || 12;
         dispatch(showLoader(true));
@@ -39,15 +41,10 @@ function PostBySearchPage() {
                 <Pagination itemsCount={itemsCount} itemsLimit={itemsLimit} currentPage={currentPage} setCurrentPage={setCurrentPage} />
             )}
             <div className="flex flex-wrap items-center gap-[34px] w-full gap-y-5 py-[15px]">
-                {posts.length > 0 ? (
+                {posts.length > 0 &&
                     posts.map((post) => {
                         return <PostCard key={post._id} post={post} rerenderView={fetchPosts} />;
-                    })
-                ) : (
-                    <div className="text-center w-full pt-[50px]">
-                        <p className="text-xl">No results found for your search.</p>
-                    </div>
-                )}
+                    })}
             </div>
             {posts.length > 0 && (
                 <Pagination itemsCount={itemsCount} itemsLimit={itemsLimit} currentPage={currentPage} setCurrentPage={setCurrentPage} />

@@ -1,14 +1,34 @@
-import React, { useState } from 'react';
-import { IoMdClose } from 'react-icons/io';
 import Input from '../components/Input';
 import Button from '../components/Button';
+import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 function SearchFormMember() {
-    const [close, setClose] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [searchParams, setSearchParams] = useSearchParams();
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const trimed = searchTerm.trim();
+        if (!trimed) {
+            searchParams.delete('member');
+            setSearchParams(searchParams);
+            return;
+        } else {
+            searchParams.set('member', trimed);
+            setSearchParams(searchParams);
+            console.log(trimed);
+        }
+    };
     return (
-        <form className="box w-full relative">
-            <Input type={'text'} placeholder={'Search member'} className={'border w-full rounded-md px-[12px] py-[5px] outline-none'} />
+        <form className="box w-full relative" onSubmit={handleSubmit}>
+            <Input
+                type={'text'}
+                placeholder={'Search member'}
+                className={'border w-full rounded-md px-[12px] py-[5px] outline-none'}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+            />
             <Button
                 type={'submit'}
                 className={
@@ -17,11 +37,6 @@ function SearchFormMember() {
             >
                 Search
             </Button>
-            {close && (
-                <div className="absolute top-[20px] right-[20px] text-red-600 cursor-pointer">
-                    <IoMdClose />
-                </div>
-            )}
         </form>
     );
 }

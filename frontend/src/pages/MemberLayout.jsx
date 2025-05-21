@@ -4,16 +4,8 @@ import MemberDetails from '../components/MemberDetails';
 
 function MemberLayout() {
     return (
-        <div className="container mx-auto">
-            <div className="flex flex-col lg:flex-row px-[16px] gap-[20px]">
-                <div className="w-full lg:w-2/3">
-                    <Outlet />
-                </div>
-                <div className="w-full lg:w-1/3 flex flex-col gap-[20px]">
-                    <SearchFormMember />
-                    <MemberDetails />
-                </div>
-            </div>
+        <div className="container mx-auto px-4">
+            <Outlet />
         </div>
     );
 }

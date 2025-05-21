@@ -26,6 +26,9 @@ export const routesConfig = {
     MEMBER: {
         path: '/member',
     },
+    SEARCH_MEMBER: {
+        path: '/member/search',
+    },
     DASHBOARD_ROOT: {
         path: '/dashboard',
     },

@@ -23,6 +23,7 @@ import DashboardPostsEdit from '../pages/DashboardPostsEdit';
 import GuestProtect from '../components/GuestProtect';
 import ResetPasswordPage from '../pages/ResetPasswordPage';
 import ChangeEmailPage from '../pages/ChangeEmailPage';
+import MembersBySearchPage from '../pages/MembersBySearchPage';
 
 const router = createBrowserRouter([
     {
@@ -66,6 +67,10 @@ const router = createBrowserRouter([
                             {
                                 path: routesConfig.MEMBER.path,
                                 element: <MembersPage />,
+                            },
+                            {
+                                path: routesConfig.SEARCH_MEMBER.path,
+                                element: <MembersBySearchPage />,
                             },
                         ],
                     },
