@@ -57,20 +57,12 @@ function SinglePostPage() {
 
     return (
         <div className="container mx-auto">
-            <div className="px-[16px]">
+            <div className="px-[16px] mb-5">
                 {/* {isSuccess ? ( */}
                 {Object.hasOwn(post, '_id') && (
                     <div className="box flex flex-col md:flex-row items-stretch">
                         {/* LEFT */}
-                        <div className="w-full md:w-1/2 p-[10px]">
-                            <img
-                                src={post.image.includes('uploads') ? 'http://localhost:4000/' + post.image : post.image}
-                                alt=""
-                                className="w-full h-full lg:h-[460px] object-cover rounded-lg"
-                            />
-                        </div>
-                        {/* RIGHT */}
-                        <div className="w-full md:w-1/2 p-[10px]">
+                        <div className="w-full md:w-1/2 p-[10px] order-2 md:order-1">
                             <h2 className="font-semibold text-3xl mb-[10px]">{post.title}</h2>
                             <div className="mb-[10px]">
                                 {post.tags.length > 0 ? (
@@ -89,7 +81,7 @@ function SinglePostPage() {
                             <Link to={routesConfig.POST_AUTHOR.realPath(post.userId)} className="font-medium text-lg mb-[10px]">
                                 {post.user?.firstName + ' ' + post.user?.lastName}
                             </Link>
-                            <p className="text-gray-700 mb-[18px]">Published: {formatDatetime(post.createdAt)}</p>
+                            <p className="text-gray-700 mb-[18px] text-sm">Published: {formatDatetime(post.createdAt)}</p>
                             <div className="flex items-center justify-between">
                                 <span className="flex items-center gap-2 mb-2">
                                     {post.likes.map((el) => el.userId).includes(user?._id) ? (
@@ -103,11 +95,24 @@ function SinglePostPage() {
                                     )}
                                     {post.likes.length} {post.likes.length > 1 ? 'LIKES' : 'LIKE'}
                                 </span>
-                                {post.updatedAt && <span className="text-gray-700 italic">Edited: {formatDatetime(post.updatedAt)}</span>}
                             </div>
+                            {post.updatedAt && (
+                                <div className="text-end">
+                                    <span className="text-gray-700 italic text-sm">Edited: {formatDatetime(post.updatedAt)}</span>
+                                </div>
+                            )}
                             <AddCommentForm postId={post._id} rerenderView={fetchPost} />
                             {/* Comments list */}
                             {post.comments.length > 0 && <CommentsList post={post} rerenderView={fetchPost} />}
+                        </div>
+                        {/* RIGHT */}
+
+                        <div className="w-full md:w-1/2 p-[10px] order-1 md:order-2">
+                            <img
+                                src={post.image.includes('uploads') ? 'http://localhost:4000/' + post.image : post.image}
+                                alt=""
+                                className="w-full h-full lg:h-[460px] object-cover rounded-lg"
+                            />
                         </div>
                     </div>
                 )}

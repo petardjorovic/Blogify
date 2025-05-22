@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Input from './Input';
 import Label from './Label';
 import { getAllTags } from '../services/tagService';
@@ -8,6 +8,9 @@ import { toast } from 'react-toastify';
 import TagsCOBox from './TagCOBox';
 import { useDispatch } from 'react-redux';
 import { showLoader } from '../store/loaderSlice';
+import useIsSmallScreen from '../utils/useIsSmallScreen';
+import { IoMdArrowDropdown } from 'react-icons/io';
+import { AnimatePresence, motion } from 'framer-motion';
 
 function CreateMemory({ onPostCreated }) {
     const dispatch = useDispatch();
@@ -26,6 +29,8 @@ function CreateMemory({ onPostCreated }) {
     const [isImageValid, setIsImageValid] = useState(true);
     const imageInputRef = useRef();
     const [resetTags, setResetTags] = useState(false);
+    const isSmallScreen = useIsSmallScreen();
+    const [isDropdown, setIsDropdown] = useState(false);
 
     useEffect(() => {
         const fetchTags = async () => {
@@ -84,82 +89,188 @@ function CreateMemory({ onPostCreated }) {
         }
     };
     return (
-        <div className="box w-full">
-            <h3 className="font-semibold text-xl text-center mb-[12px]">Create memory</h3>
-            <form encType="multipart/form-data" onSubmit={handleSubmit}>
-                <label htmlFor="title" className={`px-[12px] ${!isTitle && 'text-red-600'}`}>
-                    {isTitle ? 'Title' : 'Title is required'}
-                </label>
-                <Input
-                    type={'text'}
-                    id={'title'}
-                    name={'title'}
-                    placeholder="Title"
-                    className={`border outline-none w-full rounded-md px-[12px] py-[5px] mb-[10px]`}
-                    onChange={handleChange}
-                    value={data.title}
-                />
-                <label htmlFor="body" className={`px-[12px] ${!isBody && 'text-red-600'}`}>
-                    {isBody ? 'Message' : 'Message is required'}
-                </label>
-                <textarea
-                    name="body"
-                    id="body"
-                    cols="30"
-                    rows="10"
-                    placeholder="Message"
-                    className="border w-full rounded-md px-[12px] py-[5px] outline-none mb-[10px]"
-                    onChange={handleChange}
-                    value={data.body}
-                ></textarea>
-                <Label className={`px-[12px] ${!isTags && 'text-red-600'}`}>{isTags ? 'Tags' : 'You must add at least one tag'}</Label>
-                {tags.length > 0 && <TagsCOBox tags={tags} setData={setData} data={data} resetTags={resetTags} />}
-                <div className="flex items-center justify-center border py-[5px] rounded-md mt-[10px] gap-[40px] mb-[10px]">
-                    <div className="bg-gray-400 px-[5px]  py-[2px] gap-[2px] flex items-center rounded-md select-none]">
-                        <input
-                            type="radio"
-                            id="public"
-                            name="isPublic"
-                            onChange={() => setData({ ...data, isPublic: true })}
-                            value={data.isPublic}
-                            checked={data.isPublic}
-                        />
-                        <label htmlFor="public" className="text-sm">
-                            Public
+        <>
+            {!isSmallScreen ? (
+                <div className="box w-full">
+                    <h3 className="font-semibold text-xl text-center mb-[12px]">Create memory</h3>
+                    <form encType="multipart/form-data" onSubmit={handleSubmit}>
+                        <label htmlFor="title" className={`px-[12px] ${!isTitle && 'text-red-600'}`}>
+                            {isTitle ? 'Title' : 'Title is required'}
                         </label>
-                    </div>
-                    <div className="bg-gray-400 px-[5px]  py-[2px] gap-[2px] flex items-center rounded-md select-none">
-                        <input
-                            type="radio"
-                            id="private"
-                            name="isPublic"
-                            onChange={() => setData({ ...data, isPublic: false })}
-                            value={data.isPublic}
+                        <Input
+                            type={'text'}
+                            id={'title'}
+                            name={'title'}
+                            placeholder="Title"
+                            className={`border outline-none w-full rounded-md px-[12px] py-[5px] mb-[10px]`}
+                            onChange={handleChange}
+                            value={data.title}
                         />
-                        <label htmlFor="private" className="text-sm">
-                            Private
+                        <label htmlFor="body" className={`px-[12px] ${!isBody && 'text-red-600'}`}>
+                            {isBody ? 'Message' : 'Message is required'}
                         </label>
-                    </div>
+                        <textarea
+                            name="body"
+                            id="body"
+                            cols="30"
+                            rows="10"
+                            placeholder="Message"
+                            className="border w-full rounded-md px-[12px] py-[5px] outline-none mb-[10px]"
+                            onChange={handleChange}
+                            value={data.body}
+                        ></textarea>
+                        <Label className={`px-[12px] ${!isTags && 'text-red-600'}`}>
+                            {isTags ? 'Tags' : 'You must add at least one tag'}
+                        </Label>
+                        {tags.length > 0 && <TagsCOBox tags={tags} setData={setData} data={data} resetTags={resetTags} />}
+                        <div className="flex items-center justify-center border py-[5px] rounded-md mt-[10px] gap-[40px] mb-[10px]">
+                            <div className="bg-gray-400 px-[5px]  py-[2px] gap-[2px] flex items-center rounded-md select-none]">
+                                <input
+                                    type="radio"
+                                    id="public"
+                                    name="isPublic"
+                                    onChange={() => setData({ ...data, isPublic: true })}
+                                    value={data.isPublic}
+                                    checked={data.isPublic}
+                                />
+                                <label htmlFor="public" className="text-sm">
+                                    Public
+                                </label>
+                            </div>
+                            <div className="bg-gray-400 px-[5px]  py-[2px] gap-[2px] flex items-center rounded-md select-none">
+                                <input
+                                    type="radio"
+                                    id="private"
+                                    name="isPublic"
+                                    onChange={() => setData({ ...data, isPublic: false })}
+                                    value={data.isPublic}
+                                />
+                                <label htmlFor="private" className="text-sm">
+                                    Private
+                                </label>
+                            </div>
+                        </div>
+                        <label htmlFor="browseFile" className={`px-[12px] ${(!isImage || !isImageValid) && 'text-red-600'}`}>
+                            {isImage ? (isImageValid ? 'Image' : imageValidation(data.image).msg) : 'Image is required'}
+                        </label>
+                        <div className="border rounded-md flex flex-col">
+                            <input
+                                type="file"
+                                name="chosenFile"
+                                id="browseFile"
+                                className=""
+                                onChange={handleImage}
+                                accept="image/*"
+                                ref={imageInputRef}
+                            />
+                        </div>
+                        <button type="submit" className="w-full px-[16px] py-[4px] bg-mainBlue text-white rounded-md mt-[10px]">
+                            Create
+                        </button>
+                    </form>
                 </div>
-                <label htmlFor="browseFile" className={`px-[12px] ${(!isImage || !isImageValid) && 'text-red-600'}`}>
-                    {isImage ? (isImageValid ? 'Image' : imageValidation(data.image).msg) : 'Image is required'}
-                </label>
-                <div className="border rounded-md flex flex-col">
-                    <input
-                        type="file"
-                        name="chosenFile"
-                        id="browseFile"
-                        className=""
-                        onChange={handleImage}
-                        accept="image/*"
-                        ref={imageInputRef}
-                    />
-                </div>
-                <button type="submit" className="w-full px-[16px] py-[4px] bg-mainBlue text-white rounded-md mt-[10px]">
-                    Create
-                </button>
-            </form>
-        </div>
+            ) : (
+                <>
+                    <button
+                        className="flex items-center gap-1 border border-mainBlue py-1 font-semibold text-mainBlue uppercase justify-center rounded-md p-[4px] text-center w-full"
+                        onClick={() => setIsDropdown(!isDropdown)}
+                    >
+                        Create Memory{' '}
+                        <motion.span animate={{ rotate: isDropdown ? 180 : 0 }} transition={{ duration: 0.3 }} className="inline-block">
+                            <IoMdArrowDropdown size={22} />
+                        </motion.span>
+                    </button>
+                    <AnimatePresence>
+                        {isDropdown && (
+                            <motion.div
+                                className="box w-full"
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                transition={{ duration: 0.3 }}
+                                exit={{ height: 0, opacity: 0 }}
+                            >
+                                <h3 className="font-semibold text-xl text-center mb-[12px]">Create memory</h3>
+                                <form encType="multipart/form-data" onSubmit={handleSubmit}>
+                                    <label htmlFor="title" className={`px-[12px] ${!isTitle && 'text-red-600'}`}>
+                                        {isTitle ? 'Title' : 'Title is required'}
+                                    </label>
+                                    <Input
+                                        type={'text'}
+                                        id={'title'}
+                                        name={'title'}
+                                        placeholder="Title"
+                                        className={`border outline-none w-full rounded-md px-[12px] py-[5px] mb-[10px]`}
+                                        onChange={handleChange}
+                                        value={data.title}
+                                    />
+                                    <label htmlFor="body" className={`px-[12px] ${!isBody && 'text-red-600'}`}>
+                                        {isBody ? 'Message' : 'Message is required'}
+                                    </label>
+                                    <textarea
+                                        name="body"
+                                        id="body"
+                                        cols="30"
+                                        rows="10"
+                                        placeholder="Message"
+                                        className="border w-full rounded-md px-[12px] py-[5px] outline-none mb-[10px]"
+                                        onChange={handleChange}
+                                        value={data.body}
+                                    ></textarea>
+                                    <Label className={`px-[12px] ${!isTags && 'text-red-600'}`}>
+                                        {isTags ? 'Tags' : 'You must add at least one tag'}
+                                    </Label>
+                                    {tags.length > 0 && <TagsCOBox tags={tags} setData={setData} data={data} resetTags={resetTags} />}
+                                    <div className="flex items-center justify-center border py-[5px] rounded-md mt-[10px] gap-[40px] mb-[10px]">
+                                        <div className="bg-gray-400 px-[5px]  py-[2px] gap-[2px] flex items-center rounded-md select-none]">
+                                            <input
+                                                type="radio"
+                                                id="public"
+                                                name="isPublic"
+                                                onChange={() => setData({ ...data, isPublic: true })}
+                                                value={data.isPublic}
+                                                checked={data.isPublic}
+                                            />
+                                            <label htmlFor="public" className="text-sm">
+                                                Public
+                                            </label>
+                                        </div>
+                                        <div className="bg-gray-400 px-[5px]  py-[2px] gap-[2px] flex items-center rounded-md select-none">
+                                            <input
+                                                type="radio"
+                                                id="private"
+                                                name="isPublic"
+                                                onChange={() => setData({ ...data, isPublic: false })}
+                                                value={data.isPublic}
+                                            />
+                                            <label htmlFor="private" className="text-sm">
+                                                Private
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <label htmlFor="browseFile" className={`px-[12px] ${(!isImage || !isImageValid) && 'text-red-600'}`}>
+                                        {isImage ? (isImageValid ? 'Image' : imageValidation(data.image).msg) : 'Image is required'}
+                                    </label>
+                                    <div className="border rounded-md flex flex-col">
+                                        <input
+                                            type="file"
+                                            name="chosenFile"
+                                            id="browseFile"
+                                            className=""
+                                            onChange={handleImage}
+                                            accept="image/*"
+                                            ref={imageInputRef}
+                                        />
+                                    </div>
+                                    <button type="submit" className="w-full px-[16px] py-[4px] bg-mainBlue text-white rounded-md mt-[10px]">
+                                        Create
+                                    </button>
+                                </form>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </>
+            )}
+        </>
     );
 }
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Pagination from '../components/Pagination';
 import MemberCard from '../components/MemberCard';
@@ -18,21 +18,37 @@ function MambersPage() {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsLimit, setItemsLimit] = useState(20);
     const [membersCount, setMembersCount] = useState(0);
+    const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(20);
+    const [member, setMember] = useState('');
+    const [errorMessage, setErrorMessage] = useState(false);
 
-    const fetchMembers = async () => {
-        const page = searchParams.get('page') || 1;
-        const limit = searchParams.get('limit') || 20;
+    const fetchMembers = useCallback(async () => {
         dispatch(showLoader(true));
-        const res = await getAllUsers(page, limit);
+        const res = await getAllUsers(page, limit, member);
         dispatch(showLoader(false));
+
         if (res.status === 'success') {
             setMembers(res.members);
             setMembersCount(res.membersCount);
+            if (res.members.length === 0) {
+                setErrorMessage(true);
+            } else {
+                setErrorMessage(false);
+            }
+        } else {
+            setErrorMessage(true);
         }
-    };
+    }, [dispatch, limit, page, member]);
 
     useEffect(() => {
         fetchMembers();
+    }, [fetchMembers]);
+
+    useEffect(() => {
+        setPage(searchParams.get('page') || 1);
+        setLimit(searchParams.get('limit') || 20);
+        setMember(searchParams.get('member') || '');
     }, [searchParams]);
 
     return (
@@ -66,6 +82,14 @@ function MambersPage() {
                             );
                         })}
                 </div>
+                {errorMessage && (
+                    <>
+                        <div className="text-center py-10 text-gray-600">
+                            <p className="text-lg font-semibold mb-2">No members found for your search.</p>
+                            <p>Try different keywords or remove the filters.</p>
+                        </div>
+                    </>
+                )}
                 {members.length > 0 && (
                     <Pagination
                         itemsCount={membersCount}
@@ -76,8 +100,8 @@ function MambersPage() {
                 )}
             </div>
             <div className="w-full md:w-1/3 flex flex-col gap-3 order-1 md:order-2">
-                <SearchFormMember />
-                <MemberDetails />
+                <SearchFormMember setCurrentPage={setCurrentPage} />
+                {user.role === 'admin' && <MemberDetails />}
             </div>
         </div>
     );

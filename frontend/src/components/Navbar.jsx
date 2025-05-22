@@ -162,7 +162,7 @@ function Navbar() {
                         />
                         {/* Burger menu */}
                         <motion.div
-                            className="absolute top-[-15px] right-0 h-screen w-[180px] bg-mainBlue text-white z-40 p-5 flex flex-col gap-6 rounded-l-sm"
+                            className="fixed top-0 right-0 h-screen w-[180px] bg-mainBlue text-white z-40 p-5 flex flex-col gap-6 rounded-l-sm"
                             variants={{ hidden: { x: 180 }, visible: { x: 0 } }}
                             initial={'hidden'}
                             transition={{ type: 'spring', stiffness: 200, damping: 30 }}

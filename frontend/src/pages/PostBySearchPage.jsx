@@ -14,20 +14,23 @@ function PostBySearchPage() {
     const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get('page')) || 1);
     const [itemsLimit, setItemsLimit] = useState(12);
     const [itemsCount, setItemsCount] = useState(0);
-    const location = useLocation();
+    const [errorMessage, setErrorMessage] = useState(false);
 
     const fetchPosts = useCallback(async () => {
-        // if (!location.pathname.includes('post/search')) return;
         const page = searchParams.get('page') || 1;
         const limit = searchParams.get('limit') || 12;
         dispatch(showLoader(true));
         const res = await getPostsBySearch(searchParams.toString(), page, limit);
         dispatch(showLoader(false));
-        console.log(res);
 
         if (res.status === 'success') {
             setPosts(res.posts);
             setItemsCount(res.postsCount);
+            if (res.posts.length === 0) {
+                setErrorMessage(true);
+            } else {
+                setErrorMessage(false);
+            }
         }
     }, [searchParams, dispatch]);
 
@@ -46,6 +49,14 @@ function PostBySearchPage() {
                         return <PostCard key={post._id} post={post} rerenderView={fetchPosts} />;
                     })}
             </div>
+            {errorMessage && (
+                <>
+                    <div className="text-center py-10 text-gray-600">
+                        <p className="text-lg font-semibold mb-2">No posts found for your search.</p>
+                        <p>Try different keywords or remove the filters.</p>
+                    </div>
+                </>
+            )}
             {posts.length > 0 && (
                 <Pagination itemsCount={itemsCount} itemsLimit={itemsLimit} currentPage={currentPage} setCurrentPage={setCurrentPage} />
             )}

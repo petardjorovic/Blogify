@@ -200,6 +200,7 @@ function DashboardMyReactions() {
                     )}
                 </div>
             )}
+            {/* === Pagination === */}
             <div className="flex flex-wrap justify-center items-center gap-2 my-6">
                 <button
                     onClick={() => setPage(1)}

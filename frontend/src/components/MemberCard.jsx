@@ -10,6 +10,7 @@ import { setMemberInfo } from '../store/memberSlice';
 import { motion } from 'framer-motion';
 import DeleteMemberModal from './DeleteMemberModal';
 import useLockScroll from '../utils/useLockScroll';
+import { IoChatboxEllipsesOutline } from 'react-icons/io5';
 
 function MemberCard({ member, user, rerenderView }) {
     const dispatch = useDispatch();
@@ -33,27 +34,35 @@ function MemberCard({ member, user, rerenderView }) {
                 />
                 <div>
                     <h5 className="text-lg font-semibold text-center md:text-start">{member.firstName + ' ' + member.lastName}</h5>
-                    <p>
-                        <span className="font-semibold">Gender:</span> {member.gender}
-                    </p>
-                    <p className="break-words">
-                        <span className="font-semibold">Email:</span> {member.email}
-                    </p>
+                    {user.role === 'admin' && (
+                        <>
+                            <p>
+                                <span className="font-semibold">Gender:</span> {member.gender}
+                            </p>
+                            <p className="break-words">
+                                <span className="font-semibold">Email:</span> {member.email}
+                            </p>
+                        </>
+                    )}
                 </div>
             </div>
-            <div className="">
-                <p className="">
-                    <span className="font-semibold">Role:</span> {member.role}
-                </p>
-            </div>
-            <div>
-                <p>
-                    <span className="font-semibold">Birth date:</span> {formatDate(member.birthDate)}
-                </p>
-                <p>
-                    <span className="font-semibold">Member from:</span> {formatDate(member.createdAt)}
-                </p>
-            </div>
+            {user.role === 'admin' && (
+                <div className="">
+                    <p className="">
+                        <span className="font-semibold">Role:</span> {member.role}
+                    </p>
+                </div>
+            )}
+            {user.role === 'admin' && (
+                <div>
+                    <p>
+                        <span className="font-semibold">Birth date:</span> {formatDate(member.birthDate)}
+                    </p>
+                    <p>
+                        <span className="font-semibold">Member from:</span> {formatDate(member.createdAt)}
+                    </p>
+                </div>
+            )}
             <div className="flex md:flex-col gap-[10px]">
                 <Link
                     to={routesConfig.POST_AUTHOR.realPath(member._id)}
@@ -61,12 +70,17 @@ function MemberCard({ member, user, rerenderView }) {
                 >
                     <BsBinoculars />
                 </Link>
-                <button
-                    className="w-[30px] h-[30px] bg-green-700 rounded-md flex items-center justify-center text-white"
-                    onClick={handleMemberInfo}
-                >
-                    <BsEye />
+                <button className="w-[30px] h-[30px] border border-mainBlue rounded-md flex items-center justify-center text-mainBlue">
+                    <IoChatboxEllipsesOutline />
                 </button>
+                {user.role === 'admin' && (
+                    <button
+                        className="w-[30px] h-[30px] bg-green-700 rounded-md flex items-center justify-center text-white"
+                        onClick={handleMemberInfo}
+                    >
+                        <BsEye />
+                    </button>
+                )}
                 {user.role === 'admin' && (
                     <button
                         onClick={() => setIsDeleteMemberModal(true)}

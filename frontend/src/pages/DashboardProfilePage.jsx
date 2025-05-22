@@ -117,7 +117,7 @@ function DashboardProfilePage() {
     };
 
     return (
-        <div className="max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-md">
+        <div className="max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-md mb-5">
             <h2 className="text-2xl font-semibold mb-6">Profile</h2>
             <div className="grid grid-cols-1 md:grid-cols-[250px_1fr] gap-8">
                 {/* Avatar and buttons */}

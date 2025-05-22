@@ -3,7 +3,7 @@ import Button from '../components/Button';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-function SearchFormMember() {
+function SearchFormMember({ setCurrentPage }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -16,8 +16,10 @@ function SearchFormMember() {
             return;
         } else {
             searchParams.set('member', trimed);
+            searchParams.set('page', 1);
+            searchParams.set('limit', 20);
             setSearchParams(searchParams);
-            console.log(trimed);
+            setCurrentPage(1);
         }
     };
     return (

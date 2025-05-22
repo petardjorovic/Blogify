@@ -5,10 +5,28 @@ const mongoose = require('mongoose');
 const deleteUserCascade = require('../transactions/deleteUserCascade');
 
 const getAllMembers = asyncErrorHandler(async (req, res, next) => {
-    const page = parseInt(req.query.page);
-    const limit = parseInt(req.query.limit);
-    const members = await UserModel.aggregate([{ $match: { activate: true } }, { $skip: (page - 1) * limit }, { $limit: limit }]);
-    const membersCount = await UserModel.countDocuments();
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const member = req.query.member?.trim() || '';
+    const parts = member.split(' ').filter(Boolean);
+
+    const regexParts = parts.map((part) => ({
+        $or: [{ firstName: { $regex: part, $options: 'i' } }, { lastName: { $regex: part, $options: 'i' } }],
+    }));
+
+    let match = { activate: true };
+
+    if (parts.length > 0) {
+        match.$and = regexParts;
+    }
+
+    const members = await UserModel.aggregate([
+        { $match: match },
+        { $sort: { createdAt: -1 } },
+        { $skip: (page - 1) * limit },
+        { $limit: limit },
+    ]);
+    const membersCount = await UserModel.countDocuments(match);
     if (!members) return next(new CustomError('Users not found', 404));
 
     res.status(200).json({

@@ -19,7 +19,7 @@ function Pagination({ itemsCount, itemsLimit, currentPage, setCurrentPage }) {
         // searchParams.set('limit', itemsLimit);
         // searchParams.set('page', 1);
         // setSearchParams(searchParams);
-    }, [itemsLimit]);
+    }, [itemsLimit, itemsCount]);
 
     const handleNext = () => {
         if (currentPage < pagesCount) {

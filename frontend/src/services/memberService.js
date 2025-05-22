@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-export const getAllUsers = async (page, limit) => {
+export const getAllUsers = async (page, limit, member) => {
     try {
-        const res = await axios.get(`/api/member?page=${page}&limit=${limit}`);
+        const res = await axios.get(`/api/member?page=${page}&limit=${limit}&member=${member}`);
         if (res.status === 200 && res.data.status === 'success') {
             return {
                 status: res.data.status,

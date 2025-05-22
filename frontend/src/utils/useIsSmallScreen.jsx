@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function useIsSmallScreen(breakpoint = 768) {
     const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < breakpoint);
