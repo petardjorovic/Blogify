@@ -32,6 +32,12 @@ const storage = new CloudinaryStorage({
     },
 });
 
-const parser = multer({ storage, fileFilter });
+const parser = multer({
+    storage,
+    fileFilter,
+    limits: {
+        fileSize: 500 * 1024, // 500 KB
+    },
+});
 
 module.exports = parser;

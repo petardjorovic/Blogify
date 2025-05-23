@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 30
+    },
+    "auditLog": "D:\\My-social-network\\backend\\logs\\.ef343db9da0de844be23addc21a9f35aa7c33ea7-audit.json",
+    "files": [
+        {
+            "date": 1747992569777,
+            "name": "D:\\My-social-network\\backend\\logs\\error-2025-05-23.log",
+            "hash": "3bf07e5ffb805d68b7d3a8d3c5b70b8ac4a19df1972a451bf82b2d1b84ab3ed0"
+        }
+    ],
+    "hashType": "sha256"
+}

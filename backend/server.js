@@ -1,14 +1,18 @@
+// IMPORT PACKAGE
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const fileUpload = require('express-fileupload');
 const path = require('path');
-const errorController = require('./controllers/errorController');
+const { rateLimit } = require('express-rate-limit');
+const morgan = require('morgan');
+const helmet = require('helmet');
+
+const logger = require('./utils/logger');
 const CustomError = require('./utils/CustomError');
-// if (process.env.NODE_ENV !== 'production') {
-//     require('dotenv').config();
-// }
-require('dotenv').config(); // ovo zbog testiranja production-a
+const errorController = require('./controllers/errorController');
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
 
 mongoose
     .connect(process.env.MONGODB_URI)
@@ -19,11 +23,62 @@ mongoose
 
 const app = express();
 
+app.use(helmet());
+
+app.use(
+    morgan('combined', {
+        skip: (req) => req.path.startsWith('/uploads') || req.path === '/favicon.ico',
+        stream: {
+            write: (message) => logger.info(message.trim()),
+        },
+    })
+);
+
+// ovo je obavezno kad koristis servise kao sto je render (jer su reverse proxy)
+// da bi mogla da se prepozna IP adresa posetioca
+app.set('trust proxy', 1);
+
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+    message: 'Too many requests from this IP address. Try again later',
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+const loginLimiter = rateLimit({
+    windowMs: 10 * 60 * 1000, // 10 minuta
+    max: 5, // samo 5 pokušaja po IP
+    message: 'Too many login attemps. Try again after 10 minutes.',
+    standardHeaders: true,
+    legacyHeaders: false,
+    skipSuccessfulRequests: true,
+});
+
+app.use('/api/auth/login', loginLimiter);
+
+app.use('/api', limiter);
+
+app.use(
+    express.json({
+        limit: '50kb', // test je 5mb
+        verify: (req, res, buf) => {
+            // buf je Buffer koji sadrži sirovi body requesta
+            req.rawBodySize = buf.length; // velicina u bajtovima
+        },
+    })
+);
+
+// Middleware za logovanje veličine requesta JSON payloada
+// app.use((req, res, next) => {
+//     if (req.rawBodySize !== undefined) {
+//         console.log(`Velicina JSON tela je: ${req.rawBodySize} bajtova`);
+//     }
+//     next();
+// });
+
 app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
 app.use(cors());
-// app.use(fileUpload());  // posto koristis multer ovo mora da se zakomentarise
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/', require('./routes'));
 

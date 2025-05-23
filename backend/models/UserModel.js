@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
+const validator = require('validator');
 
 const userSchema = new Schema(
     {
@@ -18,7 +19,7 @@ const userSchema = new Schema(
             required: [true, 'Email is required'],
             unique: true,
             lowercase: true,
-            match: [/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/, 'Invalid email format'],
+            validate: [validator.isEmail, 'Email is not valid'],
         },
         password: {
             type: String,

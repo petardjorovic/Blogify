@@ -23,7 +23,7 @@ function LoginForm() {
         validationSchema: Yup.object({
             email: Yup.string()
                 .required('Email is required')
-                .matches(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/, 'Email is not valid'),
+                .matches(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/, 'Email is not valid'),
             password: Yup.string().required('Password is required').min(4, 'Password must be at least 4 characters'),
         }),
         onSubmit: async (values) => {

@@ -23,7 +23,7 @@ function ChangeEmailModal({ setIsChangeEmailModal, userEmail }) {
             password: Yup.string().min(4, 'Minimum length is 4 characters.').required('Required.'),
             newEmail: Yup.string()
                 .required('Required')
-                .matches(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/, 'Email is not valid')
+                .matches(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/, 'Email is not valid')
                 .trim()
                 .test('is-different', 'New email must be different from current.', (value) => value !== userEmail),
         }),

@@ -9,7 +9,7 @@ const activationToken = require('../utils/activationToken');
 const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
 const crypto = require('crypto');
-const { z } = require('zod');
+const validator = require('validator');
 
 const login = asyncErrorHandler(async (req, res, next) => {
     if (!req.body.email || !req.body.password) {
@@ -105,8 +105,7 @@ const changePassword = asyncErrorHandler(async (req, res, next) => {
 const forgotPassword = asyncErrorHandler(async (req, res, next) => {
     // 1. GET A USER BASED ON A POSTED EMAIL
     const { email } = req.body;
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    if (!emailRegex.test(email)) return next(new CustomError('Please enter a valid email', 400));
+    if (!validator.isEmail(email)) return next(new CustomError('Please enter a valid email', 400));
     const user = await UserModel.findOne({ email });
     if (!user) return next(new CustomError('We could not find user with given email', 404));
 
@@ -159,8 +158,7 @@ const resetPassword = asyncErrorHandler(async (req, res, next) => {
 });
 
 const checkResendActivationLink = asyncErrorHandler(async (req, res, next) => {
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    if (!emailRegex.test(req.body.email)) return next(new CustomError('Please enter a valid email', 400));
+    if (!validator.isEmail(req.body.email)) return next(new CustomError('Please enter a valid email', 400));
     const user = await UserModel.findOne({ email: req.body.email });
     if (!user) return next(new CustomError('User not found', 404));
     if (user.activate) return next(new CustomError('The user account is already activated', 409));

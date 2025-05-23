@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import logo from '../assets/logo.png';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { routesConfig } from '../config/routesConfig';
 import Button from '../components/Button';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,6 +21,11 @@ function Navbar() {
     const navigate = useNavigate();
     const isSmallScreen = useIsSmallScreen();
     const [isDashboardSidebar, setIsDashboardSidebar] = useState(false);
+    const location = useLocation();
+
+    useEffect(() => {
+        setIsDashboardSidebar(location.pathname.includes('/dashboard'));
+    }, [location.pathname, setIsDashboardSidebar]);
 
     const logoutUser = () => {
         setOpenBurgerMenu(false);
@@ -43,11 +48,7 @@ function Navbar() {
                             isSmallScreen ? (
                                 <>
                                     <Link to={routesConfig.DASHBOARD_ROOT.path}>
-                                        <img
-                                            src={user.image.includes('uploads') ? `http://localhost:4000/${user.image}` : user.image}
-                                            alt="avatar"
-                                            className="w-[45px] h-[45px] rounded-full border object-cover"
-                                        />
+                                        <img src={user.image} alt="avatar" className="w-[45px] h-[45px] rounded-full border object-cover" />
                                     </Link>
 
                                     <button className={`p-[10px] text-[30px] text-mainBlue`} onClick={() => setOpenBurgerMenu(true)}>

@@ -15,6 +15,7 @@ const mongoose = require('mongoose');
 const deleteUserCascade = require('../transactions/deleteUserCascade');
 const Email = require('../utils/Email');
 const crypto = require('crypto');
+const validator = require('validator');
 
 const getDasboardUserProfile = asyncErrorHandler(async (req, res, next) => {
     res.status(200).json({
@@ -248,8 +249,7 @@ const deleteUserProfile = asyncErrorHandler(async (req, res, next) => {
 
 const sendChangeEmailLink = asyncErrorHandler(async (req, res, next) => {
     const { newEmail, password } = req.body;
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    if (!emailRegex.test(newEmail)) return next(new CustomError('Please enter a valid email', 400));
+    if (!validator.isEmail(newEmail)) return next(new CustomError('Please enter a valid email', 400));
     const user = await UserModel.findById(req.user._id).select('+password');
     if (newEmail.trim() === user.email) return next(new CustomError('New email must be different from current email.', 400));
 

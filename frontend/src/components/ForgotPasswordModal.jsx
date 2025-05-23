@@ -18,7 +18,7 @@ function ForgotPasswordModal({ setIsForgotPasswordModal }) {
         },
         validationSchema: Yup.object({
             email: Yup.string()
-                .matches(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/, 'Email is not valid')
+                .matches(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/, 'Email is not valid')
                 .required('Email is required'),
         }),
         onSubmit: async (values) => {
