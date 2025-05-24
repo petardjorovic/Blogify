@@ -47,7 +47,9 @@ const register = asyncErrorHandler(async (req, res, next) => {
     try {
         await new Email(
             { email: newUser.email, firstName: newUser.firstName },
-            `http://localhost:5173/activation/${actToken}`
+            process.env.NODE_ENV === 'production'
+                ? `https://mysocialnet.onrender.com/activation/${actToken}`
+                : `http://localhost:5173/activation/${actToken}`
         ).sendWelcome();
 
         res.status(200).json({
@@ -118,7 +120,9 @@ const forgotPassword = asyncErrorHandler(async (req, res, next) => {
     try {
         await new Email(
             { email: user.email, firstName: user.firstName },
-            `http://localhost:5173/resetPassword/${resetToken}`
+            process.env.NODE_ENV === 'production'
+                ? `https://mysocialnet.onrender.com/resetPassword/${resetToken}`
+                : `http://localhost:5173/resetPassword/${resetToken}`
         ).sendResetPassword();
 
         res.status(200).json({
@@ -168,7 +172,9 @@ const checkResendActivationLink = asyncErrorHandler(async (req, res, next) => {
     try {
         await new Email(
             { email: user.email, firstName: user.firstName },
-            `http://localhost:5173/activation/${actToken}`
+            process.env.NODE_ENV === 'production'
+                ? `https://mysocialnet.onrender.com/activation/${actToken}`
+                : `http://localhost:5173/activation/${actToken}`
         ).resendActivation();
 
         res.status(200).json({

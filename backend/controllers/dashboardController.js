@@ -267,7 +267,9 @@ const sendChangeEmailLink = asyncErrorHandler(async (req, res, next) => {
     try {
         await new Email(
             { email: newEmail, firstName: user.firstName },
-            `http://localhost:5173/changeEmail/?token=${resetToken}&expires=${expiresAt}`
+            process.env.NODE_ENV === 'production'
+                ? `https://mysocialnet.onrender.com/changeEmail/?token=${resetToken}&expires=${expiresAt}`
+                : `http://localhost:5173/changeEmail/?token=${resetToken}&expires=${expiresAt}`
         ).changeEmail();
 
         res.status(200).json({
