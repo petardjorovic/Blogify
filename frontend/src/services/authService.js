@@ -15,8 +15,8 @@ export const login = async (data) => {
     } catch (err) {
         console.error(err, 'err iz servisa login');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Login failed. Please try again.',
         };
     }
 };
