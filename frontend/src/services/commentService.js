@@ -12,8 +12,8 @@ export const addComment = async (data) => {
     } catch (err) {
         console.error(err, 'err iz servisa add comment');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Add comment failed. Please try again.',
         };
     }
 };
@@ -30,8 +30,8 @@ export const deleteComment = async (commentId) => {
     } catch (err) {
         console.error(err, 'err iz servisa deleteComment');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Delete comment failed. Please try again.',
         };
     }
 };

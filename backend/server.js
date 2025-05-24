@@ -78,7 +78,25 @@ app.use(
 // });
 
 app.use(express.urlencoded({ extended: false }));
-app.use(cors());
+
+const allowedOrigins = [
+    // 'http://localhost:4000',    // frontend lokalno
+    'https://mysocialnet.onrender.com', // produkcija
+];
+
+app.use(
+    cors({
+        origin: function (origin, callback) {
+            // Dozvoli zahteve sa servera (bez origin headera) i sa dozvoljenih domena
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error('Not allowed by CORS'));
+            }
+        },
+        // Ne stavljaj credentials: true ako ne koristiš cookie
+    })
+);
 
 app.use('/', require('./routes'));
 

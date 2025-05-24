@@ -33,8 +33,8 @@ export const register = async (data) => {
     } catch (err) {
         console.error(err, 'err iz servisa register');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Register failed. Please try again.',
         };
     }
 };
@@ -51,8 +51,8 @@ export const fetchUserFromToken = async () => {
     } catch (err) {
         console.error(err, 'err iz servisa fetchUserFromToken');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Request failed. Please try again.',
         };
     }
 };
@@ -60,7 +60,6 @@ export const fetchUserFromToken = async () => {
 export const checkUserActivation = async (token) => {
     try {
         const res = await axios.post(`/api/auth/activation/${token}`);
-        //console.log(res, 'res iz servisa checkuserActivation');
         if (res.status === 200) {
             return {
                 status: res.data.status,
@@ -70,8 +69,8 @@ export const checkUserActivation = async (token) => {
     } catch (err) {
         console.error(err, 'err iz servisa check user activation');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Request failed. Please try again.',
         };
     }
 };
@@ -88,8 +87,8 @@ export const changePassword = async (data) => {
     } catch (err) {
         console.error(err, 'err iz servisa change password');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Request for change password failed. Please try again.',
         };
     }
 };
@@ -106,8 +105,8 @@ export const forgotPassword = async (data) => {
     } catch (err) {
         console.error(err, 'err iz servisa forgot password');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Request for forgot password failed. Please try again.',
         };
     }
 };
@@ -124,8 +123,8 @@ export const resetPassword = async (data, token) => {
     } catch (err) {
         console.error(err, 'err iz servisa reset password');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Request for reset password failed. Please try again.',
         };
     }
 };
@@ -142,8 +141,8 @@ export const resendActivationLink = async (email) => {
     } catch (err) {
         console.error(err, 'err iz servisa resend activation link');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Request for resend activation link failed. Please try again.',
         };
     }
 };

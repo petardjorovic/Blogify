@@ -13,8 +13,8 @@ export const getAllUsers = async (page, limit, member) => {
     } catch (err) {
         console.error(err, 'err iz servisa get all users');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Request failed. Please try again.',
         };
     }
 };
@@ -31,8 +31,8 @@ export const getMemberInfo = async (userId) => {
     } catch (err) {
         console.error(err, 'err iz servisa get member info');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Request failed. Please try again.',
         };
     }
 };
@@ -49,8 +49,8 @@ export const deleteMember = async (memberId) => {
     } catch (err) {
         console.error(err, 'err iz servisa delete member');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Delete request failed. Please try again.',
         };
     }
 };

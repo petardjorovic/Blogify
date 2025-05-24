@@ -14,8 +14,8 @@ export const getDashboardHomePosts = async () => {
     } catch (err) {
         console.error(err, 'err iz servisa get dashboard home posts');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Request failed. Please try again.',
         };
     }
 };
@@ -32,8 +32,8 @@ export const getDashboardUserProfile = async () => {
     } catch (err) {
         console.error(err, 'err iz servisa get dashboar user');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Request failed. Please try again.',
         };
     }
 };
@@ -51,8 +51,8 @@ export const updateProfileImage = async (data) => {
     } catch (err) {
         console.error(err, 'err iz servisa update profile image');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Update image failed. Please try again.',
         };
     }
 };
@@ -70,8 +70,8 @@ export const updateUserInfo = async (data) => {
     } catch (err) {
         console.error(err, 'err iz servisa update user info');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Update user info failed. Please try again.',
         };
     }
 };
@@ -89,8 +89,8 @@ export const getDashboardUserPosts = async (page, limit) => {
     } catch (err) {
         console.error(err, 'err iz servisa get dashboard user posts');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Request failed. Please try again.',
         };
     }
 };
@@ -108,8 +108,8 @@ export const getDashboardUserReactionsLikes = async (page, limit) => {
     } catch (err) {
         console.error(err, 'err iz servisa get dashboard user reactions likes');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Request failed. Please try again.',
         };
     }
 };
@@ -127,8 +127,8 @@ export const getDashboardUserReactionsComments = async (page, limit) => {
     } catch (err) {
         console.error(err, 'err iz servisa get dashboard user reactions comments');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Request failed. Please try again.',
         };
     }
 };
@@ -146,8 +146,8 @@ export const getDashboardSinglePostEdit = async (postId) => {
     } catch (err) {
         console.error(err, 'err iz servisa get dashboard single post edit');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Request failed. Please try again.',
         };
     }
 };
@@ -165,8 +165,8 @@ export const updatePostImage = async (image, postId, oldImage) => {
     } catch (err) {
         console.error(err, 'err iz servisa update post image');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Update post image failed. Please try again.',
         };
     }
 };
@@ -184,8 +184,8 @@ export const updatePostInfo = async (data, postId) => {
     } catch (err) {
         console.error(err, 'err iz servisa update post info');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Update post info failed. Please try again.',
         };
     }
 };
@@ -202,8 +202,8 @@ export const deleteUserProfile = async (data) => {
     } catch (err) {
         console.error(err, 'err iz servisa delete user profile');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Delete user profile failed. Please try again.',
         };
     }
 };
@@ -220,8 +220,8 @@ export const changeEmail = async (data) => {
     } catch (err) {
         console.error(err, 'err iz servisa change email');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Change email failed. Please try again.',
         };
     }
 };
@@ -238,8 +238,8 @@ export const checkEmailChangeToken = async (token) => {
     } catch (err) {
         console.error(err, 'err iz servisa checkEmailChangeToken');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Request failed. Please try again.',
         };
     }
 };

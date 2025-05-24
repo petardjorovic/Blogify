@@ -12,8 +12,8 @@ export const getAllTags = async () => {
     } catch (err) {
         console.error(err, 'err iz servisa getTags');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Request failed. Please try again.',
         };
     }
 };

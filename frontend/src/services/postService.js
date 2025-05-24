@@ -13,8 +13,8 @@ export const getAllPosts = async (page, limit) => {
     } catch (err) {
         console.error(err, 'err iz servisa getall posts');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Request failed. Please try again.',
         };
     }
 };
@@ -31,8 +31,8 @@ export const getSinglePost = async (postId) => {
     } catch (err) {
         console.error(err, 'err iz servisa getsinglepost');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Request failed. Please try again.',
         };
     }
 };
@@ -51,8 +51,8 @@ export const getPostsByTag = async (tagName, page, limit) => {
     } catch (err) {
         console.error(err, 'err iz servisa get post by tag');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Request failed. Please try again.',
         };
     }
 };
@@ -70,8 +70,8 @@ export const getPostsByUser = async (userId, page, limit) => {
     } catch (err) {
         console.error(err, 'err iz servisa get posts by user');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Request failed. Please try again.',
         };
     }
 };
@@ -89,8 +89,8 @@ export const getPostsBySearch = async (data, page, limit) => {
     } catch (err) {
         console.error(err, 'err iz servisa getpostbysearch');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Request failed. Please try again.',
         };
     }
 };
@@ -107,8 +107,8 @@ export const addNewPost = async (data) => {
     } catch (err) {
         console.error(err, 'err iz servisa add new post');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Add new post failed. Please try again.',
         };
     }
 };
@@ -125,8 +125,8 @@ export const deleteSinglePost = async (postId, userId) => {
     } catch (err) {
         console.error(err, 'err iz servisa delete single post');
         return {
-            status: err.response.data.error.status,
-            message: err.response.data.message,
+            status: err.response?.data?.error?.status || 'error',
+            message: err.response?.data?.message || err.message || 'Delete post failed. Please try again.',
         };
     }
 };
