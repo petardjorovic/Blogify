@@ -108,11 +108,7 @@ function SinglePostPage() {
                         {/* RIGHT */}
 
                         <div className="w-full md:w-1/2 p-[10px] order-1 md:order-2">
-                            <img
-                                src={post.image.includes('uploads') ? 'http://localhost:4000/' + post.image : post.image}
-                                alt=""
-                                className="w-full h-full lg:h-[460px] object-cover rounded-lg"
-                            />
+                            <img src={post.image} alt="" className="w-full h-full lg:h-[460px] object-cover rounded-lg" />
                         </div>
                     </div>
                 )}

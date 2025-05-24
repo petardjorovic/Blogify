@@ -2,8 +2,9 @@ import axios from 'axios';
 import { localStorageConfig } from './localStorageConfig';
 import { Navigate } from 'react-router-dom';
 import { routesConfig } from './routesConfig';
+import { urlConfig } from '../config/urlConfig';
 
-axios.defaults.baseURL = 'http://localhost:4000';
+axios.defaults.baseURL = urlConfig.backend;
 
 axios.interceptors.request.use(
     function (config) {

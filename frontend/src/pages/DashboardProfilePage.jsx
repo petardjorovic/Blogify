@@ -107,7 +107,7 @@ function DashboardProfilePage() {
         dispatch(showLoader(true));
         const res = await updateUserInfo(inputsData);
         dispatch(showLoader(false));
-        console.log(res, 'res sa fronta update user info');
+        //console.log(res, 'res sa fronta update user info');
         if (res.status === 'success') {
             setUser(res.user);
             toast.success(res.message);

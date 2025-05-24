@@ -55,7 +55,7 @@ const register = asyncErrorHandler(async (req, res, next) => {
             message: 'Registration successful! Please check your email for the activation link (valid for 24 hours).',
         });
     } catch (error) {
-        console.log(error, 'register activation send email error');
+        console.error(error, 'register activation send email error');
         await UserModel.findByIdAndDelete(savedUser._id);
         return next(new CustomError('An error occurred, please try again later.', 500));
     }
@@ -126,7 +126,7 @@ const forgotPassword = asyncErrorHandler(async (req, res, next) => {
             message: 'Password reset link has been sent to your email address',
         });
     } catch (err) {
-        console.log(err, 'reset password email err');
+        console.error(err, 'reset password email err');
         user.passwordResetToken = undefined;
         user.passwordResetTokenExpires = undefined;
         await user.save({ validateBeforeSave: false });
@@ -176,7 +176,7 @@ const checkResendActivationLink = asyncErrorHandler(async (req, res, next) => {
             message: 'The activation link has just been sent. Please check your email for the activation link (valid for 24 hours).',
         });
     } catch (error) {
-        console.log(error, 'resend activation send email error');
+        console.error(error, 'resend activation send email error');
         return next(new CustomError('An error occurred, please try again later.', 500));
     }
 });

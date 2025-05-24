@@ -65,7 +65,7 @@ function DashboardPostsEdit() {
         formData.append('image', file);
         setImageLabel('');
         const res = await updatePostImage(formData, postId, image);
-        console.log(res, 'res sa fronta update post image');
+        //console.log(res, 'res sa fronta update post image');
         if (res.status === 'success') {
             setImageLabel('image');
             setImage(res.image);

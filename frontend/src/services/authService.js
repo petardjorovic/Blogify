@@ -60,7 +60,7 @@ export const fetchUserFromToken = async () => {
 export const checkUserActivation = async (token) => {
     try {
         const res = await axios.post(`/api/auth/activation/${token}`);
-        console.log(res, 'res iz servisa checkuserActivation');
+        //console.log(res, 'res iz servisa checkuserActivation');
         if (res.status === 200) {
             return {
                 status: res.data.status,

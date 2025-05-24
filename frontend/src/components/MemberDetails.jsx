@@ -28,7 +28,7 @@ function MemberDetails() {
                 <div>
                     <div className="flex flex-col items-center">
                         <img
-                            src={memberInfo.image.includes('uploads') ? `http://localhost:4000/${memberInfo.image}` : memberInfo.image}
+                            src={memberInfo.image}
                             alt="avatar"
                             className="w-[200px] h-[200px] object-cover rounded-full border border-black"
                         />

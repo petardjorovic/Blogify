@@ -101,7 +101,7 @@ function Navbar() {
                                     <li>
                                         <Link to={routesConfig.DASHBOARD_ROOT.path} onClick={() => setOpenBurgerMenu(false)}>
                                             <img
-                                                src={user.image.includes('uploads') ? `http://localhost:4000/${user.image}` : user.image}
+                                                src={user.image}
                                                 alt="avatar"
                                                 className="w-[45px] h-[45px] rounded-full border object-cover"
                                             />

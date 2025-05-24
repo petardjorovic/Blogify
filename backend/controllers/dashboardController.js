@@ -275,7 +275,7 @@ const sendChangeEmailLink = asyncErrorHandler(async (req, res, next) => {
             message: 'Activation link has been sent to your new entered email address.',
         });
     } catch (err) {
-        console.log(err, 'change email send email');
+        console.error(err, 'change email send email');
         user.pendingEmail = undefined;
         user.pendingEmailToken = undefined;
         user.pendingEmailTokenExpires = undefined;

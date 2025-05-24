@@ -27,11 +27,7 @@ function MemberCard({ member, user, rerenderView }) {
     return (
         <div className="box flex flex-col md:flex-row items-center justify-between overflow-y-hidden">
             <div className="flex flex-col md:flex-row items-center gap-[20px]">
-                <img
-                    src={member.image.includes('uploads') ? `http://localhost:4000/${member.image}` : member.image}
-                    alt="avatar"
-                    className="w-[70px] h-[70px] object-cover rounded-full border"
-                />
+                <img src={member.image} alt="avatar" className="w-[70px] h-[70px] object-cover rounded-full border" />
                 <div>
                     <h5 className="text-lg font-semibold text-center md:text-start">{member.firstName + ' ' + member.lastName}</h5>
                     {user.role === 'admin' && (
