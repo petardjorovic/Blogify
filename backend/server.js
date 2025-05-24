@@ -80,7 +80,7 @@ app.use(
 app.use(express.urlencoded({ extended: false }));
 
 const allowedOrigins = [
-    // 'http://localhost:4000',    // frontend lokalno
+    'http://localhost:5173', // frontend lokalno
     'https://mysocialnet.onrender.com', // produkcija
 ];
 

@@ -14,18 +14,18 @@ const transportError = new winston.transports.DailyRotateFile({
     level: 'error',
 });
 
-const transportCombined = new winston.transports.DailyRotateFile({
-    filename: 'combined-%DATE%.log',
-    dirname: logDir,
-    datePattern: 'YYYY-MM-DD',
-    zippedArchive: true,
-    maxSize: '20m',
-    maxFiles: '30d',
-});
+// const transportCombined = new winston.transports.DailyRotateFile({
+//     filename: 'combined-%DATE%.log',
+//     dirname: logDir,
+//     datePattern: 'YYYY-MM-DD',
+//     zippedArchive: true,
+//     maxSize: '20m',
+//     maxFiles: '30d',
+// });
 
 const logger = winston.createLogger({
     format: winston.format.combine(winston.format.timestamp(), winston.format.json()),
-    transports: [transportError, transportCombined],
+    transports: [transportError], // transportCombined  (ovo sam izbacio)
 });
 
 // if (process.env.NODE_ENV !== 'production') {
