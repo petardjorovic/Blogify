@@ -35,7 +35,7 @@ function Navbar() {
 
     return (
         <header className="container mx-auto px-[16px] sticky top-0 mt-[15px] z-10 bg-white">
-            <div className={`box flex items-center justify-between mb-[40px]`}>
+            <div className={`box flex items-center justify-between mb-[25px]`}>
                 <div className="flex items-center gap-[5px]">
                     <Link to={routesConfig.POST.path}>
                         <img src={logo} alt="logo" className="w-[50px]" />

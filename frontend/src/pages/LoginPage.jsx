@@ -11,7 +11,7 @@ function LoginPage() {
     useLockScroll(isForgotPasswordModal);
     return (
         <div className="container mx-auto">
-            <div className="flex flex-col gap-[20px] lg:flex-row px-[16px] items-stretch">
+            <div className="flex flex-col gap-[20px] lg:flex-row px-[16px] mb-4 items-stretch">
                 <div className="w-full lg:w-[50%]">
                     <img
                         src={loginImg}

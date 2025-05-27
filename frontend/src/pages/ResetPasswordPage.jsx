@@ -101,7 +101,12 @@ function ResetPasswordPage() {
                 </div>
             </div>
             {loader && <Loader />}
-            <ToastContainer />
+            <ToastContainer
+                position="top-right"
+                containerClassName="w-full flex justify-end" // centriranje i kontrola širine
+                toastClassName="w-[60%] min-w-fit bg-white text-black shadow-md rounded-lg"
+                style={{ top: '2rem' }}
+            />
         </div>
     );
 }

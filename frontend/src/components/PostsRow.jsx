@@ -16,12 +16,14 @@ function PostsRow({ posts, title }) {
                     pagination={{ clickable: true }}
                     spaceBetween={16}
                     breakpoints={{
-                        0: { slidesPerView: 1.2 },
-                        480: { slidesPerView: 1.5 },
+                        0: { slidesPerView: 1 },
+                        420: { slidesPerView: 1 },
+                        520: { slidesPerView: 1.3 },
                         640: { slidesPerView: 2 },
-                        768: { slidesPerView: 2.5 },
-                        1024: { slidesPerView: 3 },
-                        1280: { slidesPerView: 4 },
+                        768: { slidesPerView: 2 },
+                        1024: { slidesPerView: 2.5 },
+                        1280: { slidesPerView: 3 },
+                        1400: { slidesPerView: 3.7 },
                     }}
                     className="!overflow-visible"
                 >
