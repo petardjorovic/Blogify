@@ -31,6 +31,7 @@ function SinglePostPage() {
         dispatch(showLoader(true));
         const res = await getSinglePost(postId);
         dispatch(showLoader(false));
+        console.log(res.post);
 
         if (res.status === 'success') {
             setPost(res.post);

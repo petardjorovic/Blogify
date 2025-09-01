@@ -40,7 +40,7 @@ function Navbar() {
                     <Link to={routesConfig.POST.path}>
                         <img src={logo} alt="logo" className="w-[50px]" />
                     </Link>
-                    <p className="text-base">SocialNet</p>
+                    <p className="text-base">Blogify</p>
                 </div>
                 <nav className="flex">
                     <ul className="flex gap-[10px] items-center">
