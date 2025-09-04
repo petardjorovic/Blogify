@@ -50,7 +50,7 @@
 
 ```bash
 git clone https://github.com/petardjorovic/Blogify.git
-cd blogify
+cd Blogify
 ```
 
 ### 2️⃣ Install Dependencies
