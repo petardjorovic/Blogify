@@ -1,13 +1,5 @@
 # Blogify
 
-[![Live Demo](https://img.shields.io/badge/Live-Demo-green?style=for-the-badge)](https://mysocialnet.onrender.com/)
-[![GitHub stars](https://img.shields.io/github/stars/petardjorovic/blogify?style=for-the-badge)](https://github.com/petardjorovic/blogify/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/petardjorovic/blogify?style=for-the-badge)](https://github.com/petardjorovic/blogify/network)
-[![GitHub issues](https://img.shields.io/github/issues/petardjorovic/blogify?style=for-the-badge)](https://github.com/petardjorovic/blogify/issues)
-[![License](https://img.shields.io/github/license/petardjorovic/blogify?style=for-the-badge)](./LICENSE)
-
----
-
 ### 🛠 Tech Stack
 
 ![React](https://img.shields.io/badge/Frontend-React-61DAFB?style=for-the-badge\&logo=react\&logoColor=white)
@@ -23,6 +15,8 @@
 ## 📸 Preview
 
 *Add your screenshots here*
+![Dashboard Preview](/frontend/public/dashboardpage.png)
+![Posts Preview](/frontend/public/postspage.png)
 
 ---
 
