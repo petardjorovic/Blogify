@@ -14,7 +14,25 @@
 
 ## 📸 Preview
 
-_Add your screenshots here_
+### Home Page
+
+![Home Page](/frontend/public/screenshots/posts-page.png)
+
+### Dashboard
+
+![Dashboard](/frontend/public/screenshots/dashboard-page.png)
+
+### Signle Post
+
+![Single Post](/frontend/public/screenshots/singlepostpage.png)
+
+### Login
+
+![Login](/frontend/public/screenshots/loginpage.png)
+
+### Register
+
+![Register](/frontend/public/screenshots/registerpage.png)
 
 ---
 
