@@ -2,21 +2,19 @@
 
 ### 🛠 Tech Stack
 
-![React](https://img.shields.io/badge/Frontend-React-61DAFB?style=for-the-badge\&logo=react\&logoColor=white)
-![Vite](https://img.shields.io/badge/Bundler-Vite-646CFF?style=for-the-badge\&logo=vite\&logoColor=white)
-![TailwindCSS](https://img.shields.io/badge/Styling-TailwindCSS-38B2AC?style=for-the-badge\&logo=tailwind-css\&logoColor=white)
-![NodeJS](https://img.shields.io/badge/Backend-Node.js-339933?style=for-the-badge\&logo=node.js\&logoColor=white)
-![Express](https://img.shields.io/badge/Framework-Express-000000?style=for-the-badge\&logo=express\&logoColor=white)
-![MongoDB](https://img.shields.io/badge/Database-MongoDB-47A248?style=for-the-badge\&logo=mongodb\&logoColor=white)
-![Cloudinary](https://img.shields.io/badge/Storage-Cloudinary-3448C5?style=for-the-badge\&logo=cloudinary\&logoColor=white)
+![React](https://img.shields.io/badge/Frontend-React-61DAFB?style=for-the-badge&logo=react&logoColor=white)
+![Vite](https://img.shields.io/badge/Bundler-Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/Styling-TailwindCSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![NodeJS](https://img.shields.io/badge/Backend-Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
+![Express](https://img.shields.io/badge/Framework-Express-000000?style=for-the-badge&logo=express&logoColor=white)
+![MongoDB](https://img.shields.io/badge/Database-MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
+![Cloudinary](https://img.shields.io/badge/Storage-Cloudinary-3448C5?style=for-the-badge&logo=cloudinary&logoColor=white)
 
 ---
 
 ## 📸 Preview
 
-*Add your screenshots here*
-![Dashboard Preview](/frontend/public/dashboardpage.png)
-![Posts Preview](/frontend/public/postspage.png)
+_Add your screenshots here_
 
 ---
 
@@ -28,13 +26,13 @@
 
 ## 🚀 Features
 
-* 🔐 **Authentication**: Register, login, and secure sessions with JWT
-* 📝 **Post Management**: Create, edit, and delete posts
-* ❤️ **Likes & Comments**: Interact with other users’ content
-* 🔍 **Search & Filters**: Quickly find posts by title or category
-* 👤 **User Profiles**: View and edit user info
-* ☁️ **Cloud Image Uploads** via Cloudinary
-* 📱 **Responsive UI** powered by TailwindCSS
+-   🔐 **Authentication**: Register, login, and secure sessions with JWT
+-   📝 **Post Management**: Create, edit, and delete posts
+-   ❤️ **Likes & Comments**: Interact with other users’ content
+-   🔍 **Search & Filters**: Quickly find posts by title or category
+-   👤 **User Profiles**: View and edit user info
+-   ☁️ **Cloud Image Uploads** via Cloudinary
+-   📱 **Responsive UI** powered by TailwindCSS
 
 ---
 
@@ -94,8 +92,8 @@ npm run dev
 
 The app will run on:
 
-* Frontend: `http://localhost:5173`
-* Backend: `http://localhost:5000`
+-   Frontend: `http://localhost:5173`
+-   Backend: `http://localhost:5000`
 
 ---
 
@@ -126,12 +124,12 @@ Blogify/
 
 | Method | Endpoint           | Description         | Auth Required |
 | ------ | ------------------ | ------------------- | ------------- |
-| POST   | /api/auth/register | Register a new user | ❌             |
-| POST   | /api/auth/login    | Login user          | ❌             |
-| GET    | /api/posts         | Get all posts       | ❌             |
-| POST   | /api/posts         | Create a new post   | ✅             |
-| PUT    | /api/posts/\:id    | Update a post       | ✅             |
-| DELETE | /api/posts/\:id    | Delete a post       | ✅             |
+| POST   | /api/auth/register | Register a new user | ❌            |
+| POST   | /api/auth/login    | Login user          | ❌            |
+| GET    | /api/posts         | Get all posts       | ❌            |
+| POST   | /api/posts         | Create a new post   | ✅            |
+| PUT    | /api/posts/\:id    | Update a post       | ✅            |
+| DELETE | /api/posts/\:id    | Delete a post       | ✅            |
 
 ---
 
