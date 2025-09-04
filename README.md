@@ -15,8 +15,8 @@
 ## 📸 Preview
 
 *Add your screenshots here*
-![Dashboard Preview](./dashboardpage.png)
-![Posts Preview](./postspage.png)
+![Dashboard Preview](/frontend/public/dashboardpage.png)
+![Posts Preview](/frontend/public/postspage.png)
 
 ---
 
